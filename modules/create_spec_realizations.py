@@ -370,7 +370,7 @@ def create_spec_realizations_main(noise_level,
 
     # Check to make sure the files in the list are actually in the input directory;
     # if not, just remove those from the list and set a warning
-    list_actually_there = glob.glob(unnorm_empirical_spectra_dir + "*.dat")
+    list_actually_there = glob.glob(unnorm_empirical_spectra_dir + "*.*")
     list_actually_basenames = np.array([os.path.basename(t) for t in list_actually_there])
 
     num_sought = len(list_arr) # number of wanted files
