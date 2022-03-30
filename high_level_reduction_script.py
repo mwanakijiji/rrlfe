@@ -18,7 +18,7 @@ from modules import (compile_normalization,
 def main():
 
     model_choice = "abcdfghk"
-    '''
+
     # make all the directories
     make_dirs(objective = "find_calib") ## find_calib as opposed to apply_calib
 
@@ -38,7 +38,7 @@ def main():
     # scrape_ew_from_robo and calculate EWs + err_EW
     scraper_instance = scrape_ew_and_errew.Scraper()
     scraper_instance() # call instance
-    '''
+
     data_checked = scrape_ew_and_errew.quality_check()
 
     # put the good EW data into a table with
