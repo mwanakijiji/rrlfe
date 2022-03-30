@@ -10,15 +10,16 @@ import shlex
 import subprocess
 from subprocess import Popen,PIPE
 
-long_description = "For determining metallicities of RR Lyraes from low-res spectroscopy see `here <https://github.com/mwanakijiji/rrlfe>`__ for more info"
+long_description = "For determining metallicities of RR Lyraes from low-res spectroscopy see `here <https://rrlfe.readthedocs.io>`__ for more info"
 
 setup(name="rrlfe",
       version="0.0.3",
-      description="For finding FeH from low-res survey spectra of RRab stars",
+      description="For finding FeH from low-res survey spectra of RR Lyrae stars",
       long_description=long_description,
       author="Eckhart Spalding, Ron Wilhelm, Nathan De Lee, Kenneth Carrell",
       author_email="espaldin@nd.edu",
       url="https://github.com/mwanakijiji/rrlfe",
+      download_url="https://github.com/mwanakijiji/rrlfe/archive/refs/tags/v_0.0.3.tar.gz",
       license="MIT",
       packages=['modules'],
       include_package_data=True
