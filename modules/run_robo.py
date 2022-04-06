@@ -107,6 +107,9 @@ def main(
     ## ## in the file name here; this might be a weakness later on
 
     pool = multiprocessing.Pool(ncpu)
+
+    ## ## note the below file name list collects ALL files in that directory,
+    ## ## not just the ones listed in the initial .list file
     file_name_list = glob.glob(normzed_spec_source_dir+"*")
     logging.info('Reading in spectra from directory')
     logging.info(normzed_spec_source_dir)

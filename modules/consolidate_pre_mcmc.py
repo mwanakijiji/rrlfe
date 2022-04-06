@@ -8,7 +8,6 @@ import pickle
 import numpy as np
 import pandas as pd
 from pylab import *
-from IPython.display import clear_output
 from . import *
 
 
