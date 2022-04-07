@@ -8,7 +8,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from astropy.table import Table
 from astropy.io import fits
-from rrlyrae_metallicity.modules2 import *
 from . import *
 
 class findFeH():
