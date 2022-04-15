@@ -28,6 +28,7 @@ def line_order_check(line_centers):
     glitch_count = int(0) # boolean for bookeeping
     if ((line_centers[0] < 3933.660-10) or
         (line_centers[0] > 3933.660+10)): # CaIIK
+        print("line center, " line_centers[0])
         logging.warning('CaIIK line center does not match!')
         glitch_count = int(1) # boolean for bookeeping
     if ((line_centers[1] < 3970.075-10) or
