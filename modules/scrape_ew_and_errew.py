@@ -233,7 +233,7 @@ def quality_check(
 
     # read in data
     all_data = pd.read_csv(read_in_filename)
-
+    import ipdb; ipdb.set_trace()
     # make new column for 'good' (G) or 'bad' (B) based on the below criteria
     # (initialize all as 'G')
     all_data["quality"] = "G"
@@ -248,19 +248,19 @@ def quality_check(
     where_red_flag = np.where(np.array(red_flag_array) != '0')
     # identify the synthetic spectrum names which have at least one line with a bad fit
     bad_robo_spectra = all_data["realization_spec_file_name"][np.squeeze(where_red_flag)]
-
+    import ipdb; ipdb.set_trace()
     # remove duplicate names
     bad_robo_spectra_uniq = bad_robo_spectra.drop_duplicates()
     # flag as bad the spectra with those names
     all_data.loc[all_data["realization_spec_file_name"].isin(bad_robo_spectra_uniq),"quality"] = "B"
-
+    import ipdb; ipdb.set_trace()
     # Criterion 2. Remove rows where the line centers are not right, using steps similar to above
     # (specifically, if measured line center is more than 10 A away from perfect center)
     where_bad_line_center = np.where(np.abs(np.subtract(all_data["wavel_found_center"],all_data["wavel_stated_center"]) > 10))
     bad_line_center_spectra = all_data["realization_spec_file_name"][np.squeeze(where_bad_line_center,axis=0)] # squeeze necessary to preserve finite size
     bad_line_center_spectra_uniq = bad_line_center_spectra.drop_duplicates()
     all_data.loc[all_data["realization_spec_file_name"].isin(bad_line_center_spectra_uniq),"quality"] = "B"
-
+    import ipdb; ipdb.set_trace()
     # Criterion 3. Remove rows with EWs which are clearly unrealistically large which slipped through other checks
     # (this is particularly an issue with the CaIIK line, which is close to CaIIH)
     # set cutoff at 18 A, based on inspection of >200 Robospect plots of fits to
@@ -270,7 +270,7 @@ def quality_check(
     bad_CaIIK_spectra = all_data["realization_spec_file_name"][np.squeeze(where_bad_CaIIK)]
     bad_CaIIK_spectra_uniq = bad_CaIIK_spectra.drop_duplicates()
     all_data.loc[all_data["realization_spec_file_name"].isin(bad_CaIIK_spectra_uniq),"quality"] = "B"
-
+    import ipdb; ipdb.set_trace()
     # Criterion 4. Remove bad phases (for empirical data)
     '''
     min_good, max_good = phase_regions()
