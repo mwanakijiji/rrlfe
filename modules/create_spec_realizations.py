@@ -243,7 +243,7 @@ def read_list(input_list):
        Numpy array of filenames
     '''
 
-    logging.info("Reading in list of spectrum names to return table of filenames")
+    logging.info("Reading in list of spectrum names " + input_list)
 
     # expects header reading
     # spectrum,subtype,phase,feh,err_feh
@@ -370,6 +370,7 @@ def create_spec_realizations_main(noise_level,
 
     # Check to make sure the files in the list are actually in the input directory;
     # if not, just remove those from the list and set a warning
+    logging.info("Reading in unnormalized spectra from dir " + unnorm_empirical_spectra_dir)
     list_actually_there = glob.glob(unnorm_empirical_spectra_dir + "*.*")
     list_actually_basenames = np.array([os.path.basename(t) for t in list_actually_there])
 
