@@ -37,7 +37,7 @@ def main():
     # scrape_ew_from_robo and calculate EWs + err_EW
     scraper_instance = scrape_ew_and_errew.Scraper()
     scraper_instance() # call instance
-
+    '''
     data_checked = scrape_ew_and_errew.quality_check()
 
     # put the good EW data into a table with
@@ -50,7 +50,7 @@ def main():
     data_errors = scrape_ew_and_errew.generate_addl_ew_errors(groupby_parent = True)
 
     data_add_metadata = scrape_ew_and_errew.add_synthetic_meta_data()
-    '''
+
     # finds the Teff calibration
     temp = teff_retrieval.temp_vs_balmer()
 
