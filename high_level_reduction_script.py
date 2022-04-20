@@ -33,7 +33,7 @@ def main():
 
     # run_robospect on normalized synthetic spectra
     run_robo.main()
-    '''
+
     # scrape_ew_from_robo and calculate EWs + err_EW
     scraper_instance = scrape_ew_and_errew.Scraper()
     scraper_instance() # call instance
@@ -65,7 +65,6 @@ def main():
     posterior_write = run_emcee.write_soln_to_fits(model = model_choice)
 
     posterior_sample = run_emcee.corner_plot(model = model_choice)
-    '''
 
 # entry point
 if __name__ == '__main__':
