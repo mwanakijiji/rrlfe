@@ -90,7 +90,7 @@ def temp_vs_balmer(df_poststack_file_name_read = config_red["data_dirs"]["DIR_EW
     teff = df_poststack["teff"].values.astype(float)
     # fit a straight line: net Balmer
     ews_Balmer = df_poststack["EW_Balmer"].values.astype(float)
-    import ipdb; ipdb.set_trace()
+
     m, err_m, b, err_b = line_fit_temp_range(x_data_pass=ews_Balmer,
                                                 y_data_pass=teff,
                                                 t_min=t_min,
@@ -102,7 +102,7 @@ def temp_vs_balmer(df_poststack_file_name_read = config_red["data_dirs"]["DIR_EW
     # add the best-fit Teffs to dataframe
     teffs_bestfit = np.add(np.multiply(m,ews_Balmer),b)
     df_poststack["teff_bestfit"] = teffs_bestfit
-    import ipdb; ipdb.set_trace()
+
     # write all the data to file
     df_poststack.to_csv(df_poststack_file_name_write,index=False)
     logging.info("Wrote out data file including linear-best-fit Teffs to " + df_poststack_file_name_write)
