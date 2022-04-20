@@ -14,6 +14,8 @@ From: python:3.6.6
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
   git checkout tags/v0.76
+  sudo apt-get install python3-setuptools
+  sudo apt install python3-distutils
   python ./setup.py install
   cd ..
   # clone rrlfe
@@ -25,7 +27,6 @@ From: python:3.6.6
   pip install -U pip
   # install dependencies
   pip install -r requirements.txt
-  sudo apt install python3-distutils
 
 %runscript
   echo "Runscript; Python version is"
