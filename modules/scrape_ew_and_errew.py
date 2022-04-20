@@ -203,6 +203,7 @@ def add_synthetic_meta_data(input_list = config_red["data_dirs"]["DIR_SRC"] + co
     '''
 
     # read in metadata
+    logging.info("Reading in meta-data from file " + str(input_list))
     input_data_arr = pd.read_csv(input_list)
 
     # read in EW data
