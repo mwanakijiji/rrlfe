@@ -37,7 +37,7 @@ def main():
     # scrape_ew_from_robo and calculate EWs + err_EW
     scraper_instance = scrape_ew_and_errew.Scraper()
     scraper_instance() # call instance
-    '''
+
     data_checked = scrape_ew_and_errew.quality_check()
 
     # put the good EW data into a table with
@@ -60,12 +60,12 @@ def main():
 
     emcee_instance = run_emcee.RunEmcee()
     #emcee_instance(model = 'abcd') # call instance
-    emcee_instance(model = model_choice)
+    emcee_instance(model = model_choice, post_burn_in_links = 3e2)
 
     posterior_write = run_emcee.write_soln_to_fits(model = model_choice)
 
     posterior_sample = run_emcee.corner_plot(model = model_choice)
-    '''
+
 
 # entry point
 if __name__ == '__main__':
