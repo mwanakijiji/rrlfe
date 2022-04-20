@@ -21,7 +21,7 @@ def main():
 
     # make all the directories
     make_dirs(objective = "find_calib") ## find_calib as opposed to apply_calib
-
+    '''
     # compile the C spectral normalization script
     compile_normalization.compile_bkgrnd()
 
@@ -50,7 +50,7 @@ def main():
     data_errors = scrape_ew_and_errew.generate_addl_ew_errors(groupby_parent = True)
 
     data_add_metadata = scrape_ew_and_errew.add_synthetic_meta_data()
-
+    '''
     # finds the Teff calibration
     temp = teff_retrieval.temp_vs_balmer()
 
