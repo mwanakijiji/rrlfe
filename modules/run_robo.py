@@ -63,7 +63,7 @@ class RunRobo:
         ##                               --C. Waters]
 
         logging.info("Robospect cmd:")
-        logging.info("python "+self.robo_dir + "bin/rSpect.py -i 4 " +str(file_name) + \
+        logging.info("python "+ self.robo_dir + "bin/rSpect.py -i 4 " + str(file_name) + \
                     " -P " + self.norm_spec_deposit_dir + file_specific_string + \
                     " --line_list " + self.robo_dir + "tmp/ll" +" -C name null" + \
                     " -D name null" +" -N name boxcar" + " -I range 10.0" + \
