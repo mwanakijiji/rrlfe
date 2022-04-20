@@ -21,7 +21,7 @@ def main():
 
     # make all the directories
     make_dirs(objective = "find_calib") ## find_calib as opposed to apply_calib
-    '''
+
     # compile the C spectral normalization script
     compile_normalization.compile_bkgrnd()
 
@@ -30,7 +30,7 @@ def main():
     ## ## just 1 or 2 realizations for testing (default is 100)
 
     create_spec_realizations.create_spec_realizations_main(num = 1, noise_level=0.00, spec_file_type="ascii.no_header")
-    '''
+
     # run_robospect on normalized synthetic spectra
     run_robo.main()
     '''
