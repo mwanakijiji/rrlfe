@@ -342,7 +342,7 @@ def generate_net_balmer(read_in_filename = config_red["data_dirs"]["DIR_EW_PRODS
 
     # add column of net Balmer line
     cols = ["EW_Hgamma","EW_Hdelta"]
-    df_poststack["EW_Balmer"] = df_poststack[cols].mean() # simple average; note these are all of the spectra
+    df_poststack["EW_Balmer"] = df_poststack[cols].mean(axis=1) # simple average; note these are all of the spectra
 
     print(np.add( np.power(df_poststack["err_EW_Hdelta_from_robo"],2.),
             np.power(df_poststack["err_EW_Hgamma_from_robo"],2.)
