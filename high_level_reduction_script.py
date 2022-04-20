@@ -30,14 +30,14 @@ def main():
     ## ## just 1 or 2 realizations for testing (default is 100)
 
     create_spec_realizations.create_spec_realizations_main(num = 1, noise_level=0.00, spec_file_type="ascii.no_header")
-    '''
+
     # run_robospect on normalized synthetic spectra
     run_robo.main()
     '''
     # scrape_ew_from_robo and calculate EWs + err_EW
     scraper_instance = scrape_ew_and_errew.Scraper()
     scraper_instance() # call instance
-
+    '''
     data_checked = scrape_ew_and_errew.quality_check()
 
     # put the good EW data into a table with
