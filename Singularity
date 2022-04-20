@@ -1,41 +1,32 @@
 Bootstrap: docker
 From: python:3.6.6
 
-# copy files required for the app to run
-%setup
-  mkdir -p ${SINGULARITY_ROOTFS}/modules
-  mkdir -p ${SINGULARITY_ROOTFS}/vol_c/180507_fizeau_altair
+# copy files required for the app to run (this might be subsumed by pip command)
 
-%files
-  requirements.txt /
-  altair_pipeline.py /
-  # copy Python modules
-  modules/*py /modules/
-  # copy config file
-  modules/*ini /modules/
-  # kludge: this file is used as an initial template in the pipeline
-  ## ## needs to change later!
-  lm_180507_009030.fits /
+# get files from host (but we don't need any)
 
 %environment
   # set environment variable to retrieve new image each time
   export SINGULARITY_DISABLE_CACHE=True
 
 %post
+  # install Robospect
+  git clone https://github.com/czwa/robospect.py.git
+  cd robospect.py
+  git checkout tags/v0.76
+  python ./setup.py install
+  cd ..
+  # clone rrlfe
+  git clone https://github.com/mwanakijiji/rrlfe.git
+  cd rrlfe
   # install pip
   apt-get update
   apt-get install -y python3-pip
   pip install -U pip
-  # get dependencies
+  # install dependencies
   pip install -r requirements.txt
-
-# run the application (step not necessary if the verbose version
-# of the command is in the PBS file)
+  sudo apt install python3-distutils
 
 %runscript
   echo "Runscript; Python version is"
   python --version
-  #exec /bin/bash python3 /usr/src/app/altair_pipeline.py "$@"
-%startscript
-  echo "Startscript"
-  #exec /bin/bash python3 /usr/src/app/altair_pipeline.py "$@"
