@@ -14,8 +14,6 @@ From: python:3.8
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
   git checkout tags/v0.76
-  #sudo apt-get install python3-setuptools
-  #sudo apt install python3-distutils
   python ./setup.py install
   cd ..
   # clone rrlfe
