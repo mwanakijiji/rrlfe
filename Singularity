@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: python:3.6.6
+From: python:3.8
 
 # copy files required for the app to run (this might be subsumed by pip command)
 
@@ -14,8 +14,8 @@ From: python:3.6.6
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
   git checkout tags/v0.76
-  sudo apt-get install python3-setuptools
-  sudo apt install python3-distutils
+  #sudo apt-get install python3-setuptools
+  #sudo apt install python3-distutils
   python ./setup.py install
   cd ..
   # clone rrlfe
@@ -24,7 +24,7 @@ From: python:3.6.6
   # install pip
   apt-get update
   apt-get install -y python3-pip
-  pip install -U pip
+  pip install --upgrade pip
   # install dependencies
   pip install -r requirements.txt
 
