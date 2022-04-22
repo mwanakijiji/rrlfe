@@ -1,0 +1,15 @@
+astropy
+astroquery
+corner
+cycler
+emcee
+Flask
+GitPython
+matplotlib
+pandas
+pyfits
+pytest
+redis
+scipy
+seaborn
+setuptools
