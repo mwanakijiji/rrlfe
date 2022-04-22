@@ -19,7 +19,7 @@ From: python:3.8
   pip install --upgrade pip
   # install dependencies
   pip install --upgrade rrlfe -t .
-  pip install -r requirements_bare.txt
+  pip install -r requirements_bare_versions.txt
   # install Robospect
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
