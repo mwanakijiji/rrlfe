@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: python:3.6.6
+From: python:3.8
 
 # copy files required for the app to run (this might be subsumed by pip command)
 
@@ -11,9 +11,7 @@ From: python:3.6.6
 
 %post
   # install Robospect
-  git clone https://github.com/czwa/robospect.py.git
-  cd robospect.py
-  git checkout tags/v0.76
+
 
 
 %runscript
