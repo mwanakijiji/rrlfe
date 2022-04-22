@@ -10,21 +10,26 @@ From: python:3.8
   export SINGULARITY_DISABLE_CACHE=True
 
 %post
+
+  # install pip
+  apt-get update
+  apt-get install -y python3-pip
+  pip install --upgrade pip
+
+  # install dependencies
+  wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/requirements_bare_versions.txt
+  pip install -r requirements_bare_versions.txt
+
+  # clone rrlfe
+  git clone https://github.com/mwanakijiji/rrlfe.git
+
   # install Robospect
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
   git checkout tags/v0.76
   python ./setup.py install
   cd ..
-  # clone rrlfe
-  git clone https://github.com/mwanakijiji/rrlfe.git
-  cd rrlfe
-  # install pip
-  apt-get update
-  apt-get install -y python3-pip
-  pip install --upgrade pip
-  # install dependencies
-  pip install -r requirements.txt
+
 
 %runscript
   echo "Runscript; Python version is"
