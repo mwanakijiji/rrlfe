@@ -21,7 +21,7 @@ def main():
 
     # make all the directories
     make_dirs(objective = "find_calib") ## find_calib as opposed to apply_calib
-    '''
+
     # compile the C spectral normalization script
     compile_normalization.compile_bkgrnd()
 
@@ -65,7 +65,7 @@ def main():
     posterior_write = run_emcee.write_soln_to_fits(model = model_choice)
 
     posterior_sample = run_emcee.corner_plot(model = model_choice)
-
+    '''
 
 # entry point
 if __name__ == '__main__':
