@@ -28,9 +28,9 @@ From: python:3.8
   # clone rrlfe
   git clone https://github.com/mwanakijiji/rrlfe.git
 
-  # install Robospect
+  # install Robospect, suppress comments about being in detached HEAD state
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
-  git -c advice.detachedHead=false checkout tags/v0.76
-  sudo python ./setup.py install
-  cd ..
+  # git -c advice.detachedHead=false checkout tags/v0.76
+  # python ./setup.py install
+  # cd ..
