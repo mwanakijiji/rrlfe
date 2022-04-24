@@ -16,12 +16,12 @@ From: python:3.8
   apt-get install -y python3-pip
   pip install --upgrade pip
 
-  # install dependencies
+  # install dependencies into default python interpreter
   wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/requirements_bare_versions.txt
-  pip install -r requirements_bare_versions.txt
-
+  python -m pip install -r requirements_bare_versions.txt
 
 %runscript
+
   echo "Runscript; Python version is"
   python --version
 
@@ -31,6 +31,11 @@ From: python:3.8
   # install Robospect, suppress comments about being in detached HEAD state
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
-  # git -c advice.detachedHead=false checkout tags/v0.76
-  # python ./setup.py install
-  # cd ..
+  git -c advice.detachedHead=false checkout tags/v0.76
+  python ./setup.py install --user
+  cd ../rrlfe
+
+  # copy line list file
+  cp ll ../robospect.py/tmp/
+
+  singularity exec --bind $HOME/sandbox/rrlfe:/Users/bandari/Documents/git.repos/rrlfe test.sif python rrlfe/high_level_reduction_script.py
