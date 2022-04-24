@@ -20,8 +20,7 @@ From: python:3.8
   wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/requirements_bare_versions.txt
   pip install -r requirements_bare_versions.txt
 
-  # clone rrlfe
-  git clone https://github.com/mwanakijiji/rrlfe.git
+
 
   # install Robospect
   git clone https://github.com/czwa/robospect.py.git
@@ -34,3 +33,10 @@ From: python:3.8
 %runscript
   echo "Runscript; Python version is"
   python --version
+
+  # clone rrlfe
+  git clone https://github.com/mwanakijiji/rrlfe.git
+  echo "ls"
+  ls
+  echo "pwd"
+  pwd
