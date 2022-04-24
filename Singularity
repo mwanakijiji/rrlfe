@@ -31,6 +31,6 @@ From: python:3.8
   # install Robospect
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
-  git checkout tags/v0.76
-  python ./setup.py install
+  git -c advice.detachedHead=false checkout tags/v0.76
+  sudo python ./setup.py install
   cd ..
