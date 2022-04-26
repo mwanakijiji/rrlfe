@@ -35,10 +35,10 @@ From: python:3.8
   mkdir tmp/
   python ./setup.py install --user
   cd ../rrlfe
-  python -m pip install -r requirements_bare_versions.txt
+  python -m pip install --user -r requirements_bare_versions.txt
 
   # do a pip freeze
-  pip freeze > freeze_bad.txt
+  pip freeze --user > freeze_bad.txt
 
   # copy line list file
   cp ll ../robospect.py/tmp/
