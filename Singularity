@@ -16,14 +16,16 @@ From: python:3.8
   apt-get install -y python3-pip
   pip install --upgrade pip
 
-  # install dependencies into default python interpreter
-  wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/requirements_bare_versions.txt
+
 
 
 %runscript
 
   echo "Runscript; Python version is"
   python --version
+
+  # install dependencies into default python interpreter
+  wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/requirements_bare_versions.txt
 
   # clone rrlfe
   git clone https://github.com/mwanakijiji/rrlfe.git
