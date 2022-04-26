@@ -27,6 +27,7 @@ From: python:3.8
 
   # clone rrlfe
   git clone https://github.com/mwanakijiji/rrlfe.git
+  python -m pip install --user -r requirements_bare_versions.txt
 
   # install Robospect, suppress comments about being in detached HEAD state
   git clone https://github.com/czwa/robospect.py.git
@@ -35,7 +36,6 @@ From: python:3.8
   mkdir tmp/
   python ./setup.py install --user
   cd ../rrlfe
-  python -m pip install --user -r requirements_bare_versions.txt
 
   # do a pip freeze
   pip freeze --user > freeze_bad.txt
