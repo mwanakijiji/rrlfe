@@ -37,7 +37,10 @@ From: python:3.8
   cd ../rrlfe
   python -m pip install -r requirements_bare_versions.txt
 
+  # do a pip freeze
+  pip freeze > freeze_bad.txt
+
   # copy line list file
   cp ll ../robospect.py/tmp/
 
-  exec --bind $HOME/sandbox/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$HOME/sandbox/robospect.py:/Users/bandari/Documents/git.repos/robospect.py test.sif python rrlfe/high_level_reduction_script.py
+  # exec --bind $HOME/sandbox/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$HOME/sandbox/robospect.py:/Users/bandari/Documents/git.repos/robospect.py test.sif python rrlfe/high_level_reduction_script.py
