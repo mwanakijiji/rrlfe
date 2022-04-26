@@ -18,7 +18,7 @@ From: python:3.8
 
   # install dependencies into default python interpreter
   wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/requirements_bare_versions.txt
-  python -m pip install -r requirements_bare_versions.txt
+
 
 %runscript
 
@@ -32,10 +32,12 @@ From: python:3.8
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
   git -c advice.detachedHead=false checkout tags/v0.76
+  mkdir tmp/
   python ./setup.py install --user
   cd ../rrlfe
+  python -m pip install -r requirements_bare_versions.txt
 
   # copy line list file
   cp ll ../robospect.py/tmp/
 
-  singularity exec --bind $HOME/sandbox/rrlfe:/Users/bandari/Documents/git.repos/rrlfe test.sif python rrlfe/high_level_reduction_script.py
+  exec --bind $HOME/sandbox/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$HOME/sandbox/robospect.py:/Users/bandari/Documents/git.repos/robospect.py test.sif python rrlfe/high_level_reduction_script.py
