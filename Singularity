@@ -10,13 +10,10 @@ From: python:3.8
   export SINGULARITY_DISABLE_CACHE=True
 
 %post
-
   # install pip
   apt-get update
   apt-get install -y python3-pip
   pip install --upgrade pip
-
-
 
 
 %runscript
@@ -40,9 +37,10 @@ From: python:3.8
   cd ../rrlfe
 
   # do a pip freeze
-  pip freeze --user > freeze_bad.txt
+  #pip freeze --user > freeze_bad.txt
 
   # copy line list file
   cp ll ../robospect.py/tmp/
 
-  # exec --bind $HOME/sandbox/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$HOME/sandbox/robospect.py:/Users/bandari/Documents/git.repos/robospect.py test.sif python rrlfe/high_level_reduction_script.py
+  # Run this line in command line (replacing Singularity file name as needed)
+  # singularity exec --bind $HOME/sandbox/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$HOME/sandbox/robospect.py:/Users/bandari/Documents/git.repos/robospect.py test.sif python rrlfe/high_level_reduction_script.py
