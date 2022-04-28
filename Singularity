@@ -21,6 +21,9 @@ From: python:3.8
   echo "Runscript; Python version is"
   python --version
 
+  # cd into a defined dir
+  cd Private/rrlfe_work
+
   # install dependencies into default python interpreter
   wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/requirements_bare_versions.txt
 
@@ -43,4 +46,4 @@ From: python:3.8
   cp ll ../robospect.py/tmp/
 
   # Run this line in command line (replacing Singularity file name as needed)
-  # singularity exec --bind $HOME/sandbox/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$HOME/sandbox/robospect.py:/Users/bandari/Documents/git.repos/robospect.py test.sif python rrlfe/high_level_reduction_script.py
+  # singularity exec --bind ${SINGULARITY_ROOTFS}/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,${SINGULARITY_ROOTFS}/sandbox/robospect.py:/Users/bandari/Documents/git.repos/robospect.py test.sif python rrlfe/high_level_reduction_script.py
