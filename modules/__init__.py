@@ -42,6 +42,9 @@ compiled_bkgrnd_file_path_abs = config_red["data_dirs"]["DIR_BIN"] + "/bkgrnd"
 #ncpu = multiprocessing.cpu_count()
 ncpu = 2
 
+# prompt user if files will be overwritten? (turn to false if running on HPC)
+prompt_user = False
+
 # set some constants
 
 # vestigial constant in MCMC (this is NOT an astrophysical Teff)
