@@ -420,7 +420,8 @@ def create_spec_realizations_main(noise_level,
             logging.info("Directory to write realizations not empty!!")
             logging.info(outdir)
             logging.info("------------------------------")
-            input("Do what you want with those files, then hit [Enter]")
+            if prompt_user:
+                input("Do what you want with those files, then hit [Enter]")
 
         with os.scandir(bkgrnd_output_dir) as list_of_entries2:
             counter2 = 0
@@ -432,7 +433,8 @@ def create_spec_realizations_main(noise_level,
             logging.info("Directory to write raw normalization output not empty!!")
             logging.info(bkgrnd_output_dir)
             logging.info("------------------------------")
-            input("Do what you want with those files, then hit [Enter]")
+            if prompt_user:
+                input("Do what you want with those files, then hit [Enter]")
 
         with os.scandir(final_dir) as list_of_entries3:
             counter3 = 0
@@ -444,7 +446,8 @@ def create_spec_realizations_main(noise_level,
             logging.info("Directory to write final normalization output not empty!!")
             logging.info(final_dir)
             logging.info("------------------------------")
-            input("Do what you want with those files, then hit [Enter]")
+            if prompt_user:
+                input("Do what you want with those files, then hit [Enter]")
 
     # create noise-churned realizations for each spectrum
     name_list = list() # initialize

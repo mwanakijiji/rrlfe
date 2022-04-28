@@ -117,7 +117,8 @@ class findFeH():
             logging.info("Directory to pickle Fe/H retrievals to is not empty!!")
             logging.info(self.write_pickle_dir)
             logging.info("------------------------------")
-            input("Do what you want with those files, then hit [Enter]")
+            if prompt_user:
+                input("Do what you want with those files, then hit [Enter]")
 
         # add columns to data table to include retrieved Fe/H values
         self.ew_data["feh_retrieved"] = np.nan

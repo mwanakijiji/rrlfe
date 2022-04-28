@@ -125,7 +125,8 @@ def main(
         logging.info("Directory to receive Robospect output not empty!!")
         logging.info(write_dir)
         logging.info("------------------------------")
-        input("Do what you want with those files, then hit [Enter]")
+        if prompt_user:
+            input("Do what you want with those files, then hit [Enter]")
 
     # run Robospect on normalized spectra in parallel
     # (N.b. Setting the config files allows Robospect to dump files in the right places)
