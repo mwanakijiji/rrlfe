@@ -21,7 +21,7 @@ def main():
 
     # make all the directories
     make_dirs(objective = "find_calib") ## find_calib as opposed to apply_calib
-
+    '''
     # compile the C spectral normalization script
     compile_normalization.compile_bkgrnd()
 
@@ -33,7 +33,7 @@ def main():
 
     # run_robospect on normalized synthetic spectra
     run_robo.main()
-
+    '''
     # scrape_ew_from_robo and calculate EWs + err_EW
     scraper_instance = scrape_ew_and_errew.Scraper()
     scraper_instance() # call instance
