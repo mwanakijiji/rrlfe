@@ -38,7 +38,9 @@ config_apply.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_app
 cc_bkgrnd_file_path_abs = config_red["data_dirs"]["DIR_SRC"] + "/bkgrnd.cc"
 compiled_bkgrnd_file_path_abs = config_red["data_dirs"]["DIR_BIN"] + "/bkgrnd"
 
-ncpu = multiprocessing.cpu_count()
+# number of cores to use
+#ncpu = multiprocessing.cpu_count()
+ncpu = 2
 
 # set some constants
 
