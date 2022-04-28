@@ -267,12 +267,11 @@ def quality_check(
     # set cutoff at 18 A, based on inspection of >200 Robospect plots of fits to
     # synthetic spectra; all those with CaIIK EW > 18 are clearly not fit right,
     # and all those with EW < 18 look acceptable -E.S.
-    '''
     where_bad_CaIIK = np.where(np.logical_and(all_data["line_name"] == "CaIIK", all_data["EQW"] > 18))
     bad_CaIIK_spectra = all_data["realization_spec_file_name"][np.squeeze(where_bad_CaIIK)]
     bad_CaIIK_spectra_uniq = bad_CaIIK_spectra.drop_duplicates()
     all_data.loc[all_data["realization_spec_file_name"].isin(bad_CaIIK_spectra_uniq),"quality"] = "B"
-    '''
+
     # Criterion 4. Remove bad phases (for empirical data)
     '''
     min_good, max_good = phase_regions()
