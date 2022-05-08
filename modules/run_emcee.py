@@ -460,7 +460,7 @@ class RunEmcee():
         if model == 'abcd':
             # coeffs_pass = [a,b,c,d]
 
-            nwalkers = 8 # number of MCMC chains (at least 2x number of parameters)
+            nwalkers = int(8) # number of MCMC chains (at least 2x number of parameters)
 
             param_array_0 = [float(a_layden),
                             float(b_layden),
@@ -470,7 +470,7 @@ class RunEmcee():
         elif model == 'abcdfghk':
             # coeffs_pass = [a,b,c,d,f,g,h,k]
 
-            nwalkers = 16 # number of MCMC chains (at least 2x number of parameters)
+            nwalkers = int(16) # number of MCMC chains (at least 2x number of parameters)
 
             param_array_0 = [float(a_layden),
                             float(b_layden),
@@ -493,13 +493,15 @@ class RunEmcee():
         logging.info("--------------------------")
         logging.info("Setting up MCMC ...")
 
-        ndim = len(param_array_0) # dimensions of space to explore
+        ndim = int(len(param_array_0)) # dimensions of space to explore
 
         # convert the one starting point into a nwalkers*ndim array with gaussian-offset starting points
         p0 = [np.add(param_array_0,
                      np.multiply(param_array_0, 1e-4*np.random.randn(ndim))) for i in range(nwalkers)]
 
         # set up sampler
+        print("nwalkers", nwalkers, type(nwalkers))
+        print("ndim", ndim, type(ndim))
         sampler = emcee.EnsembleSampler(nwalkers,
                                         ndim,
                                         lnprob,
