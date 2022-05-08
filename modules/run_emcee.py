@@ -325,16 +325,16 @@ def write_soln_to_fits(model,
     # initialize FITS header and append keys
     hdr = fits.Header()
 
-    # retrieve git hash
-    repo = git.Repo(search_parent_directories=True)
-    sha = repo.head.object.hexsha
-    hdr["HASH"] = (sha, "Hash of rrlfe pipeline")
+    # retrieve git hash (throws error on cluster)
+    #repo = git.Repo(search_parent_directories=True)
+    #sha = repo.head.object.hexsha
+    #hdr["HASH"] = (sha, "Hash of rrlfe pipeline")
 
     # get Teff vs Balmer line info
     # set compound datatype
     dtype=np.rec.fromrecords([['string_key', 189.6752158]]).dtype
     # load data, skipping header and hash corresponding to that file
-    teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=2, usecols=(0,1), delimiter=':', dtype=dtype)
+    teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=1, usecols=(0,1), delimiter=':', dtype=dtype)
 
     dict_teff_data = {}
     for key, val in teff_data:

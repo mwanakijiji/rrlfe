@@ -107,7 +107,7 @@ def temp_vs_balmer(df_poststack_file_name_read = config_red["data_dirs"]["DIR_EW
     df_poststack.to_csv(df_poststack_file_name_write,index=False)
     logging.info("Wrote out data file including linear-best-fit Teffs to " + df_poststack_file_name_write)
 
-    # retrieve hash (throws error in cloud)
+    # retrieve hash (throws error on cluster)
     #repo = git.Repo(search_parent_directories=True)
     #sha = repo.head.object.hexsha
 
