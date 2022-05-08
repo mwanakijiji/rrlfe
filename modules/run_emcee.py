@@ -489,6 +489,10 @@ class RunEmcee():
         logging.info(lstsq_soln.x)
 
         ################# MCMC setup #################
+        print("nwalkers", nwalkers, type(nwalkers))
+        print("ndim", ndim, type(ndim))
+        print(param_array_0)
+        print(type(param_array_0[0]))
 
         logging.info("--------------------------")
         logging.info("Setting up MCMC ...")
@@ -500,8 +504,6 @@ class RunEmcee():
                      np.multiply(param_array_0, 1e-4*np.random.randn(ndim))) for i in range(nwalkers)]
 
         # set up sampler
-        print("nwalkers", nwalkers, type(nwalkers))
-        print("ndim", ndim, type(ndim))
         sampler = emcee.EnsembleSampler(nwalkers,
                                         ndim,
                                         lnprob,
