@@ -29,15 +29,21 @@ From: python:3.8
 
   # clone rrlfe
   git clone https://github.com/mwanakijiji/rrlfe.git
+
+  # install stuff
   python -m pip install --user -r requirements_bare_versions.txt
 
   # install Robospect, suppress comments about being in detached HEAD state
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
   git -c advice.detachedHead=false checkout tags/v0.77
+  # record repo hash
+  git log -1 --pretty
   mkdir tmp/
   python ./setup.py install --user
   cd ../rrlfe
+  # record repo hash
+  git log -1 --pretty
 
   # do a pip freeze
   #pip freeze --user > freeze_bad.txt
