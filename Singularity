@@ -34,7 +34,7 @@ From: python:3.8
   # install Robospect, suppress comments about being in detached HEAD state
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
-  git -c advice.detachedHead=false checkout tags/v0.76
+  git -c advice.detachedHead=false checkout tags/v0.77
   mkdir tmp/
   python ./setup.py install --user
   cd ../rrlfe
@@ -45,5 +45,8 @@ From: python:3.8
   # copy line list file
   cp ll ../robospect.py/tmp/
 
-  # Run this line in command line (replacing Singularity file name as needed)
-  # singularity exec --bind ${SINGULARITY_ROOTFS}/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,${SINGULARITY_ROOTFS}/sandbox/robospect.py:/Users/bandari/Documents/git.repos/robospect.py test.sif python rrlfe/high_level_reduction_script.py
+  # Run these lines in command line (replacing Singularity file name as needed)
+  # export CODE_HOME=/afs/crc.nd.edu/user/e/espaldin/Private/rrlfe_work
+  # [kludge for testing:] singularity exec roar.sif rm -v $CODE_HOME/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
+  #
+  # singularity exec --bind $CODE_HOME/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$CODE_HOME/robospect.py:/Users/bandari/Documents/git.repos/robospect.py roar.sif python $CODE_HOME/rrlfe/high_level_reduction_script.py
