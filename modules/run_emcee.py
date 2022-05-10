@@ -514,7 +514,7 @@ class RunEmcee():
                                         args=[Teff, ave, feh, caii, eave, efeh, ecaii])
 
         # burn-in
-        burn_in = 3e4
+        burn_in = int(3e4)
         print("just before run_mcmc")
         print("nwalkers", nwalkers, type(nwalkers))
         print("ndim", ndim, type(ndim))
