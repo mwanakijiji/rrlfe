@@ -490,7 +490,7 @@ class RunEmcee():
 
         ################# MCMC setup #################
         print("nwalkers", nwalkers, type(nwalkers))
-        print("ndim", ndim, type(ndim))
+
         print(param_array_0)
         print(type(param_array_0[0]))
 
@@ -498,6 +498,7 @@ class RunEmcee():
         logging.info("Setting up MCMC ...")
 
         ndim = int(len(param_array_0)) # dimensions of space to explore
+        print("ndim", ndim, type(ndim))
 
         # convert the one starting point into a nwalkers*ndim array with gaussian-offset starting points
         p0 = [np.add(param_array_0,
