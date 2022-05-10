@@ -539,15 +539,17 @@ class RunEmcee():
         progBarWidth = 30
         start_time = time.time()
         for i, result in enumerate(sampler.sample(posAfterBurn,
-                                                  iterations=post_burn_in_links,
-                                                  storechain=True)):
+                                                  iterations=post_burn_in_links)):
             position = result[0]
             f = open(self.mcmc_text_output, "a") # append
             for k in range(position.shape[0]): # loop over number of chains
                 position_string = str(position[k]).strip("[]") # convert to string
                 f.write("{0:4d} {1:s}\n".format(k, " ".join(str(p) for p in position[k])))
+            ## ## show progress bar; don't show if on cluster (make option with default False later)
+            '''
             n = int((progBarWidth+1) * float(i) / post_burn_in_links) # update progress bar
             sys.stdout.write("\r[{0}{1}]".format("#" * n, " " * (progBarWidth - n)))
+            '''
             f.close()
         elapsed_time = time.time() - start_time
         sys.stdout.write(" Done!\n")
