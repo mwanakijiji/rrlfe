@@ -538,6 +538,7 @@ class RunEmcee():
         f.close()
         progBarWidth = 30
         start_time = time.time()
+        post_burn_in_links = int(post_burn_in_links)
         for i, result in enumerate(sampler.sample(posAfterBurn,
                                                   iterations=post_burn_in_links)):
             position = result[0]
