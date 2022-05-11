@@ -117,9 +117,9 @@ def main(
     # Check to see if it is empty (if not, there is data from a previous
     # run that will inadvertently be used later)
     preexisting_file_list = glob.glob(write_dir + "/*", recursive=False)
-    print(preexisting_file_list)
+    #print(preexisting_file_list)
 
-    print(len(preexisting_file_list))
+    #print(len(preexisting_file_list))
     if (len(preexisting_file_list) > 0):
         logging.info("------------------------------")
         logging.info("Directory to receive Robospect output not empty!!")

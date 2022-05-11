@@ -500,6 +500,14 @@ class RunEmcee():
         ndim = int(len(param_array_0)) # dimensions of space to explore
         print("ndim", ndim, type(ndim))
 
+        # Set up the backend
+        # Don't forget to clear it in case the file already exists
+        '''
+        filename = "tutorial.h5"
+        backend = emcee.backends.HDFBackend(filename)
+        backend.reset(nwalkers, ndim)
+        '''
+
         # convert the one starting point into a nwalkers*ndim array with gaussian-offset starting points
         p0 = [np.add(param_array_0,
                      np.multiply(param_array_0, 1e-4*np.random.randn(ndim))) for i in range(nwalkers)]
@@ -520,38 +528,33 @@ class RunEmcee():
         print("ndim", ndim, type(ndim))
         print("burn_in", burn_in, type(burn_in))
         print("p0", p0, type(p0), type(p0[0]))
-        posAfterBurn, prob, state = sampler.run_mcmc(p0, burn_in)
+        state = sampler.run_mcmc(p0, burn_in)
+        sampler.reset()
 
-        # post-burn-in
-        start_time = time.time()
-
-        ################# SAVE PROGRESSIVELY TO TEXT FILE #################
+        ################# SAVE PROGRESSIVELY TO HDF5 FILE #################
         ## ## refer to these code snippets from Foreman-Mackey's website
         # IMPORTANT: sampler will only have memory of the last iteration if
         # storechain flag is set to False
 
         logging.info("--------------------------")
-        logging.info("Saving MCMC chains to text file ...")
+        logging.info("Saving MCMC chains to file ...")
 
         # post-burn-in calculate and save iteratively
-        f = open(self.mcmc_text_output, "w")
-        f.close()
-        progBarWidth = 30
-        start_time = time.time()
-        post_burn_in_links = int(post_burn_in_links)
-        for i, result in enumerate(sampler.sample(posAfterBurn,
-                                                  iterations=post_burn_in_links)):
-            position = result[0]
-            f = open(self.mcmc_text_output, "a") # append
-            for k in range(position.shape[0]): # loop over number of chains
-                position_string = str(position[k]).strip("[]") # convert to string
-                f.write("{0:4d} {1:s}\n".format(k, " ".join(str(p) for p in position[k])))
-            ## ## show progress bar; don't show if on cluster (make option with default False later)
-            '''
-            n = int((progBarWidth+1) * float(i) / post_burn_in_links) # update progress bar
-            sys.stdout.write("\r[{0}{1}]".format("#" * n, " " * (progBarWidth - n)))
-            '''
-            f.close()
+        # self.mcmc_text_output,
+        sampler.run_mcmc(state, post_burn_in_links)
+
+        samples = sampler.get_chain(flat=True)
+
+        # test plot
+        plt.hist(samples[:, 0], 100, color="k", histtype="step")
+        plt.xlabel(r"$\theta_1$")
+        plt.ylabel(r"$p(\theta_1)$")
+        plt.gca().set_yticks([])
+        plt.savefig("junk.png")
+
+        # test csv file
+        np.savetxt(self.mcmc_text_output,samples,delimiter=",")
+
         elapsed_time = time.time() - start_time
         sys.stdout.write(" Done!\n")
         sys.stdout.write("{0:s} {1:10d} {2:s}\n".format("Elapsed time: ",

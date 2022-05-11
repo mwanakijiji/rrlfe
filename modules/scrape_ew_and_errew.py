@@ -135,11 +135,11 @@ class Scraper():
             logging.info("Parsing " + self.file_list[t])
             try:
                 # this will fail if there are infs in the EWs
-                df["gaussianAmp"] = df["gaussianAmp"].str.replace("]","")
+                df["gaussianAmp"] = df["gaussianAmp"].str.replace("]","", regex=True)
                 df["gaussianAmp"] = df["gaussianAmp"].astype(np.float)
-                df["uncertaintyAmp"] = df["uncertaintyAmp"].str.replace("]","")
+                df["uncertaintyAmp"] = df["uncertaintyAmp"].str.replace("]","", regex=True)
                 df["uncertaintyAmp"] = df["uncertaintyAmp"].astype(np.float)
-                df["priorAmp"] = df["priorAmp"].str.replace("]","")
+                df["priorAmp"] = df["priorAmp"].str.replace("]","", regex=True)
                 df["priorAmp"] = df["priorAmp"].astype(np.float)
             except:
                 # skip this file
@@ -233,6 +233,7 @@ def quality_check(
     '''
 
     # read in data
+    logging.info("Reading in for quality check: " + str(read_in_filename))
     all_data = pd.read_csv(read_in_filename)
 
     # make new column for 'good' (G) or 'bad' (B) based on the below criteria
@@ -251,7 +252,12 @@ def quality_check(
     bad_robo_spectra = all_data["realization_spec_file_name"][np.squeeze(where_red_flag)]
 
     # remove duplicate names
-    bad_robo_spectra_uniq = bad_robo_spectra.drop_duplicates()
+    print(bad_robo_spectra)
+    try:
+        # case of >1 bad spectrum
+        bad_robo_spectra_uniq = bad_robo_spectra.drop_duplicates()
+    except:
+        bad_robo_spectra_uniq = bad_robo_spectra_uniq
     # flag as bad the spectra with those names
     all_data.loc[all_data["realization_spec_file_name"].isin(bad_robo_spectra_uniq),"quality"] = "B"
 
