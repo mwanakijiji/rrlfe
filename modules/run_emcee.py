@@ -553,15 +553,9 @@ class RunEmcee():
         plt.ylabel(r"$p(\theta_1)$")
         plt.gca().set_yticks([])
         plt.savefig("junk.png")
+        plt.clf()
 
         # test csv file
+        logging.info("--------------------------")
         np.savetxt(self.mcmc_text_output,samples,delimiter=",")
         logging.info("MCMC chains written out as " + str(self.mcmc_text_output))
-
-        elapsed_time = time.time() - start_time
-        sys.stdout.write(" Done!\n")
-        sys.stdout.write("{0:s} {1:10d} {2:s}\n".format("Elapsed time: ",
-                                                        int(elapsed_time), "sec"))
-        logging.info("--------------------------")
-        sys.stdout.write("MCMC chain data written out to\n")
-        logging.info(self.mcmc_text_output)

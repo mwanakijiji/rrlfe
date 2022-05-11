@@ -25,9 +25,8 @@ rm -fr $CODE_HOME/requirements_bare_versions.txt
 
 singularity run $SING_PATH/$SING_FILE
 echo "Did run; now do exec"
-# remove some input files because we just want to test
-singularity exec $SING_PATH/$SING_FILE rm -v $CODE_HOME/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
-singularity exec $SING_PATH/$SING_FILE rm -v $CODE_HOME/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/7[0-2]*
+# remove some input files if just want to test
+#singularity exec $SING_PATH/$SING_FILE rm -v $CODE_HOME/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
 singularity exec --bind $CODE_HOME/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$CODE_HOME/robospect.py:/Users/bandari/Documents/git.repos/robospect.py $SING_PATH/$SING_FILE python $CODE_HOME/rrlfe/high_level_reduction_script.py
 
 ### timestamp end
