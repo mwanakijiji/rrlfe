@@ -11,6 +11,7 @@ import pandas as pd
 import emcee
 import corner
 import logging
+import matplotlib.pyplot as plt
 from scipy.optimize import least_squares
 from astropy.io import fits
 from . import *
@@ -555,6 +556,7 @@ class RunEmcee():
 
         # test csv file
         np.savetxt(self.mcmc_text_output,samples,delimiter=",")
+        logging.info("MCMC chains written out as " + str(self.mcmc_text_output))
 
         elapsed_time = time.time() - start_time
         sys.stdout.write(" Done!\n")
