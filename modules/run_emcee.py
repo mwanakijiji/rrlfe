@@ -541,6 +541,7 @@ class RunEmcee():
 
         # post-burn-in calculate and save iteratively
         # self.mcmc_text_output,
+        post_burn_in_links = int(post_burn_in_links)
         sampler.run_mcmc(state, post_burn_in_links)
 
         samples = sampler.get_chain(flat=True)
