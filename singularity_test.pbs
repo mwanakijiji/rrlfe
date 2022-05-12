@@ -2,9 +2,9 @@
 
 #$ -M espaldin@nd.edu   # Email address for job notification
 #$ -m abe            # Send mail when job begins, ends and aborts
-#$ -pe smp 2     # Specify parallel environment and legal core size
-#$ -q long           # Specify queue
-#$ -N rrlfe_run_01       # Specify job name
+#$ -pe smp 8     # Specify parallel environment and legal core size
+#$ -q debug           # Specify queue
+#$ -N rrlfe_run_03       # Specify job name
 
 ### start timestamp
 echo "Start time"
