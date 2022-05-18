@@ -60,7 +60,7 @@ def main():
 
     emcee_instance = run_emcee.RunEmcee()
     #emcee_instance(model = 'abcd') # call instance
-    emcee_instance(model = model_choice, post_burn_in_links = 3e5)
+    emcee_instance(model = model_choice, post_burn_in_links = 3e2)
 
     posterior_write = run_emcee.write_soln_to_fits(model = model_choice)
 
