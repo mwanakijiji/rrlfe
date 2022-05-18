@@ -14,6 +14,7 @@ date
 export SING_PATH=/scratch365/espaldin/
 export SING_FILE=test.sif
 export CODE_HOME=/afs/crc.nd.edu/user/e/espaldin/Private/rrlfe_work
+export OUT_DIR=/scratch365/espaldin/
 
 # Required modules
 module load python/3
@@ -23,11 +24,22 @@ rm -fr $CODE_HOME/rrlfe
 rm -fr $CODE_HOME/robospect.py
 rm -fr $CODE_HOME/requirements_bare_versions.txt
 
+# make directory to write to (job label prevents confusion between jobs)
+export JOB_LABEL=$RANDOM
+echo "Starting job with label " $JOB_LABEL
+mkdir $OUT_DIR/$JOB_LABEL
+
 singularity run $SING_PATH/$SING_FILE
 echo "Did run; now do exec"
 # remove some input files if just want to test
 #singularity exec $SING_PATH/$SING_FILE rm -v $CODE_HOME/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
-singularity exec --bind $CODE_HOME/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$CODE_HOME/robospect.py:/Users/bandari/Documents/git.repos/robospect.py $SING_PATH/$SING_FILE python $CODE_HOME/rrlfe/high_level_reduction_script.py
+singularity exec --bind $CODE_HOME/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,\
+                        $CODE_HOME/robospect.py:/Users/bandari/Documents/git.repos/robospect.py \
+                        $OUT_DIR/$JOB_LABEL:/Users/bandari/Downloads/rrlfe_io \
+                        $SING_PATH/$SING_FILE python $CODE_HOME/rrlfe/high_level_reduction_script.py
+
+# tar output files
+tar --remove-files --verbose --create -f job_results_$JOB_LABEL.tar $OUT_DIR/$JOB_LABEL
 
 ### timestamp end
 echo "End time"
