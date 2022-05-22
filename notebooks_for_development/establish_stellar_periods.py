@@ -9,7 +9,7 @@
 # Created 2022 May 22 by E.S.
 
 
-# In[13]:
+# In[1]:
 
 
 import pandas as pd
@@ -17,19 +17,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# In[14]:
+# In[2]:
 
 
-file_name = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/periods_all_stars.csv"
+file_name = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/input_periods_all_stars.csv"
 
 
-# In[15]:
+# In[3]:
 
 
 df = pd.read_csv(file_name)
 
 
-# In[16]:
+# In[4]:
 
 
 # initialize
@@ -38,7 +38,7 @@ df["err_diff"] = np.nan
 df["err_tot"] = np.nan
 
 
-# In[18]:
+# In[5]:
 
 
 # find final periods: simple average across values
@@ -48,7 +48,7 @@ cols = ['T_KELT', 'T_TESS', 'T_other']
 df["T_final"] = df[cols].mean(axis=1)
 
 
-# In[19]:
+# In[6]:
 
 
 '''
@@ -79,13 +79,13 @@ df["T_final"] = df[cols].mean(axis=1)
 '''
 
 
-# In[20]:
+# In[7]:
 
 
 # 1. case where both KELT-based and TESS-based periods are available:
 for i in range(0,len(df)):
     #print(i)
-    # check if there are periods from both KELT and TESS
+    # check if there are periods from both KELT and TESS (but TESS has no error)
     T_TESS = df["T_TESS"].iloc[i]
     T_KELT = df["T_KELT"].iloc[i]
     err_T_TESS = df["err_T_TESS"].iloc[i]
@@ -99,9 +99,16 @@ for i in range(0,len(df)):
         # propagating error for an average gives 0.5*sqrt(err_1**2 + err_2**2), but here 
         # we don't have the error from KELT; so coefficient of 1 (instead of 0.5) here may be overestimate
         df["err_tot"].loc[i] = np.sqrt(np.add(np.power(err_T_TESS,2.),np.power(err_diff,2.)))
+        
+        # for checking
+        print("------")
+        print("star", df["star"].iloc[i])
+        print("err_diff", err_diff)
+        print("err_T_TESS", err_T_TESS)
+        print("err_tot", df["err_tot"].loc[i])
 
 
-# In[22]:
+# In[8]:
 
 
 for i in range(0,len(df)):
@@ -115,10 +122,25 @@ for i in range(0,len(df)):
         err_diff_avg = np.nanmean(df["err_diff"])
         df["err_tot"].loc[i] = np.sqrt(np.add(np.power(err_T_TESS,2.),np.power(err_diff_avg,2.)))
         
+        # for checking
+        print("------")
+        print("star", df["star"].iloc[i])
+        print("err_diff_avg", err_diff_avg)
+        print("err_T_TESS", err_T_TESS)
+        print("err_tot", df["err_tot"].loc[i])
+        
     # 3. case where only KELT-based period available:
     elif np.isnan(T_TESS) and ~np.isnan(T_KELT):
         err_TESS_avg = np.nanmean(df["err_T_TESS"])
         df["err_tot"].loc[i] = np.sqrt(np.add(np.power(err_TESS_avg,2.),np.power(err_diff_avg,2.)))
+        
+        # for checking
+        print("------")
+        print("star", df["star"].iloc[i])
+        print("err_diff_avg", err_diff_avg)
+        print("err_TESS_avg", err_TESS_avg)
+        print("err_tot", df["err_tot"].loc[i])
+
 
 # average total error so far
 avg_err_tot_empirical = np.nanmean(df["err_tot"])
@@ -131,18 +153,13 @@ for i in range(0,len(df)):
         df["err_tot"].loc[i] = avg_err_tot_empirical
 
 
-# In[9]:
+# In[19]:
 
 
 output_file_name = "junk.csv"
-df.to_csv(output_file_name)
+df.reset_index(drop=True, inplace=True)
+df.to_csv(output_file_name, index=False)
 print("Wrote ",output_file_name)
-
-
-# In[23]:
-
-
-df
 
 
 # In[ ]:
