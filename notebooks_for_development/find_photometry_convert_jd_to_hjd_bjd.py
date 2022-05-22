@@ -42,6 +42,8 @@ photometry_times = Time(photometry_jd['jd'], format='jd')
 
 # fcn to convert MJD to BJD times
 
+'''
+DO NOT USE THIS! 0.5 DAY BUG HERE; USE JD_TO_BJD
 def convert_mjd_to_bjd(mjdTimes,observatoryLoc,skyCoordObj):
 
     timesObj = time.Time(mjdTimes, format='mjd', scale='utc', location=observatoryLoc)
@@ -49,12 +51,14 @@ def convert_mjd_to_bjd(mjdTimes,observatoryLoc,skyCoordObj):
 
     time_barycentre = timesObj.tdb + ltt_bary
 
-    return time_barycentre.mjd
+    return time_barycentre
+'''
+
 
 # fcn to convert JD to BJD times
 
-'''
-THIS WAS BEING TESTED...
+
+# THIS WAS BEING TESTED AND GAVE SAME ANSWERS AS convert_mjd_to_bjd()
 def convert_jd_to_bjd(jdTimes,observatoryLoc,skyCoordObj):
 
     timesObj = time.Time(jdTimes, format='jd', scale='utc', location=observatoryLoc)
@@ -62,11 +66,13 @@ def convert_jd_to_bjd(jdTimes,observatoryLoc,skyCoordObj):
 
     time_barycentre = timesObj.tdb + ltt_bary
 
-    return time_barycentre.mjd
-'''
+    return time_barycentre
+
 
 # fcn to convert MJD to HJD times
 
+'''
+DO NOT USE THIS! 0.5 DAY BUG HERE; USE JD_TO_BJD
 def convert_mjd_to_hjd(mjdTimes,observatoryLoc,skyCoordObj):
 
     timesObj = time.Time(mjdTimes, format='mjd', scale='utc', location=observatoryLoc)
@@ -75,6 +81,7 @@ def convert_mjd_to_hjd(mjdTimes,observatoryLoc,skyCoordObj):
     times_heliocentre = timesObj.utc + ltt_helio
 
     return times_heliocentre.mjd
+'''
 
 # read in star name, return file names and BJDs of epochs-of-max
 
@@ -93,8 +100,8 @@ def return_star_epochs_photometry(starNames,jdTimes,observatoryLocs):
     thisStar = []
     observatoryThisStar = []
     jdThisStar = []
-    mjdThisStar = []
-    hjdThisStar = []
+    #mjdThisStar = []
+    #hjdThisStar = []
     bjdThisStar = []
 
     # go through each row in file
@@ -114,17 +121,19 @@ def return_star_epochs_photometry(starNames,jdTimes,observatoryLocs):
         thisStar.append(starNames[t])
         observatoryThisStar.append(observatoryLocs[t])
         jdThisStar.append(jdTimes[t].jd)
-        mjdThisStar.append(mjdTimes[t])
-        hjdThisStar.append(convert_mjd_to_hjd(mjdTimes[t],observ_thisStar,coord_thisStar))
-        bjdThisStar.append(convert_mjd_to_bjd(mjdTimes[t],observ_thisStar,coord_thisStar))
+        #mjdThisStar.append(mjdTimes[t])
+        #hjdThisStar.append(convert_mjd_to_hjd(mjdTimes[t],observ_thisStar,coord_thisStar))
+        #
+        #bjdThisStar.append(convert_jd_to_bjd(mjdTimes[t],observ_thisStar,coord_thisStar))
+        bjdThisStar.append(convert_jd_to_bjd(jdTimes.jd[t],observ_thisStar,coord_thisStar))
         print("BJD from JD:", convert_jd_to_bjd(jdTimes.jd[t],observ_thisStar,coord_thisStar))
-        print("BJD from MJD:", convert_mjd_to_bjd(jdTimes.mjd[t],observ_thisStar,coord_thisStar))
+        #print("BJD from MJD:", convert_mjd_to_bjd(jdTimes.mjd[t],observ_thisStar,coord_thisStar))
 
     df['star'] = thisStar
     df['observatory'] = observatoryThisStar
     df['jd'] = jdThisStar
-    df['mjd'] = mjdThisStar
-    df['hjd'] = hjdThisStar
+    #df['mjd'] = mjdThisStar
+    #df['hjd'] = hjdThisStar
     df['bjd'] = bjdThisStar
 
     return df
