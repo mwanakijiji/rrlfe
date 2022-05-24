@@ -44,14 +44,17 @@ df_ndl_phases["star_name"] = df_ndl_phases["#Name"].str[:6]
 df_ndl_merged = df_ndl_epochs.merge(df_ndl_phases, on=["star_name","number_cur"], suffixes=(None,"_y"))
 
 # match NDL net table to my results by spectrum number (#)
-df_all_merged = df_mine.merge(df_ndl_merged, how='inner', on=["spec_file"])
+df_all_merged = df_mine.merge(df_ndl_merged, how='outer', on=["spec_file"])
 
 # find NDL time baselines, for checking only
-df_all_merged["ndl_time_baselines"] = np.subtract(df_all_merged["Epoch_Max"],df_all_merged["ndl_spec_bjd"])
+df_all_merged["ndl_time_baselines"] = np.subtract(np.subtract(df_all_merged["Epoch_Max"],2400000),df_all_merged["ndl_spec_bjd"])
 df_all_merged["ndl_baseline_div_period"] = np.divide(df_all_merged["ndl_time_baselines"],df_all_merged["period"])
+# erro in phase we would expect from NDL
+df_all_merged["error_ndl_phase"] = np.multiply(np.abs(df_all_merged["ndl_baseline_div_period"]),df_all_merged["err_tot"])
 
 # for fyi, find error in phases: multiply error in period by number of cycles in the time baseline
 df_all_merged["error_my_phase"] = np.multiply(np.abs(df_all_merged["baseline_div_period"]),df_all_merged["err_tot"])
+
 
 '''
 # for checking
