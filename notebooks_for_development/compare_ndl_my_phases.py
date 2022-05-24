@@ -24,8 +24,6 @@ df_ndl_epochs["spec_file"] = df_ndl_epochs["filenames"] # the original spectrum 
 df_ndl_epochs["ndl_spec_bjd"] = df_ndl_epochs["bjd"]
 df_ndl_phases["ndl_phase"] = df_ndl_phases["Phases"]
 
-# extract the "cur" number (note that "filenames" here refers to NDL's files, not my spectra numbers)
-##df_ndl_epochs["number_cur"] = df_ndl_epochs["filenames"].str.split(".fits").str[-2].str[-2:]#extract('(\d+)')
 # remove redundant rows with "c.fits" in filenames col
 df_ndl_epochs = df_ndl_epochs.loc[df_ndl_epochs["filenames"].str.contains(".c.fits")==False]
 # convert to ints
@@ -55,6 +53,11 @@ df_all_merged["error_ndl_phase"] = np.multiply(np.abs(df_all_merged["ndl_baselin
 # for fyi, find error in phases: multiply error in period by number of cycles in the time baseline
 df_all_merged["error_my_phase"] = np.multiply(np.abs(df_all_merged["baseline_div_period"]),df_all_merged["err_tot"])
 
+# one last thing: insert star names in rows where no KELT data (i.e., name was left NaN)
+#idx_name_nan = df_all_merged["star_name"].isinf()
+#df_all_merged[df_all_merged["star_name"].isna()]
+
+import ipdb; ipdb.set_trace()
 
 '''
 # for checking

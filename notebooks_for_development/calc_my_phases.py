@@ -30,6 +30,13 @@ df_stellar_periods["star_match"] = df_stellar_periods["star"]
 df_epochs_of_max["photo_bjd"] = df_epochs_of_max["bjd"]
 df_spectra_epochs["spec_bjd"] = df_spectra_epochs["bjd"]
 
+## ## THE BELOW MERGE REMOVES V535 MON AND V445 OPH; FIX THESE
+# df_spectra_epochs["star_match"] == "V 535"
+# df_spectra_epochs["star_match"] == "V445 O"
+# df_epochs_of_max["star_match"] == "V445 Oph"
+# df_epochs_of_max["star_match"] == "V535 Mon"
+
+
 # combine epochs-of-max and spectral epochs
 result = pd.merge(df_spectra_epochs,
                  df_epochs_of_max[['star_match','photo_bjd']],
