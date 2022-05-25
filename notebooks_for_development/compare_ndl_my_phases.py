@@ -57,8 +57,6 @@ df_all_merged["error_my_phase"] = np.multiply(np.abs(df_all_merged["baseline_div
 #idx_name_nan = df_all_merged["star_name"].isinf()
 #df_all_merged[df_all_merged["star_name"].isna()]
 
-import ipdb; ipdb.set_trace()
-
 '''
 # for checking
 plt.clf()
@@ -81,21 +79,26 @@ plt.show()
 '''
 
 # for comparing NDL and my phases, and troubleshooting disagreement
-'''
+
 plt.clf()
 plt.scatter(df_all_merged["my_phase"],df_all_merged["ndl_phase"])
 
 for i in range(0,len(df_all_merged)):
 
+
     plt.annotate(df_all_merged["spec_file"].loc[i],
                  xy=(df_all_merged["my_phase"].loc[i],df_all_merged["ndl_phase"].loc[i]))
 
+    '''
     plt.annotate(np.round(df_all_merged["ndl_baseline_div_period"].loc[i],2),
                  xy=(df_all_merged["my_phase"].loc[i],df_all_merged["ndl_phase"].loc[i]))
-
+    '''
 #plt.scatter(np.subtract(1.,df_all_merged["my_phase"]),df_all_merged["ndl_phase"])
 plt.plot([0,1],[0,1], linestyle=":", color="gray")
 plt.show()
-'''
 
-df_all_merged.to_csv("./data/junk.csv")
+
+
+output_file_name = './data/junk.csv'
+df_all_merged.to_csv(output_file_name)
+print("Wrote ", output_file_name)

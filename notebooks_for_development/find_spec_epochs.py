@@ -142,5 +142,6 @@ for star in range(0,len(star_names_files)):
 
 
 # write filenames, spectra epochs out csv
-
-df_ut.to_csv('junk.csv')
+output_file_name = './data/junk.csv'
+df_ut.to_csv(output_file_name)
+print("Wrote ", output_file_name)

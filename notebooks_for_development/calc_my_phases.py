@@ -30,21 +30,26 @@ df_stellar_periods["star_match"] = df_stellar_periods["star"]
 df_epochs_of_max["photo_bjd"] = df_epochs_of_max["bjd"]
 df_spectra_epochs["spec_bjd"] = df_spectra_epochs["bjd"]
 
-## ## THE BELOW MERGE REMOVES V535 MON AND V445 OPH; FIX THESE
-# df_spectra_epochs["star_match"] == "V 535"
-# df_spectra_epochs["star_match"] == "V445 O"
-# df_epochs_of_max["star_match"] == "V445 Oph"
-# df_epochs_of_max["star_match"] == "V535 Mon"
+# kludge to make the names of two stars the same between tables
+df_epochs_of_max.loc[ df_epochs_of_max["star_match"] == "V445 Oph", "star_match" ] = "V445 O"
+df_epochs_of_max.loc[ df_epochs_of_max["star_match"] == "V535 Mon", "star_match" ] = "V 535"
+df_stellar_periods.loc[ df_stellar_periods["star_match"] == "V445 Oph", "star_match" ] = "V445 O"
+df_stellar_periods.loc[ df_stellar_periods["star_match"] == "V535 Mon", "star_match" ] = "V 535"
 
+# remove a redunant row for TV Lyn, leaving row corresponding to shorter time baseline
+#df_epochs_of_max = df_epochs_of_max.drop(11) # keep this one: it's furthest in time, but this is most consistent with KELT max. at BJD=2456507.116024
+df_epochs_of_max = df_epochs_of_max.drop(17) # drop this one: it's closest in time, but seems inaccurate
 
 # combine epochs-of-max and spectral epochs
 result = pd.merge(df_spectra_epochs,
                  df_epochs_of_max[['star_match','photo_bjd']],
+                 how="inner",
                  on='star_match')
 
 # combine with periods
 result2 = pd.merge(result,
                  df_stellar_periods[['star_match','T_final','err_tot']],
+                 how="inner",
                  on='star_match')
 
 # find phases
@@ -68,8 +73,6 @@ result2["phasemod"].loc[idx_neg] = np.subtract(1.,
 '''
 result3 = result2.sort_values(by="file").reset_index(drop=True)
 
-import ipdb; ipdb.set_trace()
-
 '''
 # fyi print
 for t in range(0,len(result3)):
@@ -78,4 +81,6 @@ for t in range(0,len(result3)):
     print("----")
 '''
 
-result3.to_csv("./data/junk.csv", index=False)
+output_file_name = "./data/junk.csv"
+result3.to_csv(output_file_name, index=False)
+print("Wrote to ", output_file_name)
