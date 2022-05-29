@@ -71,6 +71,13 @@ class LitFehRaw():
         self.df_sneden_feh = pd.read_csv(source_dir + "sneden_2017_abundances.dat", delimiter="|")
         # RES: ~27,000 (at 5000 A), FeI & FeII, 3400-9000 A
 
+        # Fe/H from Crestani+ 2021
+        self.df_crestani_feh = pd.read_csv(source_dir + "crestani_2021_abundances.dat",
+                                            delimiter=",", names=["name_gaiadr2","name_common",
+                                            "type","spectid","teff","err_teff","logg","err_logg",
+                                            "micro","err_micro","fehI","err_fehI","NFeI",
+                                            "fehII","err_fehII","NFehII"])
+
         # Fe/H from Kemper+ 1982; this might serve as the common basis for RRcs
         self.df_kemper_feh = pd.read_csv(source_dir + "kemper_1982_abundances.dat")
 
@@ -79,14 +86,14 @@ class LitFehRaw():
         ## ## includes NLTE phases; how to get single Fe/H?
         self.df_govea_feh = pd.read_csv(source_dir + "govea_2014_abundances.dat")
 
+
+
 def map_names(df_pass):
     # find common ASAS names
 
-    # convert output in astropy.Table format to DataFrame
-    df_test = pd.DataFrame(test.df_govea_feh)
+    import ipdb; ipdb.set_trace()
 
-    # make column of long-form, ASAS designations
-    df_pass["ASAS_common"] = np.nan
+    # treat each lit source individually to get single Fe/H and error
 
     # loop over rows, parse as necessary
     for row_num in range(0,len(df_pass)):
@@ -98,11 +105,36 @@ def map_names(df_pass):
 def main():
 
     # read in raw
-    test = LitFehRaw()
-    print(test)
-    import ipdb; ipdb.set_trace()
+    raws = LitFehRaw()
 
     # make transformations to get single Fe/H value
+
+    # convert outputs in astropy.Table format to DataFrames
+    df_our_stars = pd.DataFrame(raws.df_our_program_stars)
+    df_govea = pd.DataFrame(raws.df_govea_feh) #avg
+    df_layden = pd.DataFrame(raws.df_layden_feh) # simple
+    df_clementini = pd.DataFrame(raws.df_clementini_feh) # logeps, then avg
+    df_fernley96 = pd.DataFrame(raws.df_fernley96_feh) # simple, add error
+    df_fernley97 = pd.DataFrame(raws.df_fernley97_feh) # simple
+    df_lambert = pd.DataFrame(raws.df_lambert_logeps) # logeps, then avg
+    df_wallerstein = pd.DataFrame(raws.df_wallerstein_feh) # simple, add error
+    df_chadid = pd.DataFrame(raws.df_chadid_feh) # avg
+    df_liu = pd.DataFrame(raws.df_liu_feh)  # simple, add error (at different phases)
+    df_nemec = pd.DataFrame(raws.df_nemec_feh) # simple
+    df_solano = pd.DataFrame(raws.df_solano_feh) # simple, add error
+    df_pancino = pd.DataFrame(raws.df_pancino_feh) # simple
+    df_sneden = pd.DataFrame(raws.df_sneden_feh) # avg (diff phases)
+    df_kemper = pd.DataFrame(raws.df_kemper_feh) # simple, add error
+    import ipdb; ipdb.set_trace()
+
+    # make column of long-form, ASAS designations
+    df_govea["ASAS_common"] = np.nan
+
+    # make column for common name for matching (if applicable)
+    df_govea["feh_single"] = np.nanmean(df_govea["feIh"],df_govea["feIIh"])
+    ## ## error
+
+
 
     # expand abbreviated ASAS names (ex. Govea)
 
