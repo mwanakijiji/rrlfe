@@ -1,4 +1,4 @@
-name,log_eps_fe_spec,log_eps_feI_phot,err_log_eps_feI_phot,log_eps_feII_phot,err_log_eps_feII_phot
+name_match,log_eps_fe_spec,log_eps_feI_phot,err_log_eps_feI_phot,log_eps_feII_phot,err_log_eps_feII_phot
 SW_And,7.18,7.10,0.10,7.27,0.12
 X_Ari,5.03,4.76,0.08,4.97,0.09
 RS_Boo,6.89,6.96,0.11,7.12,0.08
