@@ -34,21 +34,17 @@ rows = 7
 
 # define a normalization function
 
-def normalize_curve(df_unnorm, mag_already = False):
+def normalize_curve(df_unnorm):
     '''
-    Takes an unnormalized light curve (in flux units), turns it into delta_m, and and normalizes it
-
-    mag_already: if true, then input is already in mags and we just need to normalize it
+    Takes an unnormalized light curve and normalizes it. This is done both for
+    photometry and the spline fit.
     '''
 
-    if mag_already:
-        y_del_mag = np.copy(df_unnorm["mag"])
-    else:
-        y_del_mag = -2.5*np.log10(df_unnorm["flux"])
+    y_photom_mag_unnorm_offset = np.subtract(df_unnorm["mag_photom"],np.min(df_unnorm["mag_spline"]))
+    y_spline_mag_unnorm_offset = np.subtract(df_unnorm["mag_spline"],np.min(df_unnorm["mag_spline"]))
 
-    y_mag_unnorm_offset = np.subtract(y_del_mag,np.min(y_del_mag))
-
-    df_unnorm["y_mag_norm"] = np.divide(y_mag_unnorm_offset,np.max(y_mag_unnorm_offset))
+    df_unnorm["y_photom_mag_norm"] = np.divide(y_photom_mag_unnorm_offset,np.max(y_spline_mag_unnorm_offset))
+    df_unnorm["y_photom_spline_norm"] = np.divide(y_spline_mag_unnorm_offset,np.max(y_spline_mag_unnorm_offset))
 
     return df_unnorm
 
@@ -93,8 +89,7 @@ df_av_peg = pd.read_csv("./data/phase_folded_curves/AV_Peg_E.cur_1.spl",
                           names=["phase","mag"], skiprows=1)
 df_ar_per = pd.read_csv("./data/phase_folded_curves/AR_Per_E.cur_1.spl",
                           names=["phase","mag"], skiprows=1)
-df_ru_psc = pd.read_csv("./data/phase_folded_curves/RU_Psc_W.cur_1.spl",
-                          names=["phase","mag"], skiprows=1)
+df_ru_psc = pd.read_csv("./data/phase_folded_curves/Phased_RU_Psc_w_spline.dat")
 
 idx_rw_ari = df_phases["star_match"] == "RW Ari"
 idx_rr_cet = df_phases["star_match"] == "RR Cet"
@@ -118,7 +113,7 @@ idx_vx_her = df_phases["star_match"] == "VX Her"
 
 
 # normalize
-
+'''
 df_rw_ari = normalize_curve(df_rw_ari)
 df_rr_cet = normalize_curve(df_rr_cet)
 df_sv_eri = normalize_curve(df_sv_eri)
@@ -134,12 +129,15 @@ df_tw_lyn = normalize_curve(df_tw_lyn)
 df_tu_uma = normalize_curve(df_tu_uma)
 
 
-df_v445_oph = normalize_curve(df_v445_oph, mag_already = True)
-df_av_peg = normalize_curve(df_av_peg, mag_already = True)
-df_ar_per = normalize_curve(df_ar_per, mag_already = True)
-df_ru_psc = normalize_curve(df_ru_psc, mag_already = True)
-df_bh_peg = normalize_curve(df_bh_peg, mag_already = True)
-df_vx_her = normalize_curve(df_vx_her, mag_already = True)
+df_v445_oph = normalize_curve(df_v445_oph)
+df_av_peg = normalize_curve(df_av_peg)
+df_ar_per = normalize_curve(df_ar_per)
+'''
+df_ru_psc = normalize_curve(df_ru_psc)
+'''
+df_bh_peg = normalize_curve(df_bh_peg)
+df_vx_her = normalize_curve(df_vx_her)
+'''
 
 # fake data
 
@@ -156,6 +154,7 @@ font_size_subtitles = 15
 font_size_source = 13
 
 # RW Ari
+'''
 axs[0, 0].set_title(cases[0] + " (c)", fontsize=font_size_subtitles)
 axs[0, 0].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[0, 0].axvline(i) for i in df_phases["my_phase"][idx_rw_ari].values]
@@ -314,18 +313,21 @@ axs[5, 0].set_xlim([0,1.0])
 axs[5, 0].set_ylim([0,1.0])
 axs[5, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
 axs[5, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+'''
 
 # RU Psc
 axs[5, 1].set_title(cases[16] + " (c)", fontsize=font_size_subtitles)
 axs[5, 1].annotate("KELT", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[5, 1].axvline(i) for i in df_phases["my_phase"][idx_ru_psc].values]
-axs[5, 1].scatter(df_ru_psc["phase"], df_ru_psc["y_mag_norm"], color="k", s=2,zorder=5)
+axs[5, 1].scatter(df_ru_psc["phase"], df_ru_psc["y_photom_mag_norm"], color="k", s=2)
+axs[5, 1].plot(df_ru_psc["phase"], df_ru_psc["y_photom_spline_norm"], color="red",linewidth=2,zorder=5)
 axs[5, 1].set_xlim([0,1.0])
 axs[5, 1].set_ylim([0,1.0])
 axs[5, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
 axs[5, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # T Sex
+'''
 axs[5, 2].set_title(cases[17] + " (c)", fontsize=font_size_subtitles)
 axs[5, 2].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[5, 2].axvline(i) for i in df_phases["my_phase"][idx_t_sex].values]
@@ -344,6 +346,7 @@ axs[6, 0].set_xlim([0,1.0])
 axs[6, 0].set_ylim([0,1.0])
 axs[6, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
 axs[6, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+'''
 
 # All RRabs
 alpha_val = 0.1
@@ -361,6 +364,7 @@ s_val = 1
 [axs[6, 1].axvline(i) for i in df_phases["my_phase"][idx_bh_peg].values]
 [axs[6, 1].axvline(i) for i in df_phases["my_phase"][idx_ar_per].values]
 [axs[6, 1].axvline(i) for i in df_phases["my_phase"][idx_tu_uma].values]
+'''
 axs[6, 1].scatter(df_x_ari["epoch"],df_x_ari["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
 axs[6, 1].scatter(df_rr_cet["epoch"], df_rr_cet["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
 axs[6, 1].scatter(df_sv_eri["epoch"], df_sv_eri["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
@@ -407,7 +411,7 @@ for ax in axs.flat:
     ax.xaxis.label.set_size(font_size_source)
     ax.yaxis.label.set_size(font_size_source)
     #ax.tick_params(axis='y', labelsize=font_size_source)
-
+'''
 # Hide x labels and tick labels for top plots and y ticks for right plots.
 for ax in axs.flat:
     ax.label_outer()
@@ -438,6 +442,6 @@ axs[0, 0].set_yticks([])
 
 plt.tight_layout()
 
-file_name_out = "test.pdf"
-plt.savefig(file_name_out)
+file_name_out = "test.png"
+plt.savefig(file_name_out, dpi=300)
 print("Wrote ", file_name_out)
