@@ -269,6 +269,9 @@ def main():
     df_kemper["feh_single"] = df_kemper["feh"]
     df_kemper["err_feh_single"] = 0.15 # estimate
 
+    # match to extract Fe/H of our program stars from Layden 1994
+    match_our_stars_layden = matchmaker(basis_table_pass=df_layden, input_table_pass=df_our_stars)
+
     # match and find offsets: Govea+ 2014 [NO MATCHES!]
     # match and find offsets: Clementini+ 1995
     print("-----")
@@ -342,6 +345,7 @@ def main():
     match_crestani["feh_single_lit_synced"] = np.add(offset_crestani,match_crestani["feh_single_lit"])
 
     # merge everything together
+    # (this includes literature after Chadid+ 2017)
     abcissa_feh_high_res_synched = [match_clementini["feh_single_basis"],
                                     match_fernley96["feh_single_basis"],
                                     match_fernley97["feh_single_basis"],
@@ -366,14 +370,60 @@ def main():
                                     match_pancino["feh_single_lit_synced"],
                                     match_crestani["feh_single_lit_synced"]]
 
+    name_synched = [match_clementini["name_match"],
+                                    match_fernley96["name_match"],
+                                    match_fernley97["name_match"],
+                                    match_lambert["name_match"],
+                                    match_wallerstein["name_match"],
+                                    match_chadid["name_match"],
+                                    match_liu["name_match"],
+                                    match_nemec["name_match"],
+                                    match_solano["name_match"],
+                                    match_pancino["name_match"],
+                                    match_crestani["name_match"]]
+
+    '''
+    # begin Chadid reproduction
+    # this includes only stuff Chadid did, to see how we compare with her
+    # note Chadid got m=1.100, b=+0.055, but they tossed some points
+    abcissa_feh_high_res_synched = [match_clementini["feh_single_basis"],
+                                    match_fernley96["feh_single_basis"],
+                                    match_lambert["feh_single_basis"],
+                                    match_liu["feh_single_basis"],
+                                    match_nemec["feh_single_basis"],
+                                    match_pancino["feh_single_basis"]]
+
+    ordinate_feh_high_res_synched = [match_clementini["feh_single_lit_synced"],
+                                    match_fernley96["feh_single_lit_synced"],
+                                    match_lambert["feh_single_lit_synced"],
+                                    match_liu["feh_single_lit_synced"],
+                                    match_nemec["feh_single_lit_synced"],
+                                    match_pancino["feh_single_lit_synced"]]
+
+    name_synched = [match_clementini["name_match"],
+                                    match_fernley96["name_match"],
+                                    match_lambert["name_match"],
+                                    match_liu["name_match"],
+                                    match_nemec["name_match"],
+                                    match_pancino["name_match"]]
+    # end Chadid reproduction
+    '''
+
     df_abcissa_synched = pd.concat(abcissa_feh_high_res_synched)
     df_ordinate_synched = pd.concat(ordinate_feh_high_res_synched)
+    df_name_synched = pd.concat(name_synched)
 
     # find the final mapping (see Chadid+ 2017 eqn. on p. 8, left-hand column)
     # [Fe/H]_highres = m * [Fe/H]_Lay94 + b
+    print("-----")
+    print("Final high-res vs. Layden (Chadid p. 8, LH col.):")
     m_final, b_final = np.polyfit(df_abcissa_synched,df_ordinate_synched,1)
     print("m final: ", m_final)
     print("b final: ", b_final)
+
+    # calculate the Fe/H of our program stars, given their values in Layden
+    match_our_stars_layden["feh_high_res"] = m_final*match_our_stars_layden["feh_basis"] + b_final
+    import ipdb; ipdb.set_trace()
 
     # sanity check
     plt.plot([-2.75,0.05],[-2.75,0.05],linestyle="--",color="gray")
@@ -386,34 +436,36 @@ def main():
 
     plt.clf()
     plt.plot([-2.75,0.05],[-3.,0.25],linestyle="--",color="gray")
-    plt.scatter(match_clementini["feh_single_basis"],match_clementini["feh_single_lit"])
-    plt.scatter(match_fernley96["feh_single_basis"],match_fernley96["feh_single_lit"])
-    plt.scatter(match_fernley97["feh_single_basis"],match_fernley97["feh_single_lit"])
-    plt.scatter(match_lambert["feh_single_basis"],match_lambert["feh_single_lit"])
-    plt.scatter(match_wallerstein["feh_single_basis"],match_wallerstein["feh_single_lit"])
-    plt.scatter(match_chadid["feh_single_basis"],match_chadid["feh_single_lit"])
-    plt.scatter(match_liu["feh_single_basis"],match_liu["feh_single_lit"])
-    plt.scatter(match_nemec["feh_single_basis"],match_nemec["feh_single_lit"])
-    plt.scatter(match_solano["feh_single_basis"],match_solano["feh_single_lit"])
-    plt.scatter(match_pancino["feh_single_basis"],match_pancino["feh_single_lit"])
-    plt.scatter(match_crestani["feh_single_basis"],match_crestani["feh_single_lit"])
+    plt.scatter(match_clementini["feh_single_basis"],match_clementini["feh_single_lit"], label="Clementini+ 1995")
+    plt.scatter(match_fernley96["feh_single_basis"],match_fernley96["feh_single_lit"], label="Fernley+ 1996")
+    plt.scatter(match_fernley97["feh_single_basis"],match_fernley97["feh_single_lit"], label="Fernley+ 1997")
+    plt.scatter(match_lambert["feh_single_basis"],match_lambert["feh_single_lit"], label="Lambert+ 1996")
+    plt.scatter(match_wallerstein["feh_single_basis"],match_wallerstein["feh_single_lit"], label="Wallerstein+ 2010")
+    plt.scatter(match_chadid["feh_single_basis"],match_chadid["feh_single_lit"], label="Chadid+ 2017")
+    plt.scatter(match_liu["feh_single_basis"],match_liu["feh_single_lit"], label="Liu+ 2013")
+    plt.scatter(match_nemec["feh_single_basis"],match_nemec["feh_single_lit"], label="Nemec+ 2013")
+    plt.scatter(match_solano["feh_single_basis"],match_solano["feh_single_lit"], label="Solano+ 1997")
+    plt.scatter(match_pancino["feh_single_basis"],match_pancino["feh_single_lit"], label="Pancino+ 2015")
+    plt.scatter(match_crestani["feh_single_basis"],match_crestani["feh_single_lit"], label="Crestani+ 2021")
+    plt.legend()
     file_name_out1 = "test_unsynced.pdf"
     plt.savefig(file_name_out1)
     print("Wrote", file_name_out1)
 
     plt.clf()
     plt.plot([-2.75,0.05],[-3.,0.25],linestyle="--",color="gray")
-    plt.scatter(match_clementini["feh_single_basis"],match_clementini["feh_single_lit_synced"])
-    plt.scatter(match_fernley96["feh_single_basis"],match_fernley96["feh_single_lit_synced"])
-    plt.scatter(match_fernley97["feh_single_basis"],match_fernley97["feh_single_lit_synced"])
-    plt.scatter(match_lambert["feh_single_basis"],match_lambert["feh_single_lit_synced"])
-    plt.scatter(match_wallerstein["feh_single_basis"],match_wallerstein["feh_single_lit_synced"])
-    plt.scatter(match_chadid["feh_single_basis"],match_chadid["feh_single_lit_synced"])
-    plt.scatter(match_liu["feh_single_basis"],match_liu["feh_single_lit_synced"])
-    plt.scatter(match_nemec["feh_single_basis"],match_nemec["feh_single_lit_synced"])
-    plt.scatter(match_solano["feh_single_basis"],match_solano["feh_single_lit_synced"])
-    plt.scatter(match_pancino["feh_single_basis"],match_pancino["feh_single_lit_synced"])
-    plt.scatter(match_crestani["feh_single_basis"],match_crestani["feh_single_lit_synced"])
+    plt.scatter(match_clementini["feh_single_basis"],match_clementini["feh_single_lit_synced"], label="Clementini+ 1995")
+    plt.scatter(match_fernley96["feh_single_basis"],match_fernley96["feh_single_lit_synced"], label="Fernley+ 1996")
+    plt.scatter(match_fernley97["feh_single_basis"],match_fernley97["feh_single_lit_synced"], label="Fernley+ 1997")
+    plt.scatter(match_lambert["feh_single_basis"],match_lambert["feh_single_lit_synced"], label="Lambert+ 1996")
+    plt.scatter(match_wallerstein["feh_single_basis"],match_wallerstein["feh_single_lit_synced"], label="Wallerstein+ 2010")
+    plt.scatter(match_chadid["feh_single_basis"],match_chadid["feh_single_lit_synced"], label="Chadid+ 2017")
+    plt.scatter(match_liu["feh_single_basis"],match_liu["feh_single_lit_synced"], label="Liu+ 2013")
+    plt.scatter(match_nemec["feh_single_basis"],match_nemec["feh_single_lit_synced"], label="Nemec+ 2013")
+    plt.scatter(match_solano["feh_single_basis"],match_solano["feh_single_lit_synced"], label="Solano+ 1997")
+    plt.scatter(match_pancino["feh_single_basis"],match_pancino["feh_single_lit_synced"], label="Pancino+ 2015")
+    plt.scatter(match_crestani["feh_single_basis"],match_crestani["feh_single_lit_synced"], label="Crestani+ 2021")
+    plt.legend()
     file_name_out2 = "test_synced.pdf"
     plt.savefig(file_name_out2)
     print("Wrote", file_name_out2)
@@ -421,17 +473,19 @@ def main():
     # FYI, to see residuals around 1-to-1 line
     plt.clf()
     plt.plot([-1.,1.],[0.,0.],linestyle="--",color="gray")
-    plt.scatter(match_clementini["feh_single_basis"],np.subtract(match_clementini["feh_single_lit_synced"],match_clementini["feh_single_basis"]))
-    plt.scatter(match_fernley96["feh_single_basis"],np.subtract(match_fernley96["feh_single_lit_synced"],match_fernley96["feh_single_basis"]))
-    plt.scatter(match_fernley97["feh_single_basis"],np.subtract(match_fernley97["feh_single_lit_synced"],match_fernley97["feh_single_basis"]))
-    plt.scatter(match_lambert["feh_single_basis"],np.subtract(match_lambert["feh_single_lit_synced"],match_lambert["feh_single_basis"]))
-    plt.scatter(match_wallerstein["feh_single_basis"],np.subtract(match_wallerstein["feh_single_lit_synced"],match_wallerstein["feh_single_basis"]))
-    plt.scatter(match_chadid["feh_single_basis"],np.subtract(match_chadid["feh_single_lit_synced"],match_chadid["feh_single_basis"]))
-    plt.scatter(match_liu["feh_single_basis"],np.subtract(match_liu["feh_single_lit_synced"],match_liu["feh_single_basis"]))
-    plt.scatter(match_nemec["feh_single_basis"],np.subtract(match_nemec["feh_single_lit_synced"],match_nemec["feh_single_basis"]))
-    plt.scatter(match_solano["feh_single_basis"],np.subtract(match_solano["feh_single_lit_synced"],match_solano["feh_single_basis"]))
-    plt.scatter(match_pancino["feh_single_basis"],np.subtract(match_pancino["feh_single_lit_synced"],match_pancino["feh_single_basis"]))
-    plt.scatter(match_crestani["feh_single_basis"],np.subtract(match_crestani["feh_single_lit_synced"],match_crestani["feh_single_basis"]))
+    plt.scatter(match_clementini["feh_single_basis"],np.subtract(match_clementini["feh_single_lit_synced"],match_clementini["feh_single_basis"]), label="Clementini+ 1995")
+    plt.scatter(match_fernley96["feh_single_basis"],np.subtract(match_fernley96["feh_single_lit_synced"],match_fernley96["feh_single_basis"]), label="Fernley+ 1996")
+    plt.scatter(match_fernley97["feh_single_basis"],np.subtract(match_fernley97["feh_single_lit_synced"],match_fernley97["feh_single_basis"]), label="Fernley+ 1997")
+    plt.scatter(match_lambert["feh_single_basis"],np.subtract(match_lambert["feh_single_lit_synced"],match_lambert["feh_single_basis"]), label="Lambert+ 1996")
+    plt.scatter(match_wallerstein["feh_single_basis"],np.subtract(match_wallerstein["feh_single_lit_synced"],match_wallerstein["feh_single_basis"]), label="Wallerstein+ 2010")
+    plt.scatter(match_chadid["feh_single_basis"],np.subtract(match_chadid["feh_single_lit_synced"],match_chadid["feh_single_basis"]), label="Chadid+ 2017")
+    plt.scatter(match_liu["feh_single_basis"],np.subtract(match_liu["feh_single_lit_synced"],match_liu["feh_single_basis"]), label="Liu+ 2013")
+    plt.scatter(match_nemec["feh_single_basis"],np.subtract(match_nemec["feh_single_lit_synced"],match_nemec["feh_single_basis"]), label="Nemec+ 2013")
+    plt.scatter(match_solano["feh_single_basis"],np.subtract(match_solano["feh_single_lit_synced"],match_solano["feh_single_basis"]), label="Solano+ 1997")
+    plt.scatter(match_pancino["feh_single_basis"],np.subtract(match_pancino["feh_single_lit_synced"],match_pancino["feh_single_basis"]), label="Pancino+ 2015")
+    plt.scatter(match_crestani["feh_single_basis"],np.subtract(match_crestani["feh_single_lit_synced"],match_crestani["feh_single_basis"]), label="Crestani+ 2021")
+    plt.legend()
+    plt.tight_layout()
     file_name_out3 = "test_resids.pdf"
     plt.savefig(file_name_out3)
     print("Wrote", file_name_out3)
