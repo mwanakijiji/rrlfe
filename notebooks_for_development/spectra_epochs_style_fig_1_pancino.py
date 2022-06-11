@@ -48,9 +48,19 @@ def normalize_curve(df_unnorm_photom, df_unnorm_spline, mag=True, nospline=False
 
     if nospline:
         # if there is no spline data (input data will be in mags, presumably, since this is from AAVSO)
-        df_unnorm_photom["y_photom_mag_norm"] = np.divide(df_unnorm_photom["mag"],np.max(df_unnorm_photom["mag"]))
 
-    elif nospline=False:
+        # subtract offset from zero
+        y_photom_mag_unnorm_offset = np.subtract(df_unnorm_photom["Mag"],np.min(df_unnorm_photom["Mag"]))
+
+        df_unnorm_photom["y_photom_norm"] = np.divide(y_photom_mag_unnorm_offset,np.max(y_photom_mag_unnorm_offset))
+
+        df_join = df_unnorm_photom.copy(deep=True)
+
+        # normalize
+        #df_unnorm_photom["y_photom_norm"] = np.divide(y_photom_mag_unnorm_offset,np.max(y_spline_mag_unnorm_offset))
+
+
+    elif nospline==False:
         # if there is spline data
 
         if not mag:
@@ -63,11 +73,18 @@ def normalize_curve(df_unnorm_photom, df_unnorm_spline, mag=True, nospline=False
         y_spline_mag_unnorm_offset = np.subtract(df_unnorm_spline["Mag"],np.min(df_unnorm_spline["Mag"]))
 
         # normalize
-        df_unnorm_photom["y_photom_mag_norm"] = np.divide(y_photom_mag_unnorm_offset,np.max(y_spline_mag_unnorm_offset))
-        df_unnorm_photom["y_photom_spline_norm"] = np.divide(y_spline_mag_unnorm_offset,np.max(y_spline_mag_unnorm_offset))
+        df_unnorm_photom["y_photom_norm"] = np.divide(y_photom_mag_unnorm_offset,np.max(y_spline_mag_unnorm_offset))
+        df_unnorm_spline["Phase"] = df_unnorm_spline["#Phase"] # kludge
+        df_unnorm_spline["y_spline_norm"] = np.divide(y_spline_mag_unnorm_offset,np.max(y_spline_mag_unnorm_offset))
+        df_photom_new = df_unnorm_photom[['Phase', 'y_photom_norm']].copy()
+        df_spline_new = df_unnorm_spline[['Phase', 'y_spline_norm']].copy()
+
+        # join
+        df_join = df_photom_new.set_index("Phase").join(df_spline_new.set_index("Phase"), on="Phase", how="outer")
+        df_join.reset_index(inplace=True) # (otherwise phase is a key)
 
     # return table with photometric table, with spline added in
-    return df_unnorm_photom
+    return df_join
 
 # read in data
 df_phases = pd.read_csv("./data/final_phases_ndl_and_me.csv")
@@ -172,46 +189,62 @@ idx_vx_her = df_phases["star_match"] == "VX Her"
 
 
 # normalize
-import ipdb; ipdb.set_trace()
 df_rw_ari_spline["Flux"] = df_rw_ari_spline["Mag"] # kludge because of mislabeling in input file
 df_rw_ari = normalize_curve(df_rw_ari, df_rw_ari_spline, mag=False)
-import ipdb; ipdb.set_trace()
+
 df_rr_cet_spline["Flux"] = df_rr_cet_spline["Mag"]
 df_rr_cet = normalize_curve(df_rr_cet, df_rr_cet_spline, mag=False)
+
 df_sv_eri_spline["Flux"] = df_sv_eri_spline["Mag"]
 df_sv_eri = normalize_curve(df_sv_eri, df_sv_eri_spline, mag=False)
+
 df_x_ari_spline["Flux"] = df_x_ari_spline["Mag"]
 df_x_ari = normalize_curve(df_x_ari, df_x_ari_spline, mag=False)
+
 df_t_sex_spline["Flux"] = df_t_sex_spline["Mag"]
 df_t_sex = normalize_curve(df_t_sex, df_t_sex_spline, mag=False)
+
 df_uy_cam_spline["Flux"] = df_uy_cam_spline["Mag"]
 df_uy_cam = normalize_curve(df_uy_cam, df_uy_cam_spline, mag=False)
+
 df_v535_mon_spline["Flux"] = df_v535_mon_spline["Mag"]
 df_v535_mon = normalize_curve(df_v535_mon, df_v535_mon_spline, mag=False)
+
 df_tv_lyn_spline["Flux"] = df_tv_lyn_spline["Mag"]
 df_tv_lyn = normalize_curve(df_tv_lyn, df_tv_lyn_spline, mag=False)
+
 df_tt_lyn_spline["Flux"] = df_tt_lyn_spline["Mag"]
 df_tt_lyn = normalize_curve(df_tt_lyn, df_tt_lyn_spline, mag=False)
+
 df_rr_leo_spline["Flux"] = df_rr_leo_spline["Mag"]
 df_rr_leo = normalize_curve(df_rr_leo, df_rr_leo_spline, mag=False)
+
 df_rr_lyr_spline["Flux"] = df_rr_lyr_spline["Mag"]
 df_rr_lyr = normalize_curve(df_rr_lyr, df_rr_lyr_spline, mag=False)
+
 df_tw_lyn_spline["Flux"] = df_tw_lyn_spline["Mag"]
 df_tw_lyn = normalize_curve(df_tw_lyn, df_tw_lyn_spline, mag=False)
+
 df_tu_uma_spline["Flux"] = df_tu_uma_spline["Mag"]
 df_tu_uma = normalize_curve(df_tu_uma, df_tu_uma_spline, mag=False)
+
 df_v445_oph = normalize_curve(df_v445_oph, df_v445_oph_spline)
+
 df_av_peg = normalize_curve(df_av_peg, df_av_peg_spline)
+
 df_ar_per = normalize_curve(df_ar_per, df_ar_per_spline)
+
 df_ru_psc = normalize_curve(df_ru_psc, df_ru_psc_spline)
+
 df_bh_peg["Mag"] = df_bh_peg["mag"] # kludge
 df_bh_peg = normalize_curve(df_bh_peg, df_bh_peg, nospline=True)
+
 df_vx_her["Mag"] = df_vx_her["mag"] # kludge
 df_vx_her = normalize_curve(df_vx_her, df_vx_her, nospline=True)
-import ipdb; ipdb.set_trace()
+import ipdb;
 # fake data
 
-example_phase_epochs_star_1 = [0.1,0.45,0.77,0.98]
+example_phase_phases_star_1 = [0.1,0.45,0.77,0.98]
 x = np.linspace(0,1.,num=50)
 y = np.sin(x)
 
@@ -224,11 +257,12 @@ font_size_subtitles = 15
 font_size_source = 13
 
 # RW Ari
-'''
+
 axs[0, 0].set_title(cases[0] + " (c)", fontsize=font_size_subtitles)
 axs[0, 0].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[0, 0].axvline(i) for i in df_phases["my_phase"][idx_rw_ari].values]
-axs[0, 0].scatter(df_rw_ari["epoch"],df_rw_ari["y_mag_norm"], color="k", s=2,zorder=5)
+axs[0, 0].scatter(df_rw_ari["Phase"],df_rw_ari["y_photom_norm"], color="k", s=2)
+axs[0, 0].scatter(df_rw_ari["Phase"],df_rw_ari["y_spline_norm"], color="r", s=1,zorder=5)
 axs[0, 0].set_xlim([0,1.0])
 axs[0, 0].set_ylim([0,1.0])
 axs[0, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -238,7 +272,8 @@ axs[0, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[0, 1].set_title(cases[1] + " (ab)", fontsize=font_size_subtitles)
 axs[0, 1].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[0, 1].axvline(i) for i in df_phases["my_phase"][idx_x_ari].values]
-axs[0, 1].scatter(df_x_ari["epoch"],df_x_ari["y_mag_norm"], color="k", s=2,zorder=5)
+axs[0, 1].scatter(df_x_ari["Phase"],df_x_ari["y_photom_norm"], color="k", s=2)
+axs[0, 1].scatter(df_x_ari["Phase"],df_x_ari["y_spline_norm"], color="r", s=1,zorder=5)
 axs[0, 1].set_xlim([0,1.0])
 axs[0, 1].set_ylim([0,1.0])
 axs[0, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -248,7 +283,8 @@ axs[0, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[0, 2].set_title(cases[2] + " (c)", fontsize=font_size_subtitles)
 axs[0, 2].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[0, 2].axvline(i) for i in df_phases["my_phase"][idx_uy_cam].values]
-axs[0, 2].scatter(df_uy_cam["epoch"], df_uy_cam["y_mag_norm"], color="k", s=2,zorder=5)
+axs[0, 2].scatter(df_uy_cam["Phase"], df_uy_cam["y_photom_norm"], color="k", s=2)
+axs[0, 2].scatter(df_uy_cam["Phase"],df_uy_cam["y_spline_norm"], color="r", s=1,zorder=5)
 axs[0, 2].set_xlim([0,1.0])
 axs[0, 2].set_ylim([0,1.0])
 axs[0, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -258,7 +294,8 @@ axs[0, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[1, 0].set_title(cases[3] + " (ab)", fontsize=font_size_subtitles)
 axs[1, 0].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[1, 0].axvline(i) for i in df_phases["my_phase"][idx_rr_cet].values]
-axs[1, 0].scatter(df_rr_cet["epoch"], df_rr_cet["y_mag_norm"], color="k", s=2,zorder=5)
+axs[1, 0].scatter(df_rr_cet["Phase"], df_rr_cet["y_photom_norm"], color="k", s=2)
+axs[1, 0].scatter(df_rr_cet["Phase"],df_rr_cet["y_spline_norm"], color="r", s=1,zorder=5)
 axs[1, 0].set_xlim([0,1.0])
 axs[1, 0].set_ylim([0,1.0])
 axs[1, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -268,7 +305,8 @@ axs[1, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[1, 1].set_title(cases[4] + " (ab)", fontsize=font_size_subtitles)
 axs[1, 1].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[1, 1].axvline(i) for i in df_phases["my_phase"][idx_sv_eri].values]
-axs[1, 1].scatter(df_sv_eri["epoch"], df_sv_eri["y_mag_norm"], color="k", s=2,zorder=5)
+axs[1, 1].scatter(df_sv_eri["Phase"], df_sv_eri["y_photom_norm"], color="k", s=2)
+axs[1, 1].scatter(df_sv_eri["Phase"],df_sv_eri["y_spline_norm"], color="r", s=1,zorder=5)
 axs[1, 1].set_xlim([0,1.0])
 axs[1, 1].set_ylim([0,1.0])
 axs[1, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -278,7 +316,8 @@ axs[1, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[1, 2].set_title(cases[5] + " (ab)", fontsize=font_size_subtitles)
 axs[1, 2].annotate("AAVSO", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[1, 2].axvline(i) for i in df_phases["my_phase"][idx_vx_her].values]
-axs[1, 2].scatter(df_vx_her["phase"], df_vx_her["y_mag_norm"], color="k", s=2,zorder=5)
+axs[1, 2].scatter(df_vx_her["phase"], df_vx_her["y_photom_norm"], color="k", s=2)
+#axs[1, 2].scatter(df_vx_her["phase"],df_vx_her["y_spline_norm"], color="r", s=1,zorder=5)
 axs[1, 2].set_xlim([0,1.0])
 axs[1, 2].set_ylim([0,1.0])
 axs[1, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -288,7 +327,8 @@ axs[1, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[2, 0].set_title(cases[6] + " (ab)", fontsize=font_size_subtitles)
 axs[2, 0].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[2, 0].axvline(i) for i in df_phases["my_phase"][idx_rr_leo].values]
-axs[2, 0].scatter(df_rr_leo["epoch"], df_rr_leo["y_mag_norm"], color="k", s=2,zorder=5)
+axs[2, 0].scatter(df_rr_leo["Phase"], df_rr_leo["y_photom_norm"], color="k", s=2)
+axs[2, 0].scatter(df_rr_leo["Phase"],df_rr_leo["y_spline_norm"], color="r", s=1,zorder=5)
 axs[2, 0].set_xlim([0,1.0])
 axs[2, 0].set_ylim([0,1.0])
 axs[2, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -298,7 +338,8 @@ axs[2, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[2, 1].set_title(cases[7] + " (ab)", fontsize=font_size_subtitles)
 axs[2, 1].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[2, 1].axvline(i) for i in df_phases["my_phase"][idx_tt_lyn].values]
-axs[2, 1].scatter(df_tt_lyn["epoch"], df_tt_lyn["y_mag_norm"], color="k", s=2,zorder=5)
+axs[2, 1].scatter(df_tt_lyn["Phase"], df_tt_lyn["y_photom_norm"], color="k", s=2)
+axs[2, 1].scatter(df_tt_lyn["Phase"],df_tt_lyn["y_spline_norm"], color="r", s=1,zorder=5)
 axs[2, 1].set_xlim([0,1.0])
 axs[2, 1].set_ylim([0,1.0])
 axs[2, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -308,7 +349,8 @@ axs[2, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[2, 2].set_title(cases[8] + " (c)", fontsize=font_size_subtitles)
 axs[2, 2].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[2, 2].axvline(i) for i in df_phases["my_phase"][idx_tv_lyn].values]
-axs[2, 2].scatter(df_tv_lyn["epoch"], df_tv_lyn["y_mag_norm"], color="k", s=2,zorder=5)
+axs[2, 2].scatter(df_tv_lyn["Phase"], df_tv_lyn["y_photom_norm"], color="k", s=2)
+axs[2, 2].scatter(df_tv_lyn["Phase"],df_tv_lyn["y_spline_norm"], color="r", s=1,zorder=5)
 axs[2, 2].set_xlim([0,1.0])
 axs[2, 2].set_ylim([0,1.0])
 axs[2, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -318,7 +360,8 @@ axs[2, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[3, 0].set_title(cases[9] + " (ab)", fontsize=font_size_subtitles)
 axs[3, 0].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[3, 0].axvline(i) for i in df_phases["my_phase"][idx_tw_lyn].values]
-axs[3, 0].scatter(df_tw_lyn["epoch"], df_tw_lyn["y_mag_norm"], color="k", s=2,zorder=5)
+axs[3, 0].scatter(df_tw_lyn["Phase"], df_tw_lyn["y_photom_norm"], color="k", s=2)
+axs[3, 0].scatter(df_tw_lyn["Phase"],df_tw_lyn["y_spline_norm"], color="r", s=1,zorder=5)
 axs[3, 0].set_xlim([0,1.0])
 axs[3, 0].set_ylim([0,1.0])
 axs[3, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -328,7 +371,8 @@ axs[3, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[3, 1].set_title(cases[10] + " (ab)", fontsize=font_size_subtitles)
 axs[3, 1].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[3, 1].axvline(i) for i in df_phases["my_phase"][idx_rr_lyr].values]
-axs[3, 1].scatter(df_rr_lyr["epoch"], df_rr_lyr["y_mag_norm"], color="k", s=2,zorder=5)
+axs[3, 1].scatter(df_rr_lyr["Phase"], df_rr_lyr["y_photom_norm"], color="k", s=2)
+axs[3, 1].scatter(df_rr_lyr["Phase"],df_rr_lyr["y_spline_norm"], color="r", s=1,zorder=5)
 axs[3, 1].set_xlim([0,1.0])
 axs[3, 1].set_ylim([0,1.0])
 axs[3, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -338,7 +382,7 @@ axs[3, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[3, 2].set_title(cases[11] + " (c)", fontsize=font_size_subtitles)
 axs[3, 2].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[3, 2].axvline(i) for i in df_phases["my_phase"][idx_v535_mon].values]
-axs[3, 2].scatter(df_v535_mon["epoch"], df_v535_mon["y_mag_norm"], color="k", s=2,zorder=5)
+axs[3, 2].scatter(df_v535_mon["Phase"], df_v535_mon["y_photom_norm"], color="k", s=2)
 axs[3, 2].set_xlim([0,1.0])
 axs[3, 2].set_ylim([0,1.0])
 axs[3, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -348,7 +392,8 @@ axs[3, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[4, 0].set_title(cases[12] + " (ab)", fontsize=font_size_subtitles)
 axs[4, 0].annotate("KELT", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[4, 0].axvline(i) for i in df_phases["my_phase"][idx_v445_oph].values]
-axs[4, 0].scatter(df_v445_oph["phase"], df_v445_oph["y_mag_norm"], color="k", s=2,zorder=5)
+axs[4, 0].scatter(df_v445_oph["Phase"], df_v445_oph["y_photom_norm"], color="k", s=2)
+axs[4, 0].scatter(df_v445_oph["Phase"],df_v445_oph["y_spline_norm"], color="r", s=1,zorder=5)
 axs[4, 0].set_xlim([0,1.0])
 axs[4, 0].set_ylim([0,1.0])
 axs[4, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -358,7 +403,8 @@ axs[4, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[4, 1].set_title(cases[13] + " (ab)", fontsize=font_size_subtitles)
 axs[4, 1].annotate("KELT", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[4, 1].axvline(i) for i in df_phases["my_phase"][idx_av_peg].values]
-axs[4, 1].scatter(df_av_peg["phase"], df_av_peg["y_mag_norm"], color="k", s=2,zorder=5)
+axs[4, 1].scatter(df_av_peg["Phase"], df_av_peg["y_photom_norm"], color="k", s=2)
+axs[4, 1].scatter(df_av_peg["Phase"], df_av_peg["y_spline_norm"], color="r", s=1,zorder=5)
 axs[4, 1].set_xlim([0,1.0])
 axs[4, 1].set_ylim([0,1.0])
 axs[4, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -368,7 +414,8 @@ axs[4, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[4, 2].set_title(cases[14] + " (ab)", fontsize=font_size_subtitles)
 axs[4, 2].annotate("AAVSO", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[4, 2].axvline(i) for i in df_phases["my_phase"][idx_bh_peg].values]
-axs[4, 2].scatter(df_bh_peg["phase"], df_bh_peg["y_mag_norm"], color="k", s=2,zorder=5)
+axs[4, 2].scatter(df_bh_peg["phase"], df_bh_peg["y_photom_norm"], color="k", s=2)
+#axs[4, 2].scatter(df_bh_peg["phase"], df_bh_peg["y_spline_norm"], color="r", s=1,zorder=5)
 axs[4, 2].set_xlim([0,1.0])
 axs[4, 2].set_ylim([0,1.0])
 axs[4, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -378,30 +425,32 @@ axs[4, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[5, 0].set_title(cases[15] + " (ab)", fontsize=font_size_subtitles)
 axs[5, 0].annotate("KELT", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[5, 0].axvline(i) for i in df_phases["my_phase"][idx_ar_per].values]
-axs[5, 0].scatter(df_ar_per["phase"], df_ar_per["y_mag_norm"], color="k", s=2,zorder=5)
+axs[5, 0].scatter(df_ar_per["Phase"], df_ar_per["y_photom_norm"], color="k", s=2)
+axs[5, 0].scatter(df_ar_per["Phase"], df_ar_per["y_spline_norm"], color="r", s=1,zorder=5)
 axs[5, 0].set_xlim([0,1.0])
 axs[5, 0].set_ylim([0,1.0])
 axs[5, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
 axs[5, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
-'''
+
 
 # RU Psc
 axs[5, 1].set_title(cases[16] + " (c)", fontsize=font_size_subtitles)
 axs[5, 1].annotate("KELT", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[5, 1].axvline(i) for i in df_phases["my_phase"][idx_ru_psc].values]
-axs[5, 1].scatter(df_ru_psc["phase"], df_ru_psc["y_photom_mag_norm"], color="k", s=2)
-axs[5, 1].plot(df_ru_psc["phase"], df_ru_psc["y_photom_spline_norm"], color="red",linewidth=2,zorder=5)
+axs[5, 1].scatter(df_ru_psc["Phase"], df_ru_psc["y_photom_norm"], color="k", s=2)
+axs[5, 1].plot(df_ru_psc["Phase"], df_ru_psc["y_spline_norm"], color="red",linewidth=2,zorder=5)
 axs[5, 1].set_xlim([0,1.0])
 axs[5, 1].set_ylim([0,1.0])
 axs[5, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
 axs[5, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # T Sex
-'''
+
 axs[5, 2].set_title(cases[17] + " (c)", fontsize=font_size_subtitles)
 axs[5, 2].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[5, 2].axvline(i) for i in df_phases["my_phase"][idx_t_sex].values]
-axs[5, 2].scatter(df_t_sex["epoch"], df_t_sex["y_mag_norm"], color="k", s=2,zorder=5)
+axs[5, 2].scatter(df_t_sex["Phase"], df_t_sex["y_photom_norm"], color="k", s=2)
+axs[5, 2].plot(df_t_sex["Phase"], df_t_sex["y_spline_norm"], color="red",linewidth=2,zorder=5)
 axs[5, 2].set_xlim([0,1.0])
 axs[5, 2].set_ylim([0,1.0])
 axs[5, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -411,12 +460,13 @@ axs[5, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 axs[6, 0].set_title(cases[18] + " (ab)", fontsize=font_size_subtitles)
 axs[6, 0].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[6, 0].axvline(i) for i in df_phases["my_phase"][idx_tu_uma].values]
-axs[6, 0].scatter(df_tu_uma["epoch"], df_tu_uma["y_mag_norm"], color="k", s=2,zorder=5)
+axs[6, 0].scatter(df_tu_uma["Phase"], df_tu_uma["y_photom_norm"], color="k", s=2)
+axs[6, 0].plot(df_tu_uma["Phase"], df_tu_uma["y_spline_norm"], color="red",linewidth=2,zorder=5)
 axs[6, 0].set_xlim([0,1.0])
 axs[6, 0].set_ylim([0,1.0])
 axs[6, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
 axs[6, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
-'''
+
 
 # All RRabs
 alpha_val = 0.1
@@ -434,23 +484,23 @@ s_val = 1
 [axs[6, 1].axvline(i) for i in df_phases["my_phase"][idx_bh_peg].values]
 [axs[6, 1].axvline(i) for i in df_phases["my_phase"][idx_ar_per].values]
 [axs[6, 1].axvline(i) for i in df_phases["my_phase"][idx_tu_uma].values]
-'''
-axs[6, 1].scatter(df_x_ari["epoch"],df_x_ari["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_rr_cet["epoch"], df_rr_cet["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_sv_eri["epoch"], df_sv_eri["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_vx_her["phase"], df_vx_her["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_rr_leo["epoch"], df_rr_leo["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_tt_lyn["epoch"], df_tt_lyn["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_tw_lyn["epoch"], df_tw_lyn["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_rr_lyr["epoch"], df_rr_lyr["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_v445_oph["phase"], df_v445_oph["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_av_peg["phase"], df_av_peg["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_bh_peg["phase"], df_bh_peg["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_ar_per["phase"], df_ar_per["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 1].scatter(df_tu_uma["epoch"], df_tu_uma["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+
+axs[6, 1].scatter(df_x_ari["Phase"],df_x_ari["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_rr_cet["Phase"], df_rr_cet["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_sv_eri["Phase"], df_sv_eri["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_vx_her["phase"], df_vx_her["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_rr_leo["Phase"], df_rr_leo["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_tt_lyn["Phase"], df_tt_lyn["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_tw_lyn["Phase"], df_tw_lyn["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_rr_lyr["Phase"], df_rr_lyr["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_v445_oph["Phase"], df_v445_oph["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_av_peg["Phase"], df_av_peg["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_bh_peg["phase"], df_bh_peg["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_ar_per["Phase"], df_ar_per["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 1].scatter(df_tu_uma["Phase"], df_tu_uma["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
 axs[6, 1].set_title(cases[19], fontsize=font_size_subtitles)
 #axs[6, 1].annotate(cases[0], xy=(0.1,0.9), fontsize=font_size_source)
-[axs[6, 1].axvline(i) for i in example_phase_epochs_star_1]
+[axs[6, 1].axvline(i) for i in example_phase_phases_star_1]
 axs[6, 1].set_xlim([0,1.0])
 axs[6, 1].set_ylim([0,1.0])
 axs[6, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -462,15 +512,15 @@ axs[6, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 [axs[6, 2].axvline(i) for i in df_phases["my_phase"][idx_tv_lyn].values]
 #[axs[6, 2].axvline(i) for i in df_phases["my_phase"][idx_ru_psc].values]
 [axs[6, 2].axvline(i) for i in df_phases["my_phase"][idx_t_sex].values]
-axs[6, 2].scatter(df_rw_ari["epoch"],df_rw_ari["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 2].scatter(df_uy_cam["epoch"], df_uy_cam["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 2].scatter(df_tv_lyn["epoch"], df_tv_lyn["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-#axs[6, 2].scatter(df_v535_mon["epoch"], df_v535_mon["y_mag_norm"], color="k", s=s_val,zorder=5)
-#axs[6, 2].scatter(df_ru_psc["phase"], df_ru_psc["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
-axs[6, 2].scatter(df_t_sex["epoch"], df_t_sex["y_mag_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 2].scatter(df_rw_ari["Phase"],df_rw_ari["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 2].scatter(df_uy_cam["Phase"], df_uy_cam["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 2].scatter(df_tv_lyn["Phase"], df_tv_lyn["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+#axs[6, 2].scatter(df_v535_mon["Phase"], df_v535_mon["y_photom_norm"], color="k", s=s_val,zorder=5)
+#axs[6, 2].scatter(df_ru_psc["Phase"], df_ru_psc["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
+axs[6, 2].scatter(df_t_sex["Phase"], df_t_sex["y_photom_norm"], color="k", alpha=alpha_val, s=s_val,zorder=5)
 axs[6, 2].set_title(cases[20], fontsize=font_size_subtitles)
 #axs[6, 2].annotate(cases[0], xy=(0.1,0.9), fontsize=font_size_source)
-[axs[6, 2].axvline(i) for i in example_phase_epochs_star_1]
+[axs[6, 2].axvline(i) for i in example_phase_phases_star_1]
 axs[6, 2].set_xlim([0,1.0])
 axs[6, 2].set_ylim([0,1.0])
 axs[6, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
@@ -481,7 +531,7 @@ for ax in axs.flat:
     ax.xaxis.label.set_size(font_size_source)
     ax.yaxis.label.set_size(font_size_source)
     #ax.tick_params(axis='y', labelsize=font_size_source)
-'''
+
 # Hide x labels and tick labels for top plots and y ticks for right plots.
 for ax in axs.flat:
     ax.label_outer()
