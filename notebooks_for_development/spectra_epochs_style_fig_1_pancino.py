@@ -34,62 +34,121 @@ rows = 7
 
 # define a normalization function
 
-def normalize_curve(df_unnorm):
+def normalize_curve(df_unnorm_photom, df_unnorm_spline, mag=True, nospline=False):
     '''
-    Takes an unnormalized light curve and normalizes it. This is done both for
-    photometry and the spline fit.
+    Takes unnormalized light curves and normalizes them. This is done both for
+    photometry and the spline fit, by using the spline's specs.
+
+    INPUTS:
+    df_unnorm_photom: dataframe containing empirical photometry
+    df_unnorm_spline: dataframe containing spline
+    mag: if true, input data is in magnitude space (as opposed to flux)
+    nospline: if true, there is no spline data at all (and second input is just a dummy)
     '''
 
-    y_photom_mag_unnorm_offset = np.subtract(df_unnorm["mag_photom"],np.min(df_unnorm["mag_spline"]))
-    y_spline_mag_unnorm_offset = np.subtract(df_unnorm["mag_spline"],np.min(df_unnorm["mag_spline"]))
+    if nospline:
+        # if there is no spline data (input data will be in mags, presumably, since this is from AAVSO)
+        df_unnorm_photom["y_photom_mag_norm"] = np.divide(df_unnorm_photom["mag"],np.max(df_unnorm_photom["mag"]))
 
-    df_unnorm["y_photom_mag_norm"] = np.divide(y_photom_mag_unnorm_offset,np.max(y_spline_mag_unnorm_offset))
-    df_unnorm["y_photom_spline_norm"] = np.divide(y_spline_mag_unnorm_offset,np.max(y_spline_mag_unnorm_offset))
+    elif nospline=False:
+        # if there is spline data
 
-    return df_unnorm
+        if not mag:
+            # if input is in flux
+            df_unnorm_photom["Mag"] = -2.5*np.log10(np.divide(df_unnorm_photom["Flux"],np.min(df_unnorm_spline["Flux"])))
+            df_unnorm_spline["Mag"] = -2.5*np.log10(np.divide(df_unnorm_spline["Flux"],np.min(df_unnorm_spline["Flux"])))
+
+        # subtract offset from zero
+        y_photom_mag_unnorm_offset = np.subtract(df_unnorm_photom["Mag"],np.min(df_unnorm_spline["Mag"]))
+        y_spline_mag_unnorm_offset = np.subtract(df_unnorm_spline["Mag"],np.min(df_unnorm_spline["Mag"]))
+
+        # normalize
+        df_unnorm_photom["y_photom_mag_norm"] = np.divide(y_photom_mag_unnorm_offset,np.max(y_spline_mag_unnorm_offset))
+        df_unnorm_photom["y_photom_spline_norm"] = np.divide(y_spline_mag_unnorm_offset,np.max(y_spline_mag_unnorm_offset))
+
+    # return table with photometric table, with spline added in
+    return df_unnorm_photom
 
 # read in data
 df_phases = pd.read_csv("./data/final_phases_ndl_and_me.csv")
 
 # read in lightcurves
-df_rw_ari = pd.read_csv("./data/phase_folded_curves/Phased_RW_Ari.dat",
-                        names=["epoch","flux"], delim_whitespace=True)
+stem_phased_curves = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/"
+
+df_rw_ari = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_RW_Ari.cur_0.sp.phase",
+                        delim_whitespace=True)
+df_rw_ari_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_RW_Ari.cur_0.spl")
+
 df_bh_peg = pd.read_csv("./data/phase_folded_curves/Phased_BH_Peg_aavso.dat",
                         delimiter=",")
+
 df_vx_her = pd.read_csv("./data/phase_folded_curves/Phased_VX_Her_aavso.dat",
                         delimiter=",")
-df_rr_cet = pd.read_csv("./data/phase_folded_curves/Phased_RR_Cet.dat",
-                        names=["epoch","flux"], delim_whitespace=True)
-df_sv_eri = pd.read_csv("./data/phase_folded_curves/Phased_SV_Eri.dat",
-                        names=["epoch","flux"], delim_whitespace=True)
-df_x_ari = pd.read_csv("./data/phase_folded_curves/Phased_X_Ari.dat",
-                       names=["epoch","flux"], delim_whitespace=True)
-df_t_sex = pd.read_csv("./data/phase_folded_curves/T_Sex_phased.dat",
-                       names=["epoch","flux"], delim_whitespace=True)
 
-df_uy_cam = pd.read_csv("./data/phase_folded_curves/Phased_UY_Cam.dat",
-                        names=["epoch","flux"], delim_whitespace=True)
-df_v535_mon = pd.read_csv("./data/phase_folded_curves/Phased_V0535_Mon.dat",
-                          names=["epoch","flux"], delim_whitespace=True)
-df_tt_lyn = pd.read_csv("./data/phase_folded_curves/Phased_TT_Lyn.dat",
-                          names=["epoch","flux"], delim_whitespace=True)
-df_tv_lyn = pd.read_csv("./data/phase_folded_curves/Phased_TV_Lyn.dat",
-                          names=["epoch","flux"], delim_whitespace=True)
-df_rr_leo = pd.read_csv("./data/phase_folded_curves/Phased_RR_Leo.dat",
-                          names=["epoch","flux"], delim_whitespace=True)
-df_rr_lyr = pd.read_csv("./data/phase_folded_curves/Phased_RR_Lyr.dat",
-                          names=["epoch","flux"], delim_whitespace=True)
-df_tw_lyn = pd.read_csv("./data/phase_folded_curves/Phased_TW_Lyn.dat",
-                          names=["epoch","flux"], delim_whitespace=True)
-df_tu_uma = pd.read_csv("./data/phase_folded_curves/Phased_TU_UMa.dat",
-                          names=["epoch","flux"], delim_whitespace=True)
-df_v445_oph = pd.read_csv("./data/phase_folded_curves/V445_Oph_E.cur_1.spl",
-                          names=["phase","mag"], skiprows=1)
-df_av_peg = pd.read_csv("./data/phase_folded_curves/AV_Peg_E.cur_1.spl",
-                          names=["phase","mag"], skiprows=1)
-df_ar_per = pd.read_csv("./data/phase_folded_curves/AR_Per_E.cur_1.spl",
-                          names=["phase","mag"], skiprows=1)
-df_ru_psc = pd.read_csv("./data/phase_folded_curves/Phased_RU_Psc_w_spline.dat")
+df_rr_cet = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_RR_Cet.cur_0.sp.phase",
+                        delim_whitespace=True)
+df_rr_cet_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_RR_Cet.cur_0.spl")
+
+df_sv_eri = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_SV_Eri.cur_0.sp.phase",
+                        delim_whitespace=True)
+df_sv_eri_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_SV_Eri.cur_0.spl")
+
+df_x_ari = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_X_Ari.cur_0.sp.phase",
+                       delim_whitespace=True)
+df_x_ari_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_X_Ari.cur_0.spl")
+
+df_t_sex = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_T_Sex.cur_0.sp.phase",
+                       delim_whitespace=True)
+df_t_sex_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_T_Sex.cur_0.spl")
+
+df_uy_cam = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_UY_Cam.cur_0.sp.phase",
+                        delim_whitespace=True)
+df_uy_cam_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_UY_Cam.cur_0.spl")
+
+df_v535_mon = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_V0535.cur_0.sp.phase",
+                          delim_whitespace=True)
+df_v535_mon_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_V0535.cur_0.spl")
+
+df_tt_lyn = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_TT_Lyn.cur_0.sp.phase",
+                          delim_whitespace=True)
+df_tt_lyn_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_TT_Lyn.cur_0.spl")
+
+df_tv_lyn = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_TV_Lyn.cur_0.sp.phase",
+                          delim_whitespace=True)
+df_tv_lyn_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_TV_Lyn.cur_0.spl")
+
+df_rr_leo = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_RR_Leo.cur_0.sp.phase",
+                          delim_whitespace=True)
+df_rr_leo_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_RR_Leo.cur_0.spl")
+
+df_rr_lyr = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_RR_Lyr.cur_0.sp.phase",
+                          delim_whitespace=True)
+df_rr_lyr_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_RR_Lyr.cur_0.spl")
+
+df_tw_lyn = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_TW_Lyn.cur_0.sp.phase",
+                          delim_whitespace=True)
+df_tw_lyn_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_TW_Lyn.cur_0.spl")
+
+df_tu_uma = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/TESS_Phased_Curves/LC_TU_UMa.cur_0.sp.phase",
+                          delim_whitespace=True)
+df_tu_uma_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/LC_TU_UMa.cur_0.spl")
+
+df_v445_oph = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/KELT_Phased_Curves/V445_Oph_E.cur_0.sp.phase",
+                        delim_whitespace=True)
+df_v445_oph_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/V445_Oph_E.cur_1.spl")
+
+df_av_peg = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/KELT_Phased_Curves/AV_Peg_E.cur_0.sp.phase",
+                        delim_whitespace=True)
+df_av_peg_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/AV_Peg_E.cur_1.spl")
+
+df_ar_per = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/KELT_Phased_Curves/AR_Per_E.cur_0.sp.phase",
+                        delim_whitespace=True)
+df_ar_per_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/AR_Per_E.cur_1.spl")
+
+df_ru_psc = pd.read_csv(stem_phased_curves + "ndl_phased_curves_20220609/KELT_Phased_Curves/RU_Psc_E_small.cur_0.sp.phase",
+                        delim_whitespace=True)
+df_ru_psc_spline = pd.read_csv(stem_phased_curves + "phase_folded_curves/RU_Psc_E_small.cur_0.spl")
+
 
 idx_rw_ari = df_phases["star_match"] == "RW Ari"
 idx_rr_cet = df_phases["star_match"] == "RR Cet"
@@ -113,32 +172,43 @@ idx_vx_her = df_phases["star_match"] == "VX Her"
 
 
 # normalize
-'''
-df_rw_ari = normalize_curve(df_rw_ari)
-df_rr_cet = normalize_curve(df_rr_cet)
-df_sv_eri = normalize_curve(df_sv_eri)
-df_x_ari = normalize_curve(df_x_ari)
-df_t_sex = normalize_curve(df_t_sex)
-df_uy_cam = normalize_curve(df_uy_cam)
-df_v535_mon = normalize_curve(df_v535_mon)
-df_tv_lyn = normalize_curve(df_tv_lyn)
-df_tt_lyn = normalize_curve(df_tt_lyn)
-df_rr_leo = normalize_curve(df_rr_leo)
-df_rr_lyr = normalize_curve(df_rr_lyr)
-df_tw_lyn = normalize_curve(df_tw_lyn)
-df_tu_uma = normalize_curve(df_tu_uma)
-
-
-df_v445_oph = normalize_curve(df_v445_oph)
-df_av_peg = normalize_curve(df_av_peg)
-df_ar_per = normalize_curve(df_ar_per)
-'''
-df_ru_psc = normalize_curve(df_ru_psc)
-'''
-df_bh_peg = normalize_curve(df_bh_peg)
-df_vx_her = normalize_curve(df_vx_her)
-'''
-
+import ipdb; ipdb.set_trace()
+df_rw_ari_spline["Flux"] = df_rw_ari_spline["Mag"] # kludge because of mislabeling in input file
+df_rw_ari = normalize_curve(df_rw_ari, df_rw_ari_spline, mag=False)
+import ipdb; ipdb.set_trace()
+df_rr_cet_spline["Flux"] = df_rr_cet_spline["Mag"]
+df_rr_cet = normalize_curve(df_rr_cet, df_rr_cet_spline, mag=False)
+df_sv_eri_spline["Flux"] = df_sv_eri_spline["Mag"]
+df_sv_eri = normalize_curve(df_sv_eri, df_sv_eri_spline, mag=False)
+df_x_ari_spline["Flux"] = df_x_ari_spline["Mag"]
+df_x_ari = normalize_curve(df_x_ari, df_x_ari_spline, mag=False)
+df_t_sex_spline["Flux"] = df_t_sex_spline["Mag"]
+df_t_sex = normalize_curve(df_t_sex, df_t_sex_spline, mag=False)
+df_uy_cam_spline["Flux"] = df_uy_cam_spline["Mag"]
+df_uy_cam = normalize_curve(df_uy_cam, df_uy_cam_spline, mag=False)
+df_v535_mon_spline["Flux"] = df_v535_mon_spline["Mag"]
+df_v535_mon = normalize_curve(df_v535_mon, df_v535_mon_spline, mag=False)
+df_tv_lyn_spline["Flux"] = df_tv_lyn_spline["Mag"]
+df_tv_lyn = normalize_curve(df_tv_lyn, df_tv_lyn_spline, mag=False)
+df_tt_lyn_spline["Flux"] = df_tt_lyn_spline["Mag"]
+df_tt_lyn = normalize_curve(df_tt_lyn, df_tt_lyn_spline, mag=False)
+df_rr_leo_spline["Flux"] = df_rr_leo_spline["Mag"]
+df_rr_leo = normalize_curve(df_rr_leo, df_rr_leo_spline, mag=False)
+df_rr_lyr_spline["Flux"] = df_rr_lyr_spline["Mag"]
+df_rr_lyr = normalize_curve(df_rr_lyr, df_rr_lyr_spline, mag=False)
+df_tw_lyn_spline["Flux"] = df_tw_lyn_spline["Mag"]
+df_tw_lyn = normalize_curve(df_tw_lyn, df_tw_lyn_spline, mag=False)
+df_tu_uma_spline["Flux"] = df_tu_uma_spline["Mag"]
+df_tu_uma = normalize_curve(df_tu_uma, df_tu_uma_spline, mag=False)
+df_v445_oph = normalize_curve(df_v445_oph, df_v445_oph_spline)
+df_av_peg = normalize_curve(df_av_peg, df_av_peg_spline)
+df_ar_per = normalize_curve(df_ar_per, df_ar_per_spline)
+df_ru_psc = normalize_curve(df_ru_psc, df_ru_psc_spline)
+df_bh_peg["Mag"] = df_bh_peg["mag"] # kludge
+df_bh_peg = normalize_curve(df_bh_peg, df_bh_peg, nospline=True)
+df_vx_her["Mag"] = df_vx_her["mag"] # kludge
+df_vx_her = normalize_curve(df_vx_her, df_vx_her, nospline=True)
+import ipdb; ipdb.set_trace()
 # fake data
 
 example_phase_epochs_star_1 = [0.1,0.45,0.77,0.98]
