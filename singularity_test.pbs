@@ -42,11 +42,13 @@ echo "ls2"
 ls
 
 # run singularity
-singularity run $SING_FILE
+singularity run --no-home $SING_FILE
 echo "Did run; now do exec"
 # remove some input files if just want to test
-singularity exec $SING_FILE rm -v ./rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
-singularity exec --bind $OUT_DIR/$JOB_LABEL:$HOME $SING_FILE python /rrlfe/high_level_reduction_script.py
+singularity exec --no-home $SING_FILE rm -v ./rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
+# (bind syntax is host:container)
+echo "Did rm; now to next exec"
+singularity exec --no-home --bind $OUT_DIR/$JOB_LABEL/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$OUT_DIR/$JOB_LABEL/robospect.py:/Users/bandari/Documents/git.repos/robospect.py $SING_FILE python /rrlfe/high_level_reduction_script.py
 
 # tar output files
 tar --remove-files --verbose --create -f job_results_$JOB_LABEL.tar $OUT_DIR/$JOB_LABEL
