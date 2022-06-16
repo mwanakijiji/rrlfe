@@ -58,7 +58,7 @@ echo "Did rm; now to next exec"
 singularity exec $SING_FILE python /rrlfe/high_level_reduction_script.py
 
 # tar output files
-tar --remove-files --verbose --create -f job_results_$JOB_LABEL.tar $OUT_DIR/$JOB_LABEL
+tar --verbose --create -f job_results_$JOB_LABEL.tar $OUT_DIR/$JOB_LABEL
 
 echo "Tarred results to job_results_" $JOB_LABEL ".tar"
 
