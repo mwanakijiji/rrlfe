@@ -41,8 +41,12 @@ echo $PWD
 echo "ls2"
 ls
 
-# run singularity
-singularity run -w --no-home $SING_FILE
+# get code
+#wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/requirements_bare_versions.txt
+#git clone https://github.com/mwanakijiji/rrlfe.git
+
+# run singularity (installs stuff)
+singularity run --writable --no-home $SING_FILE
 echo "Did run; now do exec"
 # remove some input files if just want to test
 singularity exec --no-home $SING_FILE rm -v ./rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
