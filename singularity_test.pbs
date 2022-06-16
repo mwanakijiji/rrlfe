@@ -46,7 +46,7 @@ singularity run $SING_FILE
 echo "Did run; now do exec"
 # remove some input files if just want to test
 singularity exec $SING_FILE rm -v ./rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
-singularity exec --bind $HOME:$PWD $SING_FILE python /rrlfe/high_level_reduction_script.py
+singularity exec --bind $OUT_DIR/$JOB_LABEL:$HOME $SING_FILE python /rrlfe/high_level_reduction_script.py
 
 # tar output files
 tar --remove-files --verbose --create -f job_results_$JOB_LABEL.tar $OUT_DIR/$JOB_LABEL
