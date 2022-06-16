@@ -26,6 +26,8 @@ echo "Making dir " $OUT_DIR/$JOB_LABEL
 mkdir $OUT_DIR/$JOB_LABEL
 echo "cd"
 cd $OUT_DIR/$JOB_LABEL
+echo "pwd"
+pwd
 
 # remove stuff that was already there
 #rm -fr $OUT_DIR/$JOB_LABEL/rrlfe
@@ -36,11 +38,11 @@ cd $OUT_DIR/$JOB_LABEL
 cp $SING_PATH/$SING_FILE ./$SING_FILE
 
 # run singularity
-singularity run $SING_FILE
+singularity run ./$SING_FILE
 echo "Did run; now do exec"
 # remove some input files if just want to test
-singularity exec $OUT_DIR/$JOB_LABEL/$SING_FILE rm -v $OUT_DIR/$JOB_LABEL/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
-singularity exec --bind $OUT_DIR/$JOB_LABEL/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$OUT_DIR/$JOB_LABEL/robospect.py:/Users/bandari/Documents/git.repos/robospect.py $OUT_DIR/$JOB_LABEL/$SING_FILE python $OUT_DIR/$JOB_LABEL/rrlfe/high_level_reduction_script.py
+singularity exec $PWD/$SING_FILE rm -v $PWD/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
+singularity exec --bind $PWD/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$PWD/robospect.py:/Users/bandari/Documents/git.repos/robospect.py $PWD/$SING_FILE python $OUT_DIR/$JOB_LABEL/rrlfe/high_level_reduction_script.py
 
 # tar output files
 tar --remove-files --verbose --create -f job_results_$JOB_LABEL.tar $OUT_DIR/$JOB_LABEL
