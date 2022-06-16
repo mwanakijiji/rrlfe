@@ -11,10 +11,10 @@ echo "Start time"
 date
 
 # set filesystem
-export SING_PATH=/scratch365/espaldin/
+export SING_PATH=/scratch365/espaldin
 export SING_FILE=test.sif
 export CODE_HOME=/afs/crc.nd.edu/user/e/espaldin/Private/rrlfe_work
-export OUT_DIR=/scratch365/espaldin/
+export OUT_DIR=/scratch365/espaldin
 
 # Required modules
 module load python/3
