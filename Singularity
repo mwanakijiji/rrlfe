@@ -22,7 +22,7 @@ From: python:3.8
   python --version
 
   # cd into a defined dir
-  cd Private/rrlfe_work
+  #cd Private/rrlfe_work
 
   # install dependencies into default python interpreter
   wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/requirements_bare_versions.txt
