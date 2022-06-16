@@ -38,6 +38,8 @@ pwd
 cp $SING_PATH/$SING_FILE .
 echo "pwd2"
 echo $PWD
+echo "ls2"
+ls
 
 # run singularity
 singularity run $SING_FILE
