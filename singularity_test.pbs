@@ -34,14 +34,16 @@ pwd
 #rm -fr $OUT_DIR/$JOB_LABEL/robospect.py
 #rm -fr $OUT_DIR/$JOB_LABEL/requirements_bare_versions.txt
 
-# copy singularity file to there
-cp $SING_PATH/$SING_FILE ./$SING_FILE
+# copy singularity file to here
+cp $SING_PATH/$SING_FILE .
+echo "pwd2"
+echo $PWD
 
 # run singularity
-singularity run ./$SING_FILE
+singularity run $SING_FILE
 echo "Did run; now do exec"
 # remove some input files if just want to test
-singularity exec $PWD/$SING_FILE rm -v $PWD/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
+singularity exec $SING_FILE rm -v ./rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
 singularity exec --bind $PWD/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$PWD/robospect.py:/Users/bandari/Documents/git.repos/robospect.py $PWD/$SING_FILE python $OUT_DIR/$JOB_LABEL/rrlfe/high_level_reduction_script.py
 
 # tar output files
