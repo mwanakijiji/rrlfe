@@ -4,7 +4,7 @@
 #$ -m abe            # Send mail when job begins, ends and aborts
 #$ -pe smp 4     # Specify parallel environment and legal core size
 #$ -q debug           # Specify queue
-#$ -N rrlfe_run_03       # Specify job name
+#$ -N rrlfe_run_04       # Specify job name
 
 ### start timestamp
 echo "Start time"
@@ -19,24 +19,30 @@ export OUT_DIR=/scratch365/espaldin/
 # Required modules
 module load python/3
 
-# remove stuff that was already there
-rm -fr $CODE_HOME/rrlfe
-rm -fr $CODE_HOME/robospect.py
-rm -fr $CODE_HOME/requirements_bare_versions.txt
-
-# make directory to write to (job label prevents confusion between jobs)
+# make directory to write to (random job label prevents confusion between jobs)
 export JOB_LABEL=$RANDOM
 echo "Starting job with label " $JOB_LABEL
 mkdir $OUT_DIR/$JOB_LABEL
 
-singularity run $SING_PATH/$SING_FILE
+# remove stuff that was already there
+rm -fr $OUT_DIR/$JOB_LABEL/rrlfe
+rm -fr $OUT_DIR/$JOB_LABEL/robospect.py
+rm -fr $OUT_DIR/$JOB_LABEL/requirements_bare_versions.txt
+
+# copy singularity file to there
+cp $SING_PATH/$SING_FILE $OUT_DIR/$JOB_LABEL/$SING_FILE
+
+# run singularity
+singularity run $OUT_DIR/$JOB_LABEL/$SING_FILE
 echo "Did run; now do exec"
 # remove some input files if just want to test
-#singularity exec $SING_PATH/$SING_FILE rm -v $CODE_HOME/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
-singularity exec --bind $CODE_HOME/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$CODE_HOME/robospect.py:/Users/bandari/Documents/git.repos/robospect.py,$OUT_DIR/$JOB_LABEL:/Users/bandari/Downloads/rrlfe_io $SING_PATH/$SING_FILE python $CODE_HOME/rrlfe/high_level_reduction_script.py
+singularity exec $OUT_DIR/$JOB_LABEL/$SING_FILE rm -v $OUT_DIR/$JOB_LABEL/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
+singularity exec --bind $OUT_DIR/$JOB_LABEL/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$OUT_DIR/$JOB_LABEL/robospect.py:/Users/bandari/Documents/git.repos/robospect.py $OUT_DIR/$JOB_LABEL/$SING_FILE python $OUT_DIR/$JOB_LABEL/rrlfe/high_level_reduction_script.py
 
 # tar output files
 tar --remove-files --verbose --create -f job_results_$JOB_LABEL.tar $OUT_DIR/$JOB_LABEL
+
+echo "Tarred results to job_results_" $JOB_LABEL ".tar"
 
 ### timestamp end
 echo "End time"
