@@ -42,7 +42,7 @@ echo "ls2"
 ls
 
 # run singularity
-singularity run --no-home $SING_FILE
+singularity run -w --no-home $SING_FILE
 echo "Did run; now do exec"
 # remove some input files if just want to test
 singularity exec --no-home $SING_FILE rm -v ./rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
