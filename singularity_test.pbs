@@ -46,13 +46,16 @@ ls
 #git clone https://github.com/mwanakijiji/rrlfe.git
 
 # run singularity (installs stuff)
-singularity run --writable --no-home $SING_FILE
+# (bind syntax is host:container)
+# export SINGULARITY_BIND="/opt,/data:/mnt"
+export SINGULARITY_BIND=$PWD:$HOME
+singularity run $SING_FILE
 echo "Did run; now do exec"
 # remove some input files if just want to test
-singularity exec --no-home $SING_FILE rm -v ./rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
-# (bind syntax is host:container)
+singularity exec $SING_FILE rm -v /rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
 echo "Did rm; now to next exec"
-singularity exec --no-home --bind $OUT_DIR/$JOB_LABEL/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$OUT_DIR/$JOB_LABEL/robospect.py:/Users/bandari/Documents/git.repos/robospect.py $SING_FILE python /rrlfe/high_level_reduction_script.py
+# $OUT_DIR/$JOB_LABEL/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$OUT_DIR/$JOB_LABEL/robospect.py:/Users/bandari/Documents/git.repos/robospect.py
+singularity exec $SING_FILE python /rrlfe/high_level_reduction_script.py
 
 # tar output files
 tar --remove-files --verbose --create -f job_results_$JOB_LABEL.tar $OUT_DIR/$JOB_LABEL
