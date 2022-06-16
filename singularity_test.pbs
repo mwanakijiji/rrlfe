@@ -13,7 +13,7 @@ date
 # set filesystem
 export SING_PATH=/scratch365/espaldin
 export SING_FILE=test.sif
-export CODE_HOME=/afs/crc.nd.edu/user/e/espaldin/Private/rrlfe_work
+#export CODE_HOME=/afs/crc.nd.edu/user/e/espaldin/Private/rrlfe_work
 export OUT_DIR=/scratch365/espaldin
 
 # Required modules
@@ -26,18 +26,17 @@ echo "Making dir " $OUT_DIR/$JOB_LABEL
 mkdir $OUT_DIR/$JOB_LABEL
 echo "cd"
 cd $OUT_DIR/$JOB_LABEL
-ls $OUT_DIR/
 
 # remove stuff that was already there
-rm -fr $OUT_DIR/$JOB_LABEL/rrlfe
-rm -fr $OUT_DIR/$JOB_LABEL/robospect.py
-rm -fr $OUT_DIR/$JOB_LABEL/requirements_bare_versions.txt
+#rm -fr $OUT_DIR/$JOB_LABEL/rrlfe
+#rm -fr $OUT_DIR/$JOB_LABEL/robospect.py
+#rm -fr $OUT_DIR/$JOB_LABEL/requirements_bare_versions.txt
 
 # copy singularity file to there
-cp $SING_PATH/$SING_FILE $OUT_DIR/$JOB_LABEL/$SING_FILE
+cp $SING_PATH/$SING_FILE ./$SING_FILE
 
 # run singularity
-singularity run $OUT_DIR/$JOB_LABEL/$SING_FILE
+singularity run $SING_FILE
 echo "Did run; now do exec"
 # remove some input files if just want to test
 singularity exec $OUT_DIR/$JOB_LABEL/$SING_FILE rm -v $OUT_DIR/$JOB_LABEL/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
