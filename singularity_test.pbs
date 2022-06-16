@@ -22,6 +22,7 @@ module load python/3
 # make directory to write to (random job label prevents confusion between jobs)
 export JOB_LABEL=$RANDOM
 echo "Starting job with label " $JOB_LABEL
+echo "Making dir " $OUT_DIR/$JOB_LABEL
 mkdir $OUT_DIR/$JOB_LABEL
 
 # remove stuff that was already there
