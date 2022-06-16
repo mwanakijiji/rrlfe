@@ -24,6 +24,8 @@ export JOB_LABEL=$RANDOM
 echo "Starting job with label " $JOB_LABEL
 echo "Making dir " $OUT_DIR/$JOB_LABEL
 mkdir $OUT_DIR/$JOB_LABEL
+echo "cd"
+cd $OUT_DIR/$JOB_LABEL
 ls $OUT_DIR/
 
 # remove stuff that was already there
