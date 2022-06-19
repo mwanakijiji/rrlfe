@@ -48,7 +48,7 @@ ls
 # run singularity (installs stuff)
 # (bind syntax is host:container)
 # export SINGULARITY_BIND="/opt,/data:/mnt"
-export SINGULARITY_BIND=$PWD:$HOME
+export SINGULARITY_BIND=$PWD:$HOME,$PWD:/Users/bandari/Documents/git.repos/
 singularity run $SING_FILE
 echo "Did run; now do exec"
 # test to list
