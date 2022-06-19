@@ -51,6 +51,10 @@ ls
 export SINGULARITY_BIND=$PWD:$HOME
 singularity run $SING_FILE
 echo "Did run; now do exec"
+# test to list
+singularity exec $SING_FILE ls ${PWD}/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/
+singularity exec $SING_FILE ls ${HOME}/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/
+singularity exec $SING_FILE ls ${HOME}
 # remove some input files if just want to test
 singularity exec $SING_FILE rm -v ${PWD}/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
 echo "Did rm; now to next exec"
