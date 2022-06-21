@@ -356,7 +356,7 @@ def write_soln_to_fits(model,
     if (model == "abcd"):
 
         # corner plot (requires 'storechain=True' in enumerate above)
-        samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, usecols=(1,2,3,4), names=["a", "b", "c", "d"])
+        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4), names=["a", "b", "c", "d"])
         c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
         c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
         c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
@@ -367,7 +367,7 @@ def write_soln_to_fits(model,
     elif (model == "abcdfghk"):
         # corner plot (requires 'storechain=True' in enumerate above)
         # just first few lines to test
-        samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, usecols=(1,2,3,4,5,6,7,8), names=["a", "b", "c", "d", "f", "g", "h", "k"])
+        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4,5,6,7,8), names=["a", "b", "c", "d", "f", "g", "h", "k"])
         c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
         c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
         c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
