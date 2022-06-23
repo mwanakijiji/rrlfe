@@ -28,7 +28,7 @@ def corner_plot(model,
 
         # corner plot (requires 'storechain=True' in enumerate above)
         test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
-        samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, usecols=(1,2,3,4), names=["a", "b", "c", "d"])
+        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), names=["a", "b", "c", "d"])
         fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$"],
                             quantiles=[0.16, 0.5, 0.84],
                             title_fmt='.2f',
@@ -70,7 +70,7 @@ def corner_plot(model,
         # corner plot (requires 'storechain=True' in enumerate above)
         # just first few lines to test
         test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
-        samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, usecols=(1,2,3,4,5,6,7,8), names=["a", "b", "c", "d", "f", "g", "h", "k"])
+        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), names=["a", "b", "c", "d", "f", "g", "h", "k"])
         fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$", "$f$", "$g$", "$h$", "$k$"],
                             quantiles=[0.16, 0.5, 0.84],
                             title_fmt='.2f',
@@ -356,7 +356,7 @@ def write_soln_to_fits(model,
     if (model == "abcd"):
 
         # corner plot (requires 'storechain=True' in enumerate above)
-        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4), names=["a", "b", "c", "d"])
+        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), names=["a", "b", "c", "d"])
         c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
         c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
         c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
@@ -367,7 +367,7 @@ def write_soln_to_fits(model,
     elif (model == "abcdfghk"):
         # corner plot (requires 'storechain=True' in enumerate above)
         # just first few lines to test
-        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4,5,6,7,8), names=["a", "b", "c", "d", "f", "g", "h", "k"])
+        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), names=["a", "b", "c", "d", "f", "g", "h", "k"])
         c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
         c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
         c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
@@ -379,7 +379,7 @@ def write_soln_to_fits(model,
         table_hdu = fits.BinTableHDU.from_columns([c1, c2, c3, c4, c5, c6, c7, c8], header=hdr)
 
 
-    # write out
+    # write out as FITS table
     if not test_flag: # pragma: no cover
         if os.path.exists(soln_write_name):
 
@@ -388,6 +388,14 @@ def write_soln_to_fits(model,
 
         table_hdu.writeto(soln_write_name, overwrite=True)
         logging.info("Full calibration MCMC posterior written to " + soln_write_name)
+
+
+    # to read back in, can use this syntax
+    '''
+    test = fits.open(fits_table_filename)
+    test[1].data # whole table
+    test[1].data['a'] # one col
+    '''
 
     # return FITS table for testing
     return table_hdu

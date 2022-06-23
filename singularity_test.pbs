@@ -60,6 +60,7 @@ echo "Did run; now do exec"
 #echo "Did rm; now to next exec"
 # $OUT_DIR/$JOB_LABEL/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$OUT_DIR/$JOB_LABEL/robospect.py:/Users/bandari/Documents/git.repos/robospect.py
 singularity exec $SING_FILE python ${HOME}/rrlfe/high_level_reduction_script.py
+echo "Did mcmc; now tarring"
 
 # tar output files
 tar --verbose --create -f job_results_$JOB_LABEL.tar $OUT_DIR/$JOB_LABEL
