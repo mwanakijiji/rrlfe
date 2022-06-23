@@ -3,8 +3,8 @@
 #$ -M espaldin@nd.edu   # Email address for job notification
 #$ -m abe            # Send mail when job begins, ends and aborts
 #$ -pe smp 4     # Specify parallel environment and legal core size
-#$ -q debug           # Specify queue
-#$ -N rrlfe_run_04       # Specify job name
+#$ -q long           # Specify queue
+#$ -N rrlfe_run_10_full_blown       # Specify job name
 
 ### start timestamp
 echo "Start time"
@@ -24,10 +24,7 @@ export JOB_LABEL=$RANDOM
 echo "Starting job with label " $JOB_LABEL
 echo "Making dir " $OUT_DIR/$JOB_LABEL
 mkdir $OUT_DIR/$JOB_LABEL
-echo "cd"
 cd $OUT_DIR/$JOB_LABEL
-echo "pwd"
-pwd
 
 # remove stuff that was already there
 #rm -fr $OUT_DIR/$JOB_LABEL/rrlfe
@@ -36,10 +33,6 @@ pwd
 
 # copy singularity file to here
 cp $SING_PATH/$SING_FILE .
-echo "pwd2"
-echo $PWD
-echo "ls2"
-ls
 
 # get code
 #wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/requirements_bare_versions.txt
@@ -51,14 +44,11 @@ ls
 export SINGULARITY_BIND=$PWD:$HOME,$PWD:/Users/bandari/Documents/git.repos/
 singularity run $SING_FILE
 echo "Did run; now do exec"
-# test to list
-#singularity exec $SING_FILE ls ${PWD}/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/
-#singularity exec $SING_FILE ls ${HOME}/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/
-#singularity exec $SING_FILE ls ${HOME}
-# remove some input files if just want to test
+
+# option to remove some input files if just want to test
 #singularity exec $SING_FILE rm -v ${HOME}/rrlfe/src/model_spectra/rrmods_all/original_ascii_files/[5-6]*
 #echo "Did rm; now to next exec"
-# $OUT_DIR/$JOB_LABEL/rrlfe:/Users/bandari/Documents/git.repos/rrlfe,$OUT_DIR/$JOB_LABEL/robospect.py:/Users/bandari/Documents/git.repos/robospect.py
+
 singularity exec $SING_FILE python ${HOME}/rrlfe/high_level_reduction_script.py
 echo "Did mcmc; now tarring"
 
