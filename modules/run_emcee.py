@@ -395,6 +395,13 @@ def write_soln_to_fits(model,
     test = fits.open(fits_table_filename)
     test[1].data # whole table
     test[1].data['a'] # one col
+
+    OR
+
+    from astropy.table import Table
+    table = Table.read(fits_table_filename)
+    x=np.array(table)
+    test2 = pd.DataFrame(x)
     '''
 
     # return FITS table for testing
