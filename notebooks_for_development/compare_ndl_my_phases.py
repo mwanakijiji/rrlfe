@@ -95,6 +95,9 @@ for i in range(0,len(df_all_merged)):
     '''
 #plt.scatter(np.subtract(1.,df_all_merged["my_phase"]),df_all_merged["ndl_phase"])
 plt.plot([0,1],[0,1], linestyle=":", color="gray")
+plt.xlabel("Eckhart phase")
+plt.ylabel("Nathan phase")
+plt.title("dashed line: 1-to-1")
 plt.show()
 
 

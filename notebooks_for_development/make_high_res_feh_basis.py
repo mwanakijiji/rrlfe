@@ -423,6 +423,8 @@ def main():
 
     # calculate the Fe/H of our program stars, given their values in Layden
     match_our_stars_layden["feh_high_res"] = m_final*match_our_stars_layden["feh_basis"] + b_final
+    match_our_stars_layden.to_csv("junk_mapped.csv")
+    print("Wrote junk_mapped.csv")
     import ipdb; ipdb.set_trace()
 
     # sanity check
