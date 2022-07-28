@@ -14,8 +14,8 @@ df_ndl_epochs = pd.read_csv("./data/spectra_epochs_lc.csv")
 df_ndl_phases = pd.read_csv("./data/phases_ndl.csv")
 
 # read in mine
-df_mine = pd.read_csv("./data/spectra_my_bjds.csv")
-
+df_mine = pd.read_csv("./data/spectra_my_bjds_20220726.csv")
+import ipdb; ipdb.set_trace()
 # make specific
 df_mine["my_spec_bjd"] = np.subtract(df_mine["bjd"],2400000) # subtract to compare with NDL
 df_mine["my_phase"] = df_mine["phasemod"]
@@ -23,7 +23,7 @@ df_mine["spec_file"] = df_mine["file"] # the original spectrum file name
 df_ndl_epochs["spec_file"] = df_ndl_epochs["filenames"] # the original spectrum file name (no change by NDL)
 df_ndl_epochs["ndl_spec_bjd"] = df_ndl_epochs["bjd"]
 df_ndl_phases["ndl_phase"] = df_ndl_phases["Phases"]
-
+ipdb.set_trace()
 # remove redundant rows with "c.fits" in filenames col
 df_ndl_epochs = df_ndl_epochs.loc[df_ndl_epochs["filenames"].str.contains(".c.fits")==False]
 # convert to ints
@@ -33,14 +33,14 @@ df_ndl_epochs["number_cur"] = df_ndl_epochs["#"].astype(int)
 df_ndl_phases["number_cur"] = df_ndl_phases["#Name"].str.split("_").str[-1]
 #df_ndl_phases["number_cur"] = df_ndl_phases["#Name"].str.extract('(\d+)')
 df_ndl_phases["number_cur"] = df_ndl_phases["number_cur"].astype(int)
-
+ipdb.set_trace()
 # extract the star name
 df_ndl_epochs["star_name"] = df_ndl_epochs["filenames"].str[:6]
 df_ndl_phases["star_name"] = df_ndl_phases["#Name"].str[:6]
 
 # merge NDL's tables with each other based on star name and cur number
 df_ndl_merged = df_ndl_epochs.merge(df_ndl_phases, on=["star_name","number_cur"], suffixes=(None,"_y"))
-
+ipdb.set_trace()
 # match NDL net table to my results by spectrum number (#)
 df_all_merged = df_mine.merge(df_ndl_merged, how='outer', on=["spec_file"])
 
@@ -79,7 +79,7 @@ plt.show()
 '''
 
 # for comparing NDL and my phases, and troubleshooting disagreement
-
+ipdb.set_trace()
 plt.clf()
 plt.scatter(df_all_merged["my_phase"],df_all_merged["ndl_phase"])
 

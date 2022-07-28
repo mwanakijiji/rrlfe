@@ -11,8 +11,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 df_spectra_epochs = pd.read_csv("./data/spec_bjds.csv")
-df_stellar_periods = pd.read_csv("./data/output_periods_all_stars.csv")
-df_epochs_of_max = pd.read_csv("./data/bjds_epochs_of_max.csv")
+df_stellar_periods = pd.read_csv("./data/output_periods_all_stars_20220726.csv")
+df_epochs_of_max = pd.read_csv("./data/bjds_epochs_of_max_20220726.csv")
 
 
 # make column in each dataframe that will be used to match by star

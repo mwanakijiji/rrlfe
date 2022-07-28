@@ -87,7 +87,7 @@ def normalize_curve(df_unnorm_photom, df_unnorm_spline, mag=True, nospline=False
     return df_join
 
 # read in data
-df_phases = pd.read_csv("./data/final_phases_ndl_and_me.csv")
+df_phases = pd.read_csv("./data/phases_all_master_no_repeat_fits.csv")
 
 # read in lightcurves
 stem_phased_curves = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/"
@@ -175,7 +175,7 @@ idx_sv_eri = df_phases["star_match"] == "SV Eri"
 idx_x_ari = df_phases["star_match"] == "X Ari"
 idx_t_sex = df_phases["star_match"] == "T Sex"
 idx_uy_cam = df_phases["star_match"] == "UY Cam"
-idx_v535_mon = df_phases["star_match"] == "V535 M"
+idx_v535_mon = df_phases["star_match"] == "V 535"
 idx_tt_lyn = df_phases["star_match"] == "TT Lyn"
 idx_tv_lyn = df_phases["star_match"] == "TV Lyn"
 idx_rr_leo = df_phases["star_match"] == "RR Leo"
@@ -384,7 +384,7 @@ axs[3, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # V535 Mon
 axs[3, 2].set_title(cases[11] + " (c)", fontsize=font_size_subtitles)
-axs[3, 2].annotate("TESS", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
+axs[3, 2].annotate("KELT", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[3, 2].axvline(i) for i in df_phases["my_phase"][idx_v535_mon].values]
 axs[3, 2].scatter(df_v535_mon["Phase"], df_v535_mon["y_photom_norm"], color="k", s=2,zorder=3)
 axs[3, 2].plot(df_v535_mon["Phase"],df_v535_mon["y_spline_norm"], color="r", zorder=5)
