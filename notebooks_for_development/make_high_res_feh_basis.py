@@ -31,9 +31,11 @@ class LitFehRaw():
         # Fe/H Clementini+ 1995
         self.df_clementini_feh = pd.read_csv(source_dir + "clementini_1995_abundances.dat")
 
-        # Fe/H Fernley+ 1996
+        '''
+        # Fe/H Fernley+ 1996 (superceded b Fernley+ 1997)
         self.df_fernley96_feh = pd.read_csv(source_dir + "fernley_1996_abundances.dat")
         # RES: 60,000, FeI & FeII, 5900-8100 A
+        '''
 
         # Fe/H from Fernley+ 1997
         self.df_fernley97_feh = pd.read_csv(source_dir + "fernley_1997_abundances.dat")
@@ -171,7 +173,7 @@ def main():
     df_govea = pd.DataFrame(raws.df_govea_feh) #avg
     df_layden = pd.DataFrame(raws.df_layden_feh) # simple
     df_clementini = pd.DataFrame(raws.df_clementini_feh) # logeps, then avg
-    df_fernley96 = pd.DataFrame(raws.df_fernley96_feh) # simple, add error
+    #df_fernley96 = pd.DataFrame(raws.df_fernley96_feh) # simple, add error (superceded by Fernley+ 1997)
     df_fernley97 = pd.DataFrame(raws.df_fernley97_feh) # simple
     df_lambert = pd.DataFrame(raws.df_lambert_logeps) # logeps, then avg
     df_wallerstein = pd.DataFrame(raws.df_wallerstein_feh) # simple, add error
@@ -210,9 +212,11 @@ def main():
     df_clementini["err_feh_single"] = np.sqrt(np.add(np.power(df_clementini["err_logeps_single"],2.),np.power(df_clementini.loc[idx_sol]["err_logeps_single"][0],2.)))
     #[df_clementini["log_eps_feI"],df_clementini.loc["log_eps_feII"]].mean() # avg logeps values
 
-    # Fernley+ 1996
+    '''
+    # Fernley+ 1996 (superceded by Fernley+ 1997)
     df_fernley96["feh_single"] = df_fernley96["feh"]
     df_fernley96["err_feh_single"] = 0.15 # estimate
+    '''
 
     # Fernley+ 1997
     df_fernley97["feh_single"] = df_fernley97["feh"]
@@ -278,11 +282,14 @@ def main():
     print("clementini")
     match_clementini = matchmaker(basis_table_pass=df_layden, input_table_pass=df_clementini)
     offset_clementini = find_offsets(match_clementini)
+    '''
     # match and find offsets: Fernley+ 1996
+    # Fernley+ 1996 (superceded by Fernley+ 1997)
     print("-----")
     print("fernley96")
     match_fernley96 = matchmaker(basis_table_pass=df_layden, input_table_pass=df_fernley96)
     offset_fernley96 = find_offsets(match_fernley96)
+    '''
     # match and find offsets: Fernley+ 1997
     print("-----")
     print("fernley97")
@@ -333,7 +340,7 @@ def main():
 
     # apply the offsets
     match_clementini["feh_single_lit_synced"] = np.add(offset_clementini,match_clementini["feh_single_lit"])
-    match_fernley96["feh_single_lit_synced"] = np.add(offset_fernley96,match_fernley96["feh_single_lit"])
+    #match_fernley96["feh_single_lit_synced"] = np.add(offset_fernley96,match_fernley96["feh_single_lit"]) # (superceded by Fernley+ 1997)
     match_fernley97["feh_single_lit_synced"] = np.add(offset_fernley97,match_fernley97["feh_single_lit"])
     match_lambert["feh_single_lit_synced"] = np.add(offset_lambert,match_lambert["feh_single_lit"])
     match_wallerstein["feh_single_lit_synced"] = np.add(offset_wallerstein,match_wallerstein["feh_single_lit"])
@@ -345,9 +352,8 @@ def main():
     match_crestani["feh_single_lit_synced"] = np.add(offset_crestani,match_crestani["feh_single_lit"])
 
     # merge everything together
-    # (this includes literature after Chadid+ 2017)
+    # (this includes literature after Chadid+ 2017; and Fernley+ 96 is superfluous and is removed)
     abcissa_feh_high_res_synched = [match_clementini["feh_single_basis"],
-                                    match_fernley96["feh_single_basis"],
                                     match_fernley97["feh_single_basis"],
                                     match_lambert["feh_single_basis"],
                                     match_wallerstein["feh_single_basis"],
@@ -359,7 +365,6 @@ def main():
                                     match_crestani["feh_single_basis"]]
 
     ordinate_feh_high_res_synched = [match_clementini["feh_single_lit_synced"],
-                                    match_fernley96["feh_single_lit_synced"],
                                     match_fernley97["feh_single_lit_synced"],
                                     match_lambert["feh_single_lit_synced"],
                                     match_wallerstein["feh_single_lit_synced"],
@@ -371,7 +376,6 @@ def main():
                                     match_crestani["feh_single_lit_synced"]]
 
     name_synched = [match_clementini["name_match"],
-                                    match_fernley96["name_match"],
                                     match_fernley97["name_match"],
                                     match_lambert["name_match"],
                                     match_wallerstein["name_match"],
@@ -439,7 +443,6 @@ def main():
     plt.clf()
     plt.plot([-2.75,0.05],[-3.,0.25],linestyle="--",color="gray")
     plt.scatter(match_clementini["feh_single_basis"],match_clementini["feh_single_lit"], label="Clementini+ 1995")
-    plt.scatter(match_fernley96["feh_single_basis"],match_fernley96["feh_single_lit"], label="Fernley+ 1996")
     plt.scatter(match_fernley97["feh_single_basis"],match_fernley97["feh_single_lit"], label="Fernley+ 1997")
     plt.scatter(match_lambert["feh_single_basis"],match_lambert["feh_single_lit"], label="Lambert+ 1996")
     plt.scatter(match_wallerstein["feh_single_basis"],match_wallerstein["feh_single_lit"], label="Wallerstein+ 2010")
@@ -457,7 +460,6 @@ def main():
     plt.clf()
     plt.plot([-2.75,0.05],[-3.,0.25],linestyle="--",color="gray")
     plt.scatter(match_clementini["feh_single_basis"],match_clementini["feh_single_lit_synced"], label="Clementini+ 1995")
-    plt.scatter(match_fernley96["feh_single_basis"],match_fernley96["feh_single_lit_synced"], label="Fernley+ 1996")
     plt.scatter(match_fernley97["feh_single_basis"],match_fernley97["feh_single_lit_synced"], label="Fernley+ 1997")
     plt.scatter(match_lambert["feh_single_basis"],match_lambert["feh_single_lit_synced"], label="Lambert+ 1996")
     plt.scatter(match_wallerstein["feh_single_basis"],match_wallerstein["feh_single_lit_synced"], label="Wallerstein+ 2010")
@@ -476,7 +478,6 @@ def main():
     plt.clf()
     plt.plot([-1.,1.],[0.,0.],linestyle="--",color="gray")
     plt.scatter(match_clementini["feh_single_basis"],np.subtract(match_clementini["feh_single_lit_synced"],match_clementini["feh_single_basis"]), label="Clementini+ 1995")
-    plt.scatter(match_fernley96["feh_single_basis"],np.subtract(match_fernley96["feh_single_lit_synced"],match_fernley96["feh_single_basis"]), label="Fernley+ 1996")
     plt.scatter(match_fernley97["feh_single_basis"],np.subtract(match_fernley97["feh_single_lit_synced"],match_fernley97["feh_single_basis"]), label="Fernley+ 1997")
     plt.scatter(match_lambert["feh_single_basis"],np.subtract(match_lambert["feh_single_lit_synced"],match_lambert["feh_single_basis"]), label="Lambert+ 1996")
     plt.scatter(match_wallerstein["feh_single_basis"],np.subtract(match_wallerstein["feh_single_lit_synced"],match_wallerstein["feh_single_basis"]), label="Wallerstein+ 2010")
@@ -495,7 +496,6 @@ def main():
     import ipdb; ipdb.set_trace()
 
     resids_synched = [np.subtract(match_clementini["feh_single_lit_synced"],match_clementini["feh_single_basis"]),
-                        np.subtract(match_fernley96["feh_single_lit_synced"],match_fernley96["feh_single_basis"]),
                         np.subtract(match_fernley97["feh_single_lit_synced"],match_fernley97["feh_single_basis"]),
                         np.subtract(match_lambert["feh_single_lit_synced"],match_lambert["feh_single_basis"]),
                         np.subtract(match_wallerstein["feh_single_lit_synced"],match_wallerstein["feh_single_basis"]),
@@ -509,7 +509,6 @@ def main():
     df_fyi_resids_synched = pd.concat(resids_synched)
 
     resids_nonsynched = [np.subtract(match_clementini["feh_single_lit"],match_clementini["feh_single_basis"]),
-                        np.subtract(match_fernley96["feh_single_lit"],match_fernley96["feh_single_basis"]),
                         np.subtract(match_fernley97["feh_single_lit"],match_fernley97["feh_single_basis"]),
                         np.subtract(match_lambert["feh_single_lit"],match_lambert["feh_single_basis"]),
                         np.subtract(match_wallerstein["feh_single_lit"],match_wallerstein["feh_single_basis"]),
