@@ -31,11 +31,10 @@ class LitFehRaw():
         # Fe/H Clementini+ 1995
         self.df_clementini_feh = pd.read_csv(source_dir + "clementini_1995_abundances.dat")
 
-        '''
-        # Fe/H Fernley+ 1996 (superceded b Fernley+ 1997)
+        # Fe/H Fernley+ 1996 (superceded b Fernley+ 1997, and only used here to
+        # reproduce Chadid's result)
         self.df_fernley96_feh = pd.read_csv(source_dir + "fernley_1996_abundances.dat")
         # RES: 60,000, FeI & FeII, 5900-8100 A
-        '''
 
         # Fe/H from Fernley+ 1997
         self.df_fernley97_feh = pd.read_csv(source_dir + "fernley_1997_abundances.dat")
@@ -173,7 +172,7 @@ def main():
     df_govea = pd.DataFrame(raws.df_govea_feh) #avg
     df_layden = pd.DataFrame(raws.df_layden_feh) # simple
     df_clementini = pd.DataFrame(raws.df_clementini_feh) # logeps, then avg
-    #df_fernley96 = pd.DataFrame(raws.df_fernley96_feh) # simple, add error (superceded by Fernley+ 1997)
+    df_fernley96 = pd.DataFrame(raws.df_fernley96_feh) # simple, add error (superceded by Fernley+ 1997)
     df_fernley97 = pd.DataFrame(raws.df_fernley97_feh) # simple
     df_lambert = pd.DataFrame(raws.df_lambert_logeps) # logeps, then avg
     df_wallerstein = pd.DataFrame(raws.df_wallerstein_feh) # simple, add error
@@ -193,10 +192,13 @@ def main():
     cols_govea = ["feIh","feIIh"]
     df_govea["feh_single"] = df_govea[cols_govea].mean(axis=1)
     df_govea["err_feh_single"] = 0.5*np.sqrt(np.add(np.power(df_govea["err_feIh"],2.),np.power(df_govea["err_feIIh"],2.)))
+    # feh_single means 'single value of Fe/H from a given literature source, which may be
+    # an average of two values they provide'
 
     # Layden 1994
     df_layden["feh_single"] = df_layden["feh"]
     df_layden["err_feh_single"] = df_layden["err_feh"]
+    df_layden["err_feh_basis"] = df_layden["err_feh"] # to make explicit what the error from Layden alone is
 
     # Clementini+ 1995
     idx_sol = df_clementini["name_match"] == "sol" # row corresponding to solar values
@@ -212,11 +214,9 @@ def main():
     df_clementini["err_feh_single"] = np.sqrt(np.add(np.power(df_clementini["err_logeps_single"],2.),np.power(df_clementini.loc[idx_sol]["err_logeps_single"][0],2.)))
     #[df_clementini["log_eps_feI"],df_clementini.loc["log_eps_feII"]].mean() # avg logeps values
 
-    '''
     # Fernley+ 1996 (superceded by Fernley+ 1997)
     df_fernley96["feh_single"] = df_fernley96["feh"]
     df_fernley96["err_feh_single"] = 0.15 # estimate
-    '''
 
     # Fernley+ 1997
     df_fernley97["feh_single"] = df_fernley97["feh"]
@@ -282,14 +282,14 @@ def main():
     print("clementini")
     match_clementini = matchmaker(basis_table_pass=df_layden, input_table_pass=df_clementini)
     offset_clementini = find_offsets(match_clementini)
-    '''
+
     # match and find offsets: Fernley+ 1996
     # Fernley+ 1996 (superceded by Fernley+ 1997)
     print("-----")
     print("fernley96")
     match_fernley96 = matchmaker(basis_table_pass=df_layden, input_table_pass=df_fernley96)
     offset_fernley96 = find_offsets(match_fernley96)
-    '''
+
     # match and find offsets: Fernley+ 1997
     print("-----")
     print("fernley97")
@@ -340,7 +340,7 @@ def main():
 
     # apply the offsets
     match_clementini["feh_single_lit_synced"] = np.add(offset_clementini,match_clementini["feh_single_lit"])
-    #match_fernley96["feh_single_lit_synced"] = np.add(offset_fernley96,match_fernley96["feh_single_lit"]) # (superceded by Fernley+ 1997)
+    match_fernley96["feh_single_lit_synced"] = np.add(offset_fernley96,match_fernley96["feh_single_lit"]) # (superceded by Fernley+ 1997)
     match_fernley97["feh_single_lit_synced"] = np.add(offset_fernley97,match_fernley97["feh_single_lit"])
     match_lambert["feh_single_lit_synced"] = np.add(offset_lambert,match_lambert["feh_single_lit"])
     match_wallerstein["feh_single_lit_synced"] = np.add(offset_wallerstein,match_wallerstein["feh_single_lit"])
@@ -389,7 +389,8 @@ def main():
     '''
     # begin Chadid reproduction
     # this includes only stuff Chadid did, to see how we compare with her
-    # note Chadid got m=1.100, b=+0.055, but they tossed some points
+    # Chadid got    m=1.100, b=+0.055, but they tossed some points
+    # I get         m=1.118, b=+0.026
     abcissa_feh_high_res_synched = [match_clementini["feh_single_basis"],
                                     match_fernley96["feh_single_basis"],
                                     match_lambert["feh_single_basis"],
@@ -427,9 +428,10 @@ def main():
 
     # calculate the Fe/H of our program stars, given their values in Layden
     match_our_stars_layden["feh_high_res"] = m_final*match_our_stars_layden["feh_basis"] + b_final
-    match_our_stars_layden.to_csv("junk_mapped.csv")
-    print("Wrote junk_mapped.csv")
     import ipdb; ipdb.set_trace()
+    cols_relevant = ["name_match", "err_feh_basis", "feh_basis", "feh_high_res", "type"]
+    match_our_stars_layden.to_csv("junk_mapped.csv", columns=cols_relevant)
+    print("Wrote junk_mapped.csv")
 
     # sanity check
     plt.plot([-2.75,0.05],[-2.75,0.05],linestyle="--",color="gray")
@@ -474,26 +476,54 @@ def main():
     plt.savefig(file_name_out2)
     print("Wrote", file_name_out2)
 
+    # find residuals against basis (or equivalently, the 1-to-1 line)
+    resids_clementini = np.subtract(match_clementini["feh_single_lit_synced"],match_clementini["feh_single_basis"])
+    resids_fernley97 = np.subtract(match_fernley97["feh_single_lit_synced"],match_fernley97["feh_single_basis"])
+    resids_lambert = np.subtract(match_lambert["feh_single_lit_synced"],match_lambert["feh_single_basis"])
+    resids_wallerstein = np.subtract(match_wallerstein["feh_single_lit_synced"],match_wallerstein["feh_single_basis"])
+    resids_chadid = np.subtract(match_chadid["feh_single_lit_synced"],match_chadid["feh_single_basis"])
+    resids_liu = np.subtract(match_liu["feh_single_lit_synced"],match_liu["feh_single_basis"])
+    resids_nemec = np.subtract(match_nemec["feh_single_lit_synced"],match_nemec["feh_single_basis"])
+    resids_solano = np.subtract(match_solano["feh_single_lit_synced"],match_solano["feh_single_basis"])
+    resids_pancino = np.subtract(match_pancino["feh_single_lit_synced"],match_pancino["feh_single_basis"])
+    resids_crestani = np.subtract(match_crestani["feh_single_lit_synced"],match_crestani["feh_single_basis"])
+    resids_all_against_1to1_list = [resids_clementini,
+                    resids_fernley97,
+                    resids_lambert,
+                    resids_wallerstein,
+                    resids_chadid,
+                    resids_liu,
+                    resids_nemec,
+                    resids_solano,
+                    resids_pancino,
+                    resids_crestani]
+    resids_all_against_1to1 = pd.concat(resids_all_against_1to1_list)
+
+    # find residuals against mapped value (or equivalently, the 1-to-1 line
+    # to get stdev; we can consider this to be the remapped [Fe/H] error
+    ## ## CONTINUE HERE
+    # need to match via col 'name_match' the match_our_stars_layden["feh_high_res"] w/ 'feh_single_lit_synced' columns from each lit dataframe,
+    # and do subtraction
+    import ipdb; ipdb.set_trace()
+
     # FYI, to see residuals around 1-to-1 line
     plt.clf()
     plt.plot([-1.,1.],[0.,0.],linestyle="--",color="gray")
-    plt.scatter(match_clementini["feh_single_basis"],np.subtract(match_clementini["feh_single_lit_synced"],match_clementini["feh_single_basis"]), label="Clementini+ 1995")
-    plt.scatter(match_fernley97["feh_single_basis"],np.subtract(match_fernley97["feh_single_lit_synced"],match_fernley97["feh_single_basis"]), label="Fernley+ 1997")
-    plt.scatter(match_lambert["feh_single_basis"],np.subtract(match_lambert["feh_single_lit_synced"],match_lambert["feh_single_basis"]), label="Lambert+ 1996")
-    plt.scatter(match_wallerstein["feh_single_basis"],np.subtract(match_wallerstein["feh_single_lit_synced"],match_wallerstein["feh_single_basis"]), label="Wallerstein+ 2010")
-    plt.scatter(match_chadid["feh_single_basis"],np.subtract(match_chadid["feh_single_lit_synced"],match_chadid["feh_single_basis"]), label="Chadid+ 2017")
-    plt.scatter(match_liu["feh_single_basis"],np.subtract(match_liu["feh_single_lit_synced"],match_liu["feh_single_basis"]), label="Liu+ 2013")
-    plt.scatter(match_nemec["feh_single_basis"],np.subtract(match_nemec["feh_single_lit_synced"],match_nemec["feh_single_basis"]), label="Nemec+ 2013")
-    plt.scatter(match_solano["feh_single_basis"],np.subtract(match_solano["feh_single_lit_synced"],match_solano["feh_single_basis"]), label="Solano+ 1997")
-    plt.scatter(match_pancino["feh_single_basis"],np.subtract(match_pancino["feh_single_lit_synced"],match_pancino["feh_single_basis"]), label="Pancino+ 2015")
-    plt.scatter(match_crestani["feh_single_basis"],np.subtract(match_crestani["feh_single_lit_synced"],match_crestani["feh_single_basis"]), label="Crestani+ 2021")
+    plt.scatter(match_clementini["feh_single_basis"],resids_clementini, label="Clementini+ 1995")
+    plt.scatter(match_fernley97["feh_single_basis"],resids_fernley97, label="Fernley+ 1997")
+    plt.scatter(match_lambert["feh_single_basis"],resids_lambert, label="Lambert+ 1996")
+    plt.scatter(match_wallerstein["feh_single_basis"],resids_wallerstein, label="Wallerstein+ 2010")
+    plt.scatter(match_chadid["feh_single_basis"],resids_chadid, label="Chadid+ 2017")
+    plt.scatter(match_liu["feh_single_basis"],resids_liu, label="Liu+ 2013")
+    plt.scatter(match_nemec["feh_single_basis"],resids_nemec, label="Nemec+ 2013")
+    plt.scatter(match_solano["feh_single_basis"],resids_solano, label="Solano+ 1997")
+    plt.scatter(match_pancino["feh_single_basis"],resids_pancino, label="Pancino+ 2015")
+    plt.scatter(match_crestani["feh_single_basis"],resids_crestani, label="Crestani+ 2021")
     plt.legend()
     plt.tight_layout()
     file_name_out3 = "test_resids.pdf"
     plt.savefig(file_name_out3)
     print("Wrote", file_name_out3)
-
-    import ipdb; ipdb.set_trace()
 
     resids_synched = [np.subtract(match_clementini["feh_single_lit_synced"],match_clementini["feh_single_basis"]),
                         np.subtract(match_fernley97["feh_single_lit_synced"],match_fernley97["feh_single_basis"]),
@@ -520,7 +550,6 @@ def main():
                         np.subtract(match_crestani["feh_single_lit"],match_crestani["feh_single_basis"])
                         ]
     df_fyi_resids_nonsynched = pd.concat(resids_nonsynched)
-    import ipdb; ipdb.set_trace()
 
     '''
     .values_equal()
