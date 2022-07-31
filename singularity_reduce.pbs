@@ -41,7 +41,7 @@ cp $SING_PATH/$SING_FILE .
 # run singularity (installs stuff)
 # (bind syntax is host:container)
 # bind top level in container to current directory in host system
-export SINGULARITY_BIND=$PWD:$HOME,$PWD:/Users/bandari/Documents/git.repos/,/scratch365,/afs
+export SINGULARITY_BIND=$PWD:$HOME,$PWD:/Users/bandari/Documents/git.repos/
 singularity run $SING_FILE
 echo "Did run; now do exec"
 
