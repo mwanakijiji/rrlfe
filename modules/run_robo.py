@@ -63,22 +63,13 @@ class RunRobo:
         ##                               --C. Waters]
 
         logging.info("Robospect cmd:")
-        logging.info("python "+ self.robo_dir + "bin/rSpect.py -i 4 " + str(file_name) + \
-                    " -P " + self.norm_spec_deposit_dir + file_specific_string + \
-                    " --line_list " + self.robo_dir + "tmp/ll" +" -C name null" + \
-                    " -D name null" +" -N name boxcar" + " -I range 10.0" + \
-                    " -F chi_window 20.0 " + "-vvvv")
-        os.system("python " +
-              self.robo_dir + "bin/rSpect.py -i 4 " +
-              str(file_name) +
-              " -P " + self.norm_spec_deposit_dir + file_specific_string +
-              " --line_list " + self.robo_dir + "tmp/ll" +
-              " -C name null" +
-              " -D name null" +
-              " -N name boxcar" +
-              " -I range 10.0" +
-              " -F chi_window 20.0 " +
-              "-vvvv")
+        cmd_string = "python "+ self.robo_dir + "bin/rSpect.py -i 4 " + str(file_name) + \
+            " -P " + self.norm_spec_deposit_dir + file_specific_string + \
+            " --line_list " + self.robo_dir + "tmp/ll" +" -C name null" + \
+            " -D name null" + " -N name boxcar" + "-v silent" + " -I range 10.0" + \
+            " -F chi_window 20.0 " + "-vvvv"
+        logging.info(cmd_string)
+        os.system(cmd_string)
 
         logging.info("Robospect output files written to " + \
             self.norm_spec_deposit_dir + file_specific_string + "*")
