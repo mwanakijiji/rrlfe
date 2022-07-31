@@ -40,7 +40,7 @@ compiled_bkgrnd_file_path_abs = config_red["data_dirs"]["DIR_BIN"] + "/bkgrnd"
 
 # number of cores to use
 #ncpu = multiprocessing.cpu_count()
-ncpu = 1
+ncpu = 4
 
 # prompt user if files will be overwritten? (turn to false if running on HPC)
 prompt_user = True

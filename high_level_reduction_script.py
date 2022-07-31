@@ -29,7 +29,7 @@ def main():
     # spectra, normalize them, and write out normalizations
     ## ## just 1 or 2 realizations for testing (default is 100)
 
-    create_spec_realizations.create_spec_realizations_main(num = 2, noise_level=0.07, spec_file_type="ascii.no_header")
+    create_spec_realizations.create_spec_realizations_main(num = 1, noise_level=0.07, spec_file_type="ascii.no_header")
 
     # run_robospect on normalized synthetic spectra
     run_robo.main()
