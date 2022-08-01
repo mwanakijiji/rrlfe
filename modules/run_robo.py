@@ -74,7 +74,7 @@ class RunRobo:
             logging.info("Robospect output files written to " + \
                 self.norm_spec_deposit_dir + file_specific_string + "*")
         except:
-            logging.error(cmd_string)
+            logging.error("Failed to carry out cmd " + cmd_string)
 
 
 def main(
