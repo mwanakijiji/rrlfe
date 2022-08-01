@@ -69,10 +69,12 @@ class RunRobo:
             " -D name null" + " -N name boxcar" + " -v silent" + " -I range 10.0" + \
             " -F chi_window 20.0 " + "-vvvv"
         logging.info(cmd_string)
-        os.system(cmd_string)
-
-        logging.info("Robospect output files written to " + \
-            self.norm_spec_deposit_dir + file_specific_string + "*")
+        try:
+            os.system(cmd_string)
+            logging.info("Robospect output files written to " + \
+                self.norm_spec_deposit_dir + file_specific_string + "*")
+        except:
+            logging.error(cmd_string)
 
 
 def main(
