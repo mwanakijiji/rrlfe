@@ -275,7 +275,6 @@ def main():
 
     # match to extract Fe/H of our program stars from Layden 1994
     match_our_stars_layden = matchmaker(basis_table_pass=df_layden, input_table_pass=df_our_stars)
-
     # match and find offsets: Govea+ 2014 [NO MATCHES!]
     # match and find offsets: Clementini+ 1995
     print("-----")
@@ -390,7 +389,8 @@ def main():
     # begin Chadid reproduction
     # this includes only stuff Chadid did, to see how we compare with her
     # Chadid got    m=1.100, b=+0.055, but they tossed some points
-    # I get         m=1.118, b=+0.026
+    # I get         m=1.118, b=+0.026 (no error bars considered)
+    # I get         m=1.1215,b=+0.02946 (with error bars in x and y)
     abcissa_feh_high_res_synched = [match_clementini["feh_single_basis"],
                                     match_fernley96["feh_single_basis"],
                                     match_lambert["feh_single_basis"],
@@ -428,7 +428,6 @@ def main():
 
     # calculate the Fe/H of our program stars, given their values in Layden
     match_our_stars_layden["feh_high_res"] = m_final*match_our_stars_layden["feh_basis"] + b_final
-    import ipdb; ipdb.set_trace()
     cols_relevant = ["name_match", "err_feh_basis", "feh_basis", "feh_high_res", "type"]
     match_our_stars_layden.to_csv("junk_mapped.csv", columns=cols_relevant)
     print("Wrote junk_mapped.csv")
@@ -445,14 +444,14 @@ def main():
     plt.clf()
     plt.plot([-2.75,0.05],[-3.,0.25],linestyle="--",color="gray")
     plt.scatter(match_clementini["feh_single_basis"],match_clementini["feh_single_lit"], label="Clementini+ 1995")
-    plt.scatter(match_fernley97["feh_single_basis"],match_fernley97["feh_single_lit"], label="Fernley+ 1997")
     plt.scatter(match_lambert["feh_single_basis"],match_lambert["feh_single_lit"], label="Lambert+ 1996")
+    plt.scatter(match_fernley97["feh_single_basis"],match_fernley97["feh_single_lit"], label="Fernley+ 1997")
+    plt.scatter(match_solano["feh_single_basis"],match_solano["feh_single_lit"], label="Solano+ 1997")
     plt.scatter(match_wallerstein["feh_single_basis"],match_wallerstein["feh_single_lit"], label="Wallerstein+ 2010")
-    plt.scatter(match_chadid["feh_single_basis"],match_chadid["feh_single_lit"], label="Chadid+ 2017")
     plt.scatter(match_liu["feh_single_basis"],match_liu["feh_single_lit"], label="Liu+ 2013")
     plt.scatter(match_nemec["feh_single_basis"],match_nemec["feh_single_lit"], label="Nemec+ 2013")
-    plt.scatter(match_solano["feh_single_basis"],match_solano["feh_single_lit"], label="Solano+ 1997")
     plt.scatter(match_pancino["feh_single_basis"],match_pancino["feh_single_lit"], label="Pancino+ 2015")
+    plt.scatter(match_chadid["feh_single_basis"],match_chadid["feh_single_lit"], label="Chadid+ 2017")
     plt.scatter(match_crestani["feh_single_basis"],match_crestani["feh_single_lit"], label="Crestani+ 2021")
     plt.legend()
     file_name_out1 = "test_unsynced.pdf"
@@ -460,68 +459,136 @@ def main():
     print("Wrote", file_name_out1)
 
     plt.clf()
-    plt.plot([-2.75,0.05],[-3.,0.25],linestyle="--",color="gray")
+    plt.figure(figsize=(7.8,5.0))
+    plt.plot([-2.6,0.05],[-2.6,0.05],linestyle="--",color="gray", label="[Fe/H] equality") # 1-to-1 line
+    plt.xlim([-2.7,0.2])
+    plt.ylim([-4.5,0.4])
+    m_matlab = 1.1215 # incorporates errors in both x and y
+    b_matlab = 0.029461
+    mean_err_basis = 0.17706422018348625
+    mean_err_lit = 0.12125638062465309
+    plt.plot([-2.6, 0.05], [m_matlab*(-2.6)+b_matlab, m_matlab*0.05+b_matlab], label="Best fit") # line of best fit
+    plt.errorbar([-2.25], [-0.25], yerr=mean_err_lit, xerr=mean_err_basis, fmt="", ecolor="k", capsize=3)
     plt.scatter(match_clementini["feh_single_basis"],match_clementini["feh_single_lit_synced"], label="Clementini+ 1995")
-    plt.scatter(match_fernley97["feh_single_basis"],match_fernley97["feh_single_lit_synced"], label="Fernley+ 1997")
     plt.scatter(match_lambert["feh_single_basis"],match_lambert["feh_single_lit_synced"], label="Lambert+ 1996")
+    plt.scatter(match_fernley97["feh_single_basis"],match_fernley97["feh_single_lit_synced"], label="Fernley+ 1997")
+    plt.scatter(match_solano["feh_single_basis"],match_solano["feh_single_lit_synced"], label="Solano+ 1997")
     plt.scatter(match_wallerstein["feh_single_basis"],match_wallerstein["feh_single_lit_synced"], label="Wallerstein+ 2010")
-    plt.scatter(match_chadid["feh_single_basis"],match_chadid["feh_single_lit_synced"], label="Chadid+ 2017")
     plt.scatter(match_liu["feh_single_basis"],match_liu["feh_single_lit_synced"], label="Liu+ 2013")
     plt.scatter(match_nemec["feh_single_basis"],match_nemec["feh_single_lit_synced"], label="Nemec+ 2013")
-    plt.scatter(match_solano["feh_single_basis"],match_solano["feh_single_lit_synced"], label="Solano+ 1997")
     plt.scatter(match_pancino["feh_single_basis"],match_pancino["feh_single_lit_synced"], label="Pancino+ 2015")
+    plt.scatter(match_chadid["feh_single_basis"],match_chadid["feh_single_lit_synced"], label="Chadid+ 2017")
     plt.scatter(match_crestani["feh_single_basis"],match_crestani["feh_single_lit_synced"], label="Crestani+ 2021")
-    plt.legend()
-    file_name_out2 = "test_synced.pdf"
+    '''
+    legend1 = plt.legend(["Clementini+ 1995", "Lambert+ 1996"], ncol=2, loc="lower right", fontsize=12)
+    legend2 = plt.legend(["Wallerstein+ 2010", "Nemec+ 2013"], ncol=2, loc="upper left", fontsize=12)
+    plt.gca().add_artist(legend1)
+    plt.gca().add_artist(legend2)
+    '''
+    #plt.legend(l1,l2,loc="lower right")
+    plt.legend(ncol=3, loc="lower center", fontsize=10)
+    plt.xticks(fontsize=11)
+    plt.yticks(fontsize=11)
+    plt.xlabel("[Fe/H], Layden 94", fontsize=16)
+    plt.ylabel("[Fe/H], High res + shift", fontsize=16)
+    file_name_out2 = "junk_pub_plot_synced.pdf"
     plt.savefig(file_name_out2)
     print("Wrote", file_name_out2)
+    '''
+    cols_junk = ["feh_single_basis", "feh_single_lit_synced"]
+    junk_test = pd.concat([match_clementini[cols_junk],
+                match_fernley97[cols_junk],
+                match_lambert[cols_junk],
+                match_wallerstein[cols_junk],
+                match_chadid[cols_junk],
+                match_liu[cols_junk],
+                match_nemec[cols_junk],
+                match_solano[cols_junk],
+                match_pancino[cols_junk],
+                match_crestani[cols_junk]])
+    '''
 
     # find residuals against basis (or equivalently, the 1-to-1 line)
-    resids_clementini = np.subtract(match_clementini["feh_single_lit_synced"],match_clementini["feh_single_basis"])
-    resids_fernley97 = np.subtract(match_fernley97["feh_single_lit_synced"],match_fernley97["feh_single_basis"])
-    resids_lambert = np.subtract(match_lambert["feh_single_lit_synced"],match_lambert["feh_single_basis"])
-    resids_wallerstein = np.subtract(match_wallerstein["feh_single_lit_synced"],match_wallerstein["feh_single_basis"])
-    resids_chadid = np.subtract(match_chadid["feh_single_lit_synced"],match_chadid["feh_single_basis"])
-    resids_liu = np.subtract(match_liu["feh_single_lit_synced"],match_liu["feh_single_basis"])
-    resids_nemec = np.subtract(match_nemec["feh_single_lit_synced"],match_nemec["feh_single_basis"])
-    resids_solano = np.subtract(match_solano["feh_single_lit_synced"],match_solano["feh_single_basis"])
-    resids_pancino = np.subtract(match_pancino["feh_single_lit_synced"],match_pancino["feh_single_basis"])
-    resids_crestani = np.subtract(match_crestani["feh_single_lit_synced"],match_crestani["feh_single_basis"])
-    resids_all_against_1to1_list = [resids_clementini,
-                    resids_fernley97,
-                    resids_lambert,
-                    resids_wallerstein,
-                    resids_chadid,
-                    resids_liu,
-                    resids_nemec,
-                    resids_solano,
-                    resids_pancino,
-                    resids_crestani]
-    resids_all_against_1to1 = pd.concat(resids_all_against_1to1_list)
+    resids_to_1to1_clementini = np.subtract(match_clementini["feh_single_lit_synced"],match_clementini["feh_single_basis"])
+    resids_to_1to1_fernley97 = np.subtract(match_fernley97["feh_single_lit_synced"],match_fernley97["feh_single_basis"])
+    resids_to_1to1_lambert = np.subtract(match_lambert["feh_single_lit_synced"],match_lambert["feh_single_basis"])
+    resids_to_1to1_wallerstein = np.subtract(match_wallerstein["feh_single_lit_synced"],match_wallerstein["feh_single_basis"])
+    resids_to_1to1_chadid = np.subtract(match_chadid["feh_single_lit_synced"],match_chadid["feh_single_basis"])
+    resids_to_1to1_liu = np.subtract(match_liu["feh_single_lit_synced"],match_liu["feh_single_basis"])
+    resids_to_1to1_nemec = np.subtract(match_nemec["feh_single_lit_synced"],match_nemec["feh_single_basis"])
+    resids_to_1to1_solano = np.subtract(match_solano["feh_single_lit_synced"],match_solano["feh_single_basis"])
+    resids_to_1to1_pancino = np.subtract(match_pancino["feh_single_lit_synced"],match_pancino["feh_single_basis"])
+    resids_to_1to1_crestani = np.subtract(match_crestani["feh_single_lit_synced"],match_crestani["feh_single_basis"])
+    resids_all_to_1to1_list = [resids_to_1to1_clementini,
+                    resids_to_1to1_fernley97,
+                    resids_to_1to1_lambert,
+                    resids_to_1to1_wallerstein,
+                    resids_to_1to1_chadid,
+                    resids_to_1to1_liu,
+                    resids_to_1to1_nemec,
+                    resids_to_1to1_solano,
+                    resids_to_1to1_pancino,
+                    resids_to_1to1_crestani]
+    resids_all_against_1to1 = pd.concat(resids_all_to_1to1_list)
 
-    # find residuals against mapped value (or equivalently, the 1-to-1 line
-    # to get stdev; we can consider this to be the remapped [Fe/H] error
-    ## ## CONTINUE HERE
-    # need to match via col 'name_match' the match_our_stars_layden["feh_high_res"] w/ 'feh_single_lit_synced' columns from each lit dataframe,
-    # and do subtraction
-    import ipdb; ipdb.set_trace()
+    # find residuals against mapped value (or equivalently, the mx+b line)
+    # to get stdev; we can consider this to be the remapped [Fe/H] error;
+    # should be similar to residuals to 1-to-1 line
+    match_clementini["resids_initial_mapping"] = np.subtract(match_clementini["feh_single_lit_synced"],np.add(np.multiply(m_final,match_clementini["feh_single_basis"]),b_final))
+    match_fernley97["resids_initial_mapping"] = np.subtract(match_fernley97["feh_single_lit_synced"],np.add(np.multiply(m_final,match_fernley97["feh_single_basis"]),b_final))
+    match_lambert["resids_initial_mapping"] = np.subtract(match_lambert["feh_single_lit_synced"],np.add(np.multiply(m_final,match_lambert["feh_single_basis"]),b_final))
+    match_wallerstein["resids_initial_mapping"] = np.subtract(match_wallerstein["feh_single_lit_synced"],np.add(np.multiply(m_final,match_wallerstein["feh_single_basis"]),b_final))
+    match_chadid["resids_initial_mapping"] = np.subtract(match_chadid["feh_single_lit_synced"],np.add(np.multiply(m_final,match_chadid["feh_single_basis"]),b_final))
+    match_liu["resids_initial_mapping"] = np.subtract(match_liu["feh_single_lit_synced"],np.add(np.multiply(m_final,match_liu["feh_single_basis"]),b_final))
+    match_nemec["resids_initial_mapping"] = np.subtract(match_nemec["feh_single_lit_synced"],np.add(np.multiply(m_final,match_nemec["feh_single_basis"]),b_final))
+    match_solano["resids_initial_mapping"] = np.subtract(match_solano["feh_single_lit_synced"],np.add(np.multiply(m_final,match_solano["feh_single_basis"]),b_final))
+    match_pancino["resids_initial_mapping"] = np.subtract(match_pancino["feh_single_lit_synced"],np.add(np.multiply(m_final,match_pancino["feh_single_basis"]),b_final))
+    match_crestani["resids_initial_mapping"] = np.subtract(match_crestani["feh_single_lit_synced"],np.add(np.multiply(m_final,match_crestani["feh_single_basis"]),b_final))
 
+    # concatenate dataframes vertically, and using only relevant columns,
+    # so that we have long lists of Fe/Hs and errors, from the literature and from Layden
+    match_relevant_cols = ["name_match",
+                                "feh_single_basis", "err_feh_single_basis",
+                                "feh_single_lit_synced", "err_feh_single_lit",
+                                "resids_initial_mapping"]
+
+    match_clementini_relevant = match_clementini[match_relevant_cols]
+    match_fernley97_relevant = match_fernley97[match_relevant_cols]
+    match_lambert_relevant = match_lambert[match_relevant_cols]
+    match_wallerstein_relevant = match_wallerstein[match_relevant_cols]
+    match_chadid_relevant = match_chadid[match_relevant_cols]
+    match_liu_relevant = match_liu[match_relevant_cols]
+    match_nemec_relevant = match_nemec[match_relevant_cols]
+    match_solano_relevant = match_solano[match_relevant_cols]
+    match_pancino_relevant = match_pancino[match_relevant_cols]
+    match_crestani_relevant = match_crestani[match_relevant_cols]
+
+    all_matches_concatenated = pd.concat([match_clementini_relevant,
+                match_fernley97_relevant,
+                match_lambert_relevant,
+                match_wallerstein_relevant,
+                match_chadid_relevant,
+                match_liu_relevant,
+                match_nemec_relevant,
+                match_solano_relevant,
+                match_pancino_relevant,
+                match_crestani_relevant])
     # FYI, to see residuals around 1-to-1 line
     plt.clf()
     plt.plot([-1.,1.],[0.,0.],linestyle="--",color="gray")
-    plt.scatter(match_clementini["feh_single_basis"],resids_clementini, label="Clementini+ 1995")
-    plt.scatter(match_fernley97["feh_single_basis"],resids_fernley97, label="Fernley+ 1997")
-    plt.scatter(match_lambert["feh_single_basis"],resids_lambert, label="Lambert+ 1996")
-    plt.scatter(match_wallerstein["feh_single_basis"],resids_wallerstein, label="Wallerstein+ 2010")
-    plt.scatter(match_chadid["feh_single_basis"],resids_chadid, label="Chadid+ 2017")
-    plt.scatter(match_liu["feh_single_basis"],resids_liu, label="Liu+ 2013")
-    plt.scatter(match_nemec["feh_single_basis"],resids_nemec, label="Nemec+ 2013")
-    plt.scatter(match_solano["feh_single_basis"],resids_solano, label="Solano+ 1997")
-    plt.scatter(match_pancino["feh_single_basis"],resids_pancino, label="Pancino+ 2015")
-    plt.scatter(match_crestani["feh_single_basis"],resids_crestani, label="Crestani+ 2021")
+    plt.scatter(match_clementini["feh_single_basis"],resids_to_1to1_clementini, label="Clementini+ 1995")
+    plt.scatter(match_fernley97["feh_single_basis"],resids_to_1to1_fernley97, label="Fernley+ 1997")
+    plt.scatter(match_lambert["feh_single_basis"],resids_to_1to1_lambert, label="Lambert+ 1996")
+    plt.scatter(match_wallerstein["feh_single_basis"],resids_to_1to1_wallerstein, label="Wallerstein+ 2010")
+    plt.scatter(match_chadid["feh_single_basis"],resids_to_1to1_chadid, label="Chadid+ 2017")
+    plt.scatter(match_liu["feh_single_basis"],resids_to_1to1_liu, label="Liu+ 2013")
+    plt.scatter(match_nemec["feh_single_basis"],resids_to_1to1_nemec, label="Nemec+ 2013")
+    plt.scatter(match_solano["feh_single_basis"],resids_to_1to1_solano, label="Solano+ 1997")
+    plt.scatter(match_pancino["feh_single_basis"],resids_to_1to1_pancino, label="Pancino+ 2015")
+    plt.scatter(match_crestani["feh_single_basis"],resids_to_1to1_crestani, label="Crestani+ 2021")
     plt.legend()
     plt.tight_layout()
-    file_name_out3 = "test_resids.pdf"
+    file_name_out3 = "test_resids_to_1to1.pdf"
     plt.savefig(file_name_out3)
     print("Wrote", file_name_out3)
 
@@ -550,14 +617,6 @@ def main():
                         np.subtract(match_crestani["feh_single_lit"],match_crestani["feh_single_basis"])
                         ]
     df_fyi_resids_nonsynched = pd.concat(resids_nonsynched)
-
-    '''
-    .values_equal()
-
-    # make common basis
-    sdiff = astropy.table.join(table_1, table_2, keys=["ASAS_common"], join_type="inner")
-    '''
-
 
 # entry point
 if __name__ == '__main__':
