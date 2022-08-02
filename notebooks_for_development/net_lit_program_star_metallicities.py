@@ -68,6 +68,9 @@ plt.errorbar(df_layden["feh"], df_layden["feh_mapped"],
 plt.show()
 '''
 
+pd.set_option('display.max_rows', 1000)
+print(df_layden)
+
 file_write = "junk_mapped_program_fehs.csv"
 df_layden.to_csv(file_write)
 print("Wrote " + file_write)
