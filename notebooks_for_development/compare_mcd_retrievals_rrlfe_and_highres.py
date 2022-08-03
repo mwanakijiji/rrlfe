@@ -86,8 +86,10 @@ h2 = sns.lineplot(x=[-2.8,0.0], y=lobf, legend=False)
 plt.setp(h1, zorder=2)
 plt.setp(h2, zorder=3)
 
-g.set_xlabels("[Fe/H], mapped high-res", fontsize=22)
-g.set_ylabels("[Fe/H], retrieved", fontsize=22)
+g.set_xlabels("[Fe/H], mapped high-res", fontsize=30)
+g.set_ylabels("[Fe/H], retrieved", fontsize=30)
+
+#g.set_yticklabels(g.get_yticks(), size = 25)
 
 g.fig.set_size_inches(16,9)
 plt.grid()
