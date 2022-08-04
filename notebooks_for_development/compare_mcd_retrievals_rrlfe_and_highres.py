@@ -18,7 +18,7 @@ file_name_phases = "./src/mcd_final_phases_ascii_files_all.list"
 df_rrlfe = pd.read_csv(stem + file_name_rrlfe_retrieved)
 df_highres = pd.read_csv(stem + file_name_highres)
 df_phases = pd.read_csv(stem + file_name_phases)
-
+import ipdb; ipdb.set_trace()
 # match Fe/Hs between two sources of Fe/H
 df_rrlfe["name_match"] = ""
 df_rrlfe["name_match"][df_rrlfe["realization_spec_file_name"].str.contains("X_Ari")] = "X_Ari"
