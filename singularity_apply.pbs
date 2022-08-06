@@ -3,8 +3,8 @@
 #$ -M espaldin@nd.edu   # Email address for job notification
 #$ -m abe            # Send mail when job begins, ends and aborts
 #$ -pe smp 4     # Specify parallel environment and legal core size
-#$ -q long           # Specify queue
-#$ -N rrlfe_apply_01       # Specify job name
+#$ -q debug           # Specify queue
+#$ -N rrlfe_reduce_01       # Specify job name
 
 ### start timestamp
 echo "Start time"
@@ -50,7 +50,7 @@ echo "Did run; now do exec"
 #echo "Did rm; now to next exec"
 
 singularity exec $SING_FILE python ${HOME}/rrlfe/high_level_application_script.py
-echo "Did application; now tarring"
+echo "Did mcmc; now tarring"
 
 # tar output files
 tar --verbose --create -f job_results_$JOB_LABEL.tar $OUT_DIR/$JOB_LABEL
