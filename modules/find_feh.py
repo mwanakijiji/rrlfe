@@ -196,7 +196,6 @@ class findFeH():
 
                 # just want one of the two roots
                 feh_sample = feh_sample[1]
-                #import ipdb; ipdb.set_trace()
 
                 # check for NaN answers
                 x=feh_sample
