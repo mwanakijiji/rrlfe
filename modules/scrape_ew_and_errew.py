@@ -533,9 +533,8 @@ def stack_spectra(
         try:
             orig_name = original_names[condition_array]["orig_spec_file_name"].values[0]
         except: # pragma: no cover
-            # sanity check: if strings are not shared, abort
-            input("Spectrum file strings don't match!!")
-        #import ipdb; ipdb.set_trace()
+            # sanity check: if strings are not shared, skip and move to next spectrum
+            logging.warning("Spectrum file strings don't match!! Skipping " + this_realization_spectrum)
 
         # select data from table relevant to this spectrum realization
         data_this_spectrum = df_prestack.where(df_prestack["realization_spec_file_name"] == this_realization_spectrum).dropna().reset_index()

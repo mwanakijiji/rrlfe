@@ -21,7 +21,7 @@ def main():
 
     # Make all the directories
     make_dirs(objective = objective_choice)
-
+    '''
     # Compile the C spectral normalization script
     compile_normalization.compile_bkgrnd()
 
@@ -57,7 +57,7 @@ def main():
                     read_in_filename = config_apply["data_dirs"]["DIR_EW_PRODS"]+config_apply["file_names"]["SCRAPED_SCIENCE_SPECTRA_FILE_NAME"],
                     write_out_filename = config_apply["data_dirs"]["DIR_EW_PRODS"]+config_apply["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"]
                     )
-
+    '''
     # put the good EW data into a table with
     # rows corresponding to files and cols for the lines
     data_stacked = scrape_ew_and_errew.stack_spectra(
