@@ -4,7 +4,7 @@
 #$ -m abe            # Send mail when job begins, ends and aborts
 #$ -pe smp 4     # Specify parallel environment and legal core size
 #$ -q debug           # Specify queue
-#$ -N rrlfe_reduce_01       # Specify job name
+#$ -N rrlfe_reduce_full_job_nonoise_01       # Specify job name
 
 ### start timestamp
 echo "Start time"
