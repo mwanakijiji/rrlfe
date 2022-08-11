@@ -8,6 +8,7 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 stem = "/Users/bandari/Documents/git.repos/rrlfe/"
 
@@ -30,6 +31,7 @@ df_nsspp["name_match"] = df_nsspp["name_match"].str.replace(pat="h", repl="g") #
 df_merged_0 = df_retrieved.merge(df_nsspp, on="name_match", how="inner")
 df_merged_1 = df_merged_0.merge(df_s2n, on="name_match", how="inner")
 
+# comparison of Fe/H values
 plt.clf()
 plt.figure(figsize=(10,5))
 plt.plot([-2.5,0.0],[-2.5,0.0], linestyle="--", color="black", zorder=0)
@@ -47,6 +49,7 @@ file_name_write = "junk.pdf"
 plt.savefig(file_name_write)
 print("Wrote scatterplot", file_name_write)
 
+# histogram of Stripe 82 Fe/H
 plt.clf()
 plt.figure(figsize=(10,5))
 plt.hist(df_retrieved["feh_retrieved"],bins=300)
@@ -58,3 +61,60 @@ plt.tight_layout()
 file_name_write2 = "junk2.pdf"
 plt.savefig(file_name_write2)
 print("Wrote histogram", file_name_write2)
+
+
+# plot Teff (nSSPP) vs. Balmer line width to show linearity
+plt.clf()
+# just for clarity
+df_merged_1["nsspp_logg"] = df_merged_1["logg"]
+df_merged_1["nsspp_teff"] = df_merged_1["teff"]
+df_merged_1["Teff (nSSPP)"] = df_merged_1["nsspp_teff"]
+df_merged_1["[Fe/H] (nSSPP)"] = df_merged_1["feh_direct_nsspp"]
+df_merged_1["log(g) (nSSPP)"] = df_merged_1["nsspp_logg"]
+
+#sns.set_style('darkgrid', {'legend.frameon':True})
+sns.set(rc={'axes.facecolor':'cornflowerblue', 'figure.facecolor':'cornflowerblue'})
+sns.set(font_scale = 2.5)
+cmap = sns.cubehelix_palette(rot=-.2, as_cmap=True)
+'''
+g = sns.relplot(
+    data=df_merged_1,
+    x="EW_Balmer", y="Teff (nSSPP)",
+    hue="[Fe/H] (nSSPP)", hue_norm=(-3.0,-0.5), size="log(g) (nSSPP)",
+    palette=cmap, sizes=(10, 200),
+    height=8.27, aspect=1.1, legend=False
+)
+#plt.plot([3,16], [6000,8000], linestyle = "--", color="k",zorder=0)
+g.fig.set_size_inches(12,10)
+g.ax.xaxis.grid(True, "minor", linewidth=.25)
+g.ax.yaxis.grid(True, "minor", linewidth=.25)
+g.ax.set_ylabel("Teff, nSSPP", fontsize=30)
+g.ax.set_xlabel("Balmer EW, rrlfe ($\AA$)", fontsize=30)
+g.despine(left=True, bottom=True)
+#g.ax.set_title("(dashed line: 1-to-1)")
+#handles, labels = g.get_legend_handles_labels()
+#l = plt.legend(handles[0:2], labels[0:2], bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#plt.legend(bbox_to_anchor=(1.55, 1), loc=2, borderaxespad=0.)
+plt.tight_layout()
+file_name_write3 = "junk3.pdf"
+plt.savefig(file_name_write3)
+print("Wrote plot", file_name_write3)
+'''
+g = sns.relplot(
+    data=df_merged_1,
+    x="EW_Balmer", y="Teff (nSSPP)",
+    hue="[Fe/H] (nSSPP)", hue_norm=(-3.0,-0.5), size="log(g) (nSSPP)",
+    palette=cmap, sizes=(10, 200),
+    height=8.27, aspect=1.1, legend=True
+)
+g.fig.set_size_inches(14,10)
+g.ax.xaxis.grid(True, "minor", linewidth=.25)
+g.ax.yaxis.grid(True, "minor", linewidth=.25)
+g.ax.set_ylabel("Teff, nSSPP", fontsize=30)
+g.ax.set_xlabel("Balmer EW, rrlfe ($\AA$)", fontsize=30)
+g.despine(left=True, bottom=True)
+plt.legend(bbox_to_anchor=(1.55, 1), loc=2, borderaxespad=0.)
+#plt.tight_layout()
+file_name_write4 = "junk4.pdf"
+plt.savefig(file_name_write4)
+print("Wrote plot", file_name_write4)

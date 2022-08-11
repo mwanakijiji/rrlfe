@@ -26,12 +26,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 # set the coefficients of the model
-coeff_array= np.array([25.62681273081429,-2.7529892780145238,12.51076634183292,-1.128153778868404,
-                    0.08955467256229102,1.4456813531059578,0.02987747113827764,-0.07646288477131769,0,0])
+coeff_array= np.array([26.458560990753856,-2.902133161010684,13.111956399236913,-1.2137255854235038,
+                    0.09607072758758611,1.5487308225785184,0.032702627768572155,-0.08555553824310289,0,0])
 #coeff_array = np.array([1.,1.,1.,1.,1.,1.,1.,1.,0,0])
 
 # read in the data points to be overplotted
-data_points_read = "/Users/bandari/Documents/git.repos/rrlfe/ew_products/all_data_input_mcmc_20220130_run_1.csv"
+data_points_read = "/Users/bandari/Documents/git.repos/rrlfe/rrlfe_io_20220811_job_594776/rrlfe_io/ew_products/all_data_input_mcmc.csv"
 df_choice = pd.read_csv(data_points_read)
 
 # set the file name to write
@@ -88,47 +88,47 @@ g = sns.relplot(
     hue="[Fe/H]", size="log(g)", edgecolor="k", legend="full",
     palette=cmap, sizes=(30,160)
 )
-
+#import ipdb; ipdb.set_trace()
 # plot points to show median error bars
 # define the line along which they will lie
 balmer_dummy = np.arange(7,16,1)
 contour_4_points = np.add(8.,expanded_layden_all_coeffs(coeff_array=coeff_array, H=balmer_dummy, F=0.2))
 bool_p02 = (df_choice["feh"] == 0.2)
-import ipdb; ipdb.set_trace()
+#import ipdb; ipdb.set_trace()
 plt.errorbar(balmer_dummy[0],[20],
-                xerr=np.median(df_choice["err_EW_Balmer_based_Robo"][bool_p02]),
+                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_p02]),
                 yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_p02]), ecolor="k") # [Fe/H] = +0.2
 plt.text(balmer_dummy[0]+0.1,20+0.5,"[Fe/H] = +0.2")
 '''
 bool_p00 = (df_choice["feh"] == 0.0)
 plt.errorbar(balmer_dummy[1],contour_4_points[1],
-                xerr=np.median(df_choice["err_EW_Balmer_based_Robo"][bool_p00]),
+                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_p00]),
                 yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_p00]), ecolor="k")  # [Fe/H] = +0.0
 
 bool_m05 = (df_choice["feh"] == -0.5)
 plt.errorbar(balmer_dummy[2],contour_4_points[2],
-                xerr=np.median(df_choice["err_EW_Balmer_based_Robo"][bool_m05]),
+                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m05]),
                 yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m05]), ecolor="k") # [Fe/H] = -0.5
 '''
 bool_m10 = (df_choice["feh"] == -1.0)
 plt.errorbar(balmer_dummy[3],[15],
-                xerr=np.median(df_choice["err_EW_Balmer_based_Robo"][bool_m10]),
+                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m10]),
                 yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m10]), ecolor="k") # [Fe/H] = -1.0
 plt.text(balmer_dummy[3]+0.1,15+0.5,"-1.0")
 '''
 bool_m15 = (df_choice["feh"] == -1.5)
 plt.errorbar(balmer_dummy[4],contour_4_points[4],
-                xerr=np.median(df_choice["err_EW_Balmer_based_Robo"][bool_m15]),
+                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m15]),
                 yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m15]), ecolor="k")  # [Fe/H] = -1.5
 
 bool_m20 = (df_choice["feh"] == -2.0)
 plt.errorbar(balmer_dummy[5],contour_4_points[5],
-                xerr=np.median(df_choice["err_EW_Balmer_based_Robo"][bool_m20]),
+                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m20]),
                 yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m20]), ecolor="k")  # [Fe/H] = -2.0
 '''
 bool_m25 = (df_choice["feh"] == -2.5)
 plt.errorbar(balmer_dummy[6],[10],
-                xerr=np.median(df_choice["err_EW_Balmer_based_Robo"][bool_m25]),
+                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m25]),
                 yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m25]), ecolor="k")  # [Fe/H] = -2.5
 plt.text(balmer_dummy[6]+0.1,10+0.5,"-2.5")
 
@@ -160,3 +160,4 @@ g.set_xlabels(r"$W_{B}$"+" ($\AA$)", fontsize=22)
 g.set(ylim=(0, 25))
 
 g.savefig(file_name_write, bbox_inches='tight')
+print("Wrote", file_name_write)
