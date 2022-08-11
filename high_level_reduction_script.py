@@ -17,7 +17,7 @@ from modules import (compile_normalization,
 
 def main():
 
-    model_choice = "abcdfghk"
+    model_choice = "abcd"
 
     # make all the directories
     make_dirs(objective = "find_calib") ## find_calib as opposed to apply_calib
