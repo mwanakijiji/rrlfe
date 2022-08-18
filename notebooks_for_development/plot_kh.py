@@ -10,7 +10,6 @@
 # #### $K = a + bH + cF + dHF + f(H^{2}) + g(F^{2}) + h(H^{2})F + kH(F^{2}) $
 # #### $+ m(H^{3}) + n(F^{3}) $
 
-
 import pandas as pd
 import numpy as np
 import astropy
@@ -31,8 +30,28 @@ coeff_array= np.array([26.458560990753856,-2.902133161010684,13.111956399236913,
 #coeff_array = np.array([1.,1.,1.,1.,1.,1.,1.,1.,0,0])
 
 # read in the data points to be overplotted
-data_points_read = "/Users/bandari/Documents/git.repos/rrlfe/rrlfe_io_20220811_job_594776/rrlfe_io/ew_products/all_data_input_mcmc.csv"
+stem = "/Users/bandari/Documents/git.repos/rrlfe/"
+data_points_read = stem + "rrlfe_io_20220811_job_594776/rrlfe_io/ew_products/all_data_input_mcmc.csv"
 df_choice = pd.read_csv(data_points_read)
+
+# read in full list of spectra reduced (so that we can pinpoint the ones that failed the fitting process)
+data_start = stem + "src/synthetic_spectra_without_feh_m30.list"
+df_start = pd.read_csv(data_start)
+
+# read in ALL EW data (good and bad), to plot and/or troubleshoot the failed fits
+'''
+# not sure if useful
+good_bad = stem + "rrlfe_io_20220811_job_594776/rrlfe_io/ew_products/all_ew_info.csv"
+df_goodbad = pd.read_csv(good_bad)
+'''
+
+# merge but return the non-overlapping spectrum names
+indicator_merge = df_start.merge(df_choice, on='orig_spec_file_name', how='outer', indicator=True)
+df_lost = indicator_merge[indicator_merge['_merge']=='left_only'] # 'lost' spectra
+
+#
+#df_lost["feh_x"]
+#import ipdb; ipdb.set_trace()
 
 # set the file name to write
 file_name_write = "junk.pdf"
@@ -62,7 +81,7 @@ def expanded_layden_all_coeffs(coeff_array,H,F):
 
 
 # make some isometallicity lines for the plot
-isometal_balmer_abcissa = np.arange(2,16,0.2)
+isometal_balmer_abcissa = np.arange(2,15.0,0.2)
 retrieved_K_isometal_neg3pt0 = expanded_layden_all_coeffs(coeff_array=coeff_array, H=isometal_balmer_abcissa, F=-3.0)
 retrieved_K_isometal_neg2pt5 = expanded_layden_all_coeffs(coeff_array=coeff_array, H=isometal_balmer_abcissa, F=-2.5)
 retrieved_K_isometal_neg2pt0 = expanded_layden_all_coeffs(coeff_array=coeff_array, H=isometal_balmer_abcissa, F=-2.)
@@ -86,7 +105,7 @@ g = sns.relplot(
     data=df_choice,
     x="EW_Balmer", y="EW_CaIIK",
     hue="[Fe/H]", size="log(g)", edgecolor="k", legend="full",
-    palette=cmap, sizes=(30,160)
+    palette=cmap, sizes=(30,160), alpha=0.8, zorder=2
 )
 #import ipdb; ipdb.set_trace()
 # plot points to show median error bars
@@ -133,22 +152,33 @@ plt.errorbar(balmer_dummy[6],[10],
 plt.text(balmer_dummy[6]+0.1,10+0.5,"-2.5")
 
 # plot isometallicity contours
+success_rate_x = 14.5
+lim_abcissa = 2 # for staggering the ends of the lines
+y_offset = -0.2 # ibid
 feh_nonred = np.array([-3.0,-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.2])
 plt.text(isometal_balmer_abcissa[0]-0.65,retrieved_K_isometal_pos0pt2[0]+2,"[Fe/H]")
-p02 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_pos0pt2, color="k", alpha=0.5)
+plt.text(success_rate_x+0.25,retrieved_K_isometal_pos0pt2[-1]+1.5,"S/F", fontsize=16)
+p02 = sns.lineplot(x=isometal_balmer_abcissa[:-lim_abcissa], y=retrieved_K_isometal_pos0pt2[:-lim_abcissa], color="k", alpha=0.5, zorder=0)
 plt.text(isometal_balmer_abcissa[0]-0.6,retrieved_K_isometal_pos0pt2[0],"+0.2")
-p00 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_pos0pt0, color="k", alpha=0.5)
+plt.text(success_rate_x,retrieved_K_isometal_pos0pt2[-1]+y_offset,"19/8",fontsize=14) # successes/failures in fit
+p00 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_pos0pt0, color="k", alpha=0.5, zorder=0)
 plt.text(isometal_balmer_abcissa[0]-0.6,retrieved_K_isometal_pos0pt0[0],"+0.0")
-m05 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_neg0pt5, color="k", alpha=0.5)
+plt.text(success_rate_x+0.5,retrieved_K_isometal_pos0pt0[-1]+y_offset,"23/4",fontsize=14) # successes/failures in fit
+m05 = sns.lineplot(x=isometal_balmer_abcissa[:-lim_abcissa], y=retrieved_K_isometal_neg0pt5[:-lim_abcissa], color="k", alpha=0.5, zorder=0)
 plt.text(isometal_balmer_abcissa[0]-0.6,retrieved_K_isometal_neg0pt5[0],"-0.5")
-m10 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_neg1pt0, color="k", alpha=0.5)
+plt.text(success_rate_x,retrieved_K_isometal_neg0pt5[-1]+y_offset,"26/1",fontsize=14) # successes/failures in fit
+m10 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_neg1pt0, color="k", alpha=0.5, zorder=0)
 plt.text(isometal_balmer_abcissa[0]-0.6,retrieved_K_isometal_neg1pt0[0],"-1.0")
-m15 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_neg1pt5, color="k", alpha=0.5)
+plt.text(success_rate_x+0.5,retrieved_K_isometal_neg1pt0[-1]+y_offset,"27/0",fontsize=14) # successes/failures in fit
+m15 = sns.lineplot(x=isometal_balmer_abcissa[:-lim_abcissa], y=retrieved_K_isometal_neg1pt5[:-lim_abcissa], color="k", alpha=0.5, zorder=0)
 plt.text(isometal_balmer_abcissa[0]-0.6,retrieved_K_isometal_neg1pt5[0],"-1.5")
-m20 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_neg2pt0, color="k", alpha=0.5)
+plt.text(success_rate_x,retrieved_K_isometal_neg1pt5[-1]+y_offset,"27/0",fontsize=14) # successes/failures in fit
+m20 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_neg2pt0, color="k", alpha=0.5, zorder=0)
 plt.text(isometal_balmer_abcissa[0]-0.6,retrieved_K_isometal_neg2pt0[0],"-2.0")
-m25 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_neg2pt5, color="k", alpha=0.5)
+plt.text(success_rate_x+0.5,retrieved_K_isometal_neg2pt0[-1]+y_offset,"27/0",fontsize=14) # successes/failures in fit
+m25 = sns.lineplot(x=isometal_balmer_abcissa[:-lim_abcissa], y=retrieved_K_isometal_neg2pt5[:-lim_abcissa], color="k", alpha=0.5, zorder=0)
 plt.text(isometal_balmer_abcissa[0]-0.6,retrieved_K_isometal_neg2pt5[0],"-2.5")
+plt.text(success_rate_x,retrieved_K_isometal_neg2pt5[-1]+y_offset,"27/0",fontsize=14) # successes/failures in fit
 
 plt.xlim([1,16])
 plt.legend(loc="upper right", ncol=3)
