@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-filename = "../rrlfe_io_20220803_01/bin/retrieved_vals_20220803.csv"
+filename = "../rrlfe_io_20220803_01_mcd/bin/retrieved_vals_20220803.csv"
 
 df = pd.read_csv(filename)
 
