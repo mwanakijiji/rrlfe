@@ -45,7 +45,7 @@ good_bad = stem + "rrlfe_io_20220811_job_594776/rrlfe_io/ew_products/all_ew_info
 df_goodbad = pd.read_csv(good_bad)
 '''
 
-# merge but return the non-overlapping spectrum names
+# merge but return the non-overlapping spectrum names (print manually)
 indicator_merge = df_start.merge(df_choice, on='orig_spec_file_name', how='outer', indicator=True)
 df_lost = indicator_merge[indicator_merge['_merge']=='left_only'] # 'lost' spectra
 

@@ -13,7 +13,7 @@ import seaborn as sns
 stem = "/Users/bandari/Documents/git.repos/rrlfe/"
 
 # read in our values
-df_retrieved = pd.read_csv(stem + "rrlfe_io_20220809_01/bin/retrieved_vals_20220809.csv")
+df_retrieved = pd.read_csv(stem + "rrlfe_io_20220809_01_s82/bin/retrieved_vals_20220809.csv")
 
 # read in nSSPP Fe/H values
 df_nsspp = pd.read_csv(stem + "notebooks_for_development/data/nSSPP82.out", names=["sdss","spectrum", "teff", "logg",
@@ -29,12 +29,19 @@ df_nsspp["name_match"] = df_nsspp["name_match"].str.replace(pat="h", repl="g") #
 
 # merge everything
 df_merged_0 = df_retrieved.merge(df_nsspp, on="name_match", how="inner")
-df_merged_1 = df_merged_0.merge(df_s2n, on="name_match", how="inner")
+df_merged_1_pre_s2n = df_merged_0.merge(df_s2n, on="name_match", how="inner")
+
+# impose S/N cutoff; spectra with vals below this are dropped
+idx_s2n = df_merged_1_pre_s2n["s_to_n"] > 15.
+df_merged_1 = df_merged_1_pre_s2n[idx_s2n]
+df_low_s2n = df_merged_1_pre_s2n[~idx_s2n]
 
 # comparison of Fe/H values
 plt.clf()
 plt.figure(figsize=(10,5))
 plt.plot([-2.5,0.0],[-2.5,0.0], linestyle="--", color="black", zorder=0)
+plt.scatter(df_low_s2n["feh_direct_nsspp"], df_low_s2n["feh_retrieved"],
+            c="gray", s=50, alpha=0.5, zorder=0)
 plt.scatter(df_merged_1["feh_direct_nsspp"], df_merged_1["feh_retrieved"],
             c=df_merged_1["s_to_n"], cmap="Greens", s=50, edgecolors="k")
 plt.xlabel("[Fe/H], nSSPP", fontsize=25)

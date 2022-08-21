@@ -11,14 +11,14 @@ import numpy as np
 import seaborn as sns
 
 stem = "/Users/bandari/Documents/git.repos/rrlfe/"
-file_name_rrlfe_retrieved = "rrlfe_io_20220803_01/bin/retrieved_vals_20220803.csv"
+file_name_rrlfe_retrieved = "rrlfe_io_20220803_01_mcd/bin/retrieved_vals_20220803.csv"
 file_name_highres = "notebooks_for_development/mapped_program_fehs_20220802.csv"
 file_name_phases = "./src/mcd_final_phases_ascii_files_all.list"
 
 df_rrlfe = pd.read_csv(stem + file_name_rrlfe_retrieved)
 df_highres = pd.read_csv(stem + file_name_highres)
 df_phases = pd.read_csv(stem + file_name_phases)
-import ipdb; ipdb.set_trace()
+
 # match Fe/Hs between two sources of Fe/H
 df_rrlfe["name_match"] = ""
 df_rrlfe["name_match"][df_rrlfe["realization_spec_file_name"].str.contains("X_Ari")] = "X_Ari"
@@ -35,6 +35,9 @@ df_rrlfe["name_match"][df_rrlfe["realization_spec_file_name"].str.contains("TU_U
 
 df_retrievals_all = df_rrlfe.merge(df_highres, on="name_match")
 df_retrievals_all = df_retrievals_all.merge(df_phases, on="orig_spec_file_name") # add phases
+
+# find mean, for plotting
+df_mean = df_retrievals_all.groupby("name_match", as_index=False).mean()
 
 # distance (ito phase) from maximum (more informative)
 df_retrievals_all["phase_from_zero"] = np.abs(np.subtract(np.abs(np.subtract(df_retrievals_all["phase"],0.5)),0.5))
@@ -71,13 +74,17 @@ sns.set_style(style='white')
 
 df_retrievals_all["$|\Delta \phi|$"] = df_retrievals_all["phase_from_zero"]
 df_retrievals_all["$T_{eff}$"] = df_retrievals_all["teff_retrieved"]
-
+#import ipdb; ipdb.set_trace()
 g = sns.relplot(
     data=df_retrievals_all,
     x="feh_mapped", y="feh_retrieved",
     hue="$|\Delta \phi|$", size="$T_{eff}$", sizes=(40, 200), edgecolor="k",
-    palette=cmap, zorder=4, hue_order= [0,0.5]
+    palette=cmap, zorder=4, hue_order= [0,0.5], alpha=0.8
 )
+
+#import ipdb; ipdb.set_trace()
+#sns.scatterplot(data=df_mean, x = "feh_mapped", y = "feh_retrieved", palette="reds")
+plt.scatter(df_mean["feh_mapped"], df_mean["feh_retrieved"], color="red", marker="s", s=500, alpha=0.5, zorder=0)
 
 lobf = np.add(np.multiply(coeffs_poly[0],[-2.8,0.0]),coeffs_poly[1])
 h1 = sns.lineplot(x=[-2.8,0.0], y=[-2.8,0.0], linestyle="--", color="gray", legend=False)
