@@ -100,6 +100,7 @@ df_choice["log(g)"] = df_choice["logg"]
 cmap = "Reds"
 sns.set(font_scale=1.9)
 sns.set_style(style='white')
+sns.set_style('ticks')
 
 g = sns.relplot(
     data=df_choice,
