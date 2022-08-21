@@ -66,6 +66,8 @@ df_retrievals_all.keys()
 # line of best fit
 coeffs_poly = np.polyfit(df_retrievals_all["feh_mapped"], df_retrievals_all["feh_retrieved"], deg=1)
 
+print("Coeffs of line of best fit",coeffs_poly)
+
 plt.clf()
 
 cmap = "Blues"

@@ -9,6 +9,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
 stem = "/Users/bandari/Documents/git.repos/rrlfe/"
 
@@ -36,12 +37,18 @@ idx_s2n = df_merged_1_pre_s2n["s_to_n"] > 15.
 df_merged_1 = df_merged_1_pre_s2n[idx_s2n]
 df_low_s2n = df_merged_1_pre_s2n[~idx_s2n]
 
+# fit a line to the ones of high S/N
+idx_finite = np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"]) # to get rid of nans
+coeffs = np.polyfit(df_merged_1["feh_direct_nsspp"][idx_finite], df_merged_1["feh_retrieved"][idx_finite], deg=1)
+
+print("Coeffs of line of best fit:",coeffs)
 # comparison of Fe/H values
 plt.clf()
 plt.figure(figsize=(10,5))
 plt.plot([-2.5,0.0],[-2.5,0.0], linestyle="--", color="black", zorder=0)
 plt.scatter(df_low_s2n["feh_direct_nsspp"], df_low_s2n["feh_retrieved"],
             c="gray", s=50, alpha=0.5, zorder=0)
+plt.plot(df_merged_1["feh_direct_nsspp"], np.add(coeffs[1],np.multiply(coeffs[0],df_merged_1["feh_direct_nsspp"])), linestyle="-", color="gray")
 plt.scatter(df_merged_1["feh_direct_nsspp"], df_merged_1["feh_retrieved"],
             c=df_merged_1["s_to_n"], cmap="Greens", s=50, edgecolors="k")
 plt.xlabel("[Fe/H], nSSPP", fontsize=25)
