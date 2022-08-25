@@ -20,9 +20,15 @@ from astropy import stats
 from scipy import optimize
 import matplotlib.pyplot as plt
 
-# read in data
-stem = "/Users/bandari/Documents/git.repos/rrlfe/rrlfe_io_20220810/rrlfe_io/ew_products/"
-df = pd.read_csv(stem + "all_data_input_mcmc.csv")
+# read in abcdfghk data
+stem = "/Users/bandari/Documents/git.repos/rrlfe/"
+df = pd.read_csv(stem + "rrlfe_io_20220810_synth/rrlfe_io/ew_products/all_data_input_mcmc.csv")
+
+# read in abcd data
+'''
+df_abcd = pd.read_csv(stem + "rrlfe_io_20220825_job_596280_abcd/rrlfe_io/ew_products/all_data_input_mcmc.csv")
+import ipdb; ipdb.set_trace()
+'''
 
 # remove the three really bad datapoints
 '''
@@ -102,7 +108,7 @@ H = df_choice["EW_Balmer"]
 K = df_choice["EW_CaIIK"]
 
 ## calculate retrieved Fe/H using solution with [a,b,c,d,f,g,h,k], using logg3pt0_bic_output_20200322.csv
-modified_soln_7_abcdfghk = [20.268216020772577,-2.103240677086597,9.682756160690241,-0.7990904214384392,0.07262757512570928,1.1242402933493127,0.020811006600471953,-0.05460696008885377]
+modified_soln_7_abcdfghk = [26.458560990753856,-2.902133161010684,13.111956399236913,-1.2137255854235038,0.09607072758758611,1.5487308225785184,0.032702627768572155,-0.08555553824310289]
 
 coeff_a = modified_soln_7_abcdfghk[0]
 coeff_b = modified_soln_7_abcdfghk[1]
@@ -122,7 +128,7 @@ F_neg = np.divide(-B_cap - np.sqrt(np.power(B_cap,2.)-4*A_cap*C_cap),2*A_cap)
 
 
 ## and calculate retrieved Fe/H using just [a,b,c,d] (the Layden fit, but with our best-fit values)
-original_layden_our_fit_soln_0_abcd = [12.51368502,-0.78716519,3.87785117,-0.24297523]
+original_layden_our_fit_soln_0_abcd = [20.508474951108703,-1.52237914721989,7.335609141293953,-0.5508692067401945]
 coeff_a_original = original_layden_our_fit_soln_0_abcd[0]
 coeff_b_original = original_layden_our_fit_soln_0_abcd[1]
 coeff_c_original = original_layden_our_fit_soln_0_abcd[2]
@@ -155,5 +161,7 @@ plt.legend(fontsize=14)
 plt.tight_layout()
 
 file_name_write = "junk.pdf"
+plt.ylim([-3.,5.])
+#plt.show()
 plt.savefig(file_name_write)
 print("Wrote", file_name_write)
