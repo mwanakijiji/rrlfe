@@ -48,7 +48,7 @@ def line_order_check(line_centers):
         logging.warning('H-beta line center does not match!')
         glitch_count = 1 # boolean for bookeeping
     if (glitch_count == int(0)):
-        logging.info('CaIIK, H-eps, H-del, H-gam, h_beta line centers are consistent')
+        logging.info('CaIIK, H-eps, H-del, H-gam, H-beta line centers are consistent')
     return glitch_count
 
 
@@ -247,9 +247,17 @@ def quality_check(
     # make an array consisting of the last character in each spectrum's flag
     red_flag_array = ([u[-1] for u in all_data["flags"]])
     # consider bad flags to be of any flag with a nonzero last character
-    where_red_flag = np.where(np.array(red_flag_array) != '0')
+    # and remove rows if the bad flag corresponds to CaIIK, Hgam, or Hdel
+    where_red_flag = np.where(np.logical_and(
+                                            np.array(red_flag_array) != '0',
+                                            np.logical_or(all_data["line_name"] == "CaIIK",
+                                                np.logical_or(all_data["line_name"] == "Hgam",all_data["line_name"] == "Hdel")
+                                                )
+                                            )
+                            )
     # identify the synthetic spectrum names which have at least one line with a bad fit
     bad_robo_spectra = all_data["realization_spec_file_name"][np.squeeze(where_red_flag)]
+    import ipdb; ipdb.set_trace()
 
     # remove duplicate names
     print(bad_robo_spectra)
