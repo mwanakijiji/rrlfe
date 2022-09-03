@@ -97,7 +97,6 @@ class Scraper():
         df_master = pd.DataFrame() # initialize
 
         # loop over all filenames of realizations of empirical spectra, extract line data
-        #import ipdb; ipdb.set_trace()
         for t in range(0, len(self.file_list)):
 
             # read in Robospect output
@@ -257,7 +256,6 @@ def quality_check(
                             )
     # identify the synthetic spectrum names which have at least one line with a bad fit
     bad_robo_spectra = all_data["realization_spec_file_name"][np.squeeze(where_red_flag)]
-    import ipdb; ipdb.set_trace()
 
     # remove duplicate names
     print(bad_robo_spectra)
@@ -305,7 +303,6 @@ def quality_check(
     logging.info("--------------------------")
     logging.info('Scraped Robospect output written to')
     logging.info(write_out_filename)
-    #import ipdb; ipdb.set_trace()
 
     return pruned_data
 
@@ -582,8 +579,7 @@ def stack_spectra(
         except: # pragma: no cover
             logging.error("Data stacking error in data for " + this_realization_spectrum)
             logging.error("Data anomaly; skipping " + this_realization_spectrum)
-            #import ipdb; ipdb.set_trace()
-    #import ipdb; ipdb.set_trace()
+
     # save intermediary table of data, before adding rescaled Balmer line
     logging.info("Writing out intermediary file of stacked Robospect EWs and rescaled Balmer lines to " + write_out_filename)
     df_poststack.to_csv(write_out_filename,index=False)
