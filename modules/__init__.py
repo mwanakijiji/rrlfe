@@ -43,7 +43,7 @@ compiled_bkgrnd_file_path_abs = config_red["data_dirs"]["DIR_BIN"] + "/bkgrnd"
 ncpu = 4
 
 # prompt user if files will be overwritten? (turn to false if running on HPC)
-prompt_user = False
+prompt_user = True
 
 # set some constants
 
