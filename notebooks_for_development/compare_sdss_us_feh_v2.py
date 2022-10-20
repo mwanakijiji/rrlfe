@@ -54,19 +54,21 @@ df_low_s2n = df_merged_1_pre_s2n[~idx_s2n]
 
 # fit a line to the ones of high S/N
 idx_finite = np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"]) # to get rid of nans
-coeffs = np.polyfit(df_merged_1["feh_direct_nsspp"][idx_finite], df_merged_1["feh_retrieved"][idx_finite], deg=1)
+idx_sane = (np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"])) & \
+                ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.)) # get rid of clearly unphysical values
 
-# indices of different types
-idx_ab = df_merged_1["type_mode"] == "ab" # indices of RRabs
-idx_c = df_merged_1["type_mode"] == "c" # indices of RRcs
-df_merged_merged_abs_only = df_merged_1[idx_ab]
-df_merged_merged_cs_only = df_merged_1[idx_c]
-
+idx_sane_abs_only = (np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"])) & \
+                ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.)) & (df_merged_1["type_mode"] == "ab")
+idx_sane_cs_only = (np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"])) & \
+                ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.)) & (df_merged_1["type_mode"] == "c")
 import ipdb; ipdb.set_trace()
-idx_finite_abs_only = np.isfinite(df_merged_merged_abs_only["feh_direct_nsspp"]) & np.isfinite(df_merged_merged_abs_only["feh_retrieved"]) # to get rid of nans
-idx_finite_cs_only = np.isfinite(df_merged_merged_cs_only["feh_direct_nsspp"]) & np.isfinite(df_merged_merged_cs_only["feh_retrieved"]) # to get rid of nans
-coeffs_ab = np.polyfit(df_merged_merged_abs_only["feh_direct_nsspp"][idx_finite_abs_only], df_merged_merged_abs_only["feh_retrieved"][idx_finite_abs_only], deg=1)
-coeffs_c = np.polyfit(df_merged_merged_cs_only["feh_direct_nsspp"][idx_finite_cs_only], df_merged_merged_cs_only["feh_retrieved"][idx_finite_cs_only], deg=1)
+
+df_merged_merged_abs_only = df_merged_1[idx_sane_abs_only]
+df_merged_merged_cs_only = df_merged_1[idx_sane_cs_only]
+
+coeffs = np.polyfit(df_merged_1["feh_direct_nsspp"][idx_sane], df_merged_1["feh_retrieved"][idx_sane], deg=1)
+coeffs_ab = np.polyfit(df_merged_1["feh_direct_nsspp"][idx_sane_abs_only], df_merged_1["feh_retrieved"][idx_sane_abs_only], deg=1)
+coeffs_c = np.polyfit(df_merged_1["feh_direct_nsspp"][idx_sane_cs_only], df_merged_1["feh_retrieved"][idx_sane_cs_only], deg=1)
 import ipdb; ipdb.set_trace()
 
 # coefficients of line reflected around the 1-to-1 line
@@ -87,8 +89,8 @@ plt.scatter(df_low_s2n["feh_direct_nsspp"], df_low_s2n["feh_retrieved"],
 #plt.plot(df_merged_1["feh_direct_nsspp"], np.add(coeffs[1],np.multiply(coeffs[0],df_merged_1["feh_direct_nsspp"])), linestyle="-", color="gray")
 
 # if we want to compare Feh
-plt.scatter(df_merged_1["feh_direct_nsspp"], df_merged_1["feh_retrieved"],
-            c=df_merged_1["s_to_n"], cmap="Greens", s=50, edgecolors="k")
+plt.scatter(df_merged_1["feh_direct_nsspp"][idx_finite], df_merged_1["feh_retrieved"][idx_finite],
+            c=df_merged_1["s_to_n"][idx_finite], cmap="Greens", s=50, edgecolors="k")
 
 '''
 # if we want to compare retrieved Teffs
@@ -113,32 +115,53 @@ print("Wrote scatterplot", file_name_write)
 # distinguish points by type
 plt.clf()
 plt.figure(figsize=(10,5))
+
+# Fe/H retrievals
 plt.plot([-3.0,0.0],[-3.0,0.0], linestyle="--", color="black", zorder=0) # one-to-one
 plt.plot([-3.0,0.0],[coeffs[0]*(-3.0)+coeffs[1],coeffs[0]*(0.0)+coeffs[1]], linestyle="-", color="k", zorder=0) # line of best fit
 plt.plot([-3.0,0.0],[coeffs_ab[0]*(-3.0)+coeffs_ab[1],coeffs_ab[0]*(0.0)+coeffs_ab[1]], linestyle="-", color="red", zorder=0) # line of best fit, RRabs
 plt.plot([-3.0,0.0],[coeffs_c[0]*(-3.0)+coeffs_c[1],coeffs_c[0]*(0.0)+coeffs_c[1]], linestyle="-", color="blue", zorder=0) # line of best fit, RRcs
 #plt.plot([-3.0,0.0],[coeffs_flip[0]*(-3.0)+coeffs_flip[1],coeffs_flip[0]*(0.0)+coeffs_flip[1]], linestyle="-", zorder=0) # line flipped around 1-to-1
-plt.scatter(df_merged_1["feh_direct_nsspp"].where(idx_ab), df_merged_1["feh_retrieved"].where(idx_ab),
-            label="ab", s=50, edgecolors="k")
-plt.scatter(df_merged_1["feh_direct_nsspp"].where(idx_c), df_merged_1["feh_retrieved"].where(idx_c),
-            label="c", s=50, edgecolors="k")
-plt.legend()
-'''
-# if we want to compare retrieved Teffs
-plt.scatter(df_merged_1["teff"], df_merged_1["teff_retrieved"],
-            c=df_merged_1["s_to_n"], cmap="Greens", s=50, edgecolors="k")
-'''
 plt.title("best-fits in black: all; red: RRabs; blue: RRcs")
 plt.xlabel("[Fe/H], nSSPP", fontsize=25)
 plt.ylabel("[Fe/H], rrlfe", fontsize=25)
+plt.scatter(df_merged_1["feh_direct_nsspp"][idx_sane_abs_only], df_merged_1["feh_retrieved"][idx_sane_abs_only],
+            label="ab", s=50, edgecolors="k")
+plt.scatter(df_merged_1["feh_direct_nsspp"][idx_sane_cs_only], df_merged_1["feh_retrieved"][idx_sane_cs_only],
+            label="c", s=50, edgecolors="k")
+
+
+# if we want to compare retrieved Teffs
+'''
+#plt.scatter(df_merged_1["teff"], df_merged_1["teff_retrieved"],
+#            c=df_merged_1["s_to_n"], cmap="Greens", s=50, edgecolors="k")
+plt.plot([6000,8000],[6000,8000], linestyle="--", color="black", zorder=0) # one-to-one
+plt.scatter(df_merged_1["teff"][idx_sane_abs_only], df_merged_1["teff_retrieved"][idx_sane_abs_only], s=50, edgecolors="k", label="ab")
+plt.scatter(df_merged_1["teff"][idx_sane_cs_only], df_merged_1["teff_retrieved"][idx_sane_cs_only], s=50, edgecolors="k", label="c")
+'''
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
+plt.legend()
 plt.tight_layout()
 #plt.gca().set_aspect('equal', adjustable='box') # for equal x and y scale
 file_name_write = "junk_bytype.pdf"
 import ipdb; ipdb.set_trace()
-plt.show()
-#plt.savefig(file_name_write)
+#plt.show()
+plt.savefig(file_name_write)
+
+# density plot
+fig, ax = plt.subplots(figsize=(15,10))
+x = df_merged_1["feh_direct_nsspp"][idx_sane_cs_only] # idx_finite, idx_sane_abs_only, idx_sane_cs_only
+y = df_merged_1["feh_retrieved"][idx_sane_cs_only]
+hh = ax.hist2d(x, y, bins=150)
+plt.plot([-3.0,0.0],[-3.0,0.0], linestyle="--", color="black", zorder=1) # one-to-one
+ax.plot([-3.0,0.0],[coeffs[0]*(-3.0)+coeffs[1],coeffs[0]*(0.0)+coeffs[1]], linestyle="-", color="k", zorder=1)
+ax.plot([-3.0,0.0],[coeffs_ab[0]*(-3.0)+coeffs_ab[1],coeffs_ab[0]*(0.0)+coeffs_ab[1]], linestyle="-", color="red", zorder=1)
+ax.plot([-3.0,0.0],[coeffs_c[0]*(-3.0)+coeffs_c[1],coeffs_c[0]*(0.0)+coeffs_c[1]], linestyle="-", color="blue", zorder=1)
+ax.set_xlim(-3.,0.5)
+ax.set_ylim(-3.,0.5)
+fig.colorbar(hh[3], ax=ax)
+plt.savefig("junk_density.png")
 
 # histograms of types
 binedges = np.linspace(-3.5,0.5,num=401,endpoint=True)
