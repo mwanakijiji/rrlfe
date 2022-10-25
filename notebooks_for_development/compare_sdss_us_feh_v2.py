@@ -27,7 +27,12 @@ df_types = pd.read_csv(stem + "notebooks_for_development/data/phaseampgroupstype
 # set a single type by taking the mode of all the types from the sources; use col [0]
 # from the output (col [1] gives a second value in the rare case that the mode has
 # to be found from a 50-50 distribution of types)
-df_types["type_mode"] = df_types[["sesar_type","drake_type","drake2013b_chart_type","abbas2014_type","catalina_DR2_chart_type","drake_MLS_chart_type"]].mode(axis=1)[0]
+df_types["type_mode_0"] = df_types[["sesar_type","drake_type","drake2013b_chart_type","abbas2014_type","catalina_DR2_chart_type","drake_MLS_chart_type"]].mode(axis=1)[0]
+df_types["type_mode_1"] = df_types[["sesar_type","drake_type","drake2013b_chart_type","abbas2014_type","catalina_DR2_chart_type","drake_MLS_chart_type"]].mode(axis=1)[1]
+# a string will appear in element [1] if it is represented equally with that of element [0]
+
+# keep only the data points which are more unambiguously typed (i.e., where element [1] is nan, meaning that element [0] represents a 'majority vote' among the literature sources)
+df_types = df_types[df_types["type_mode_1"].isna()]
 
 # read in nSSPP Fe/H values
 df_nsspp = pd.read_csv(stem + "notebooks_for_development/data/RRL2.out", names=["spectrum", "teff", "logg",
@@ -53,14 +58,18 @@ df_merged_1 = df_merged_1_pre_s2n[idx_s2n]
 df_low_s2n = df_merged_1_pre_s2n[~idx_s2n]
 
 # fit a line to the ones of high S/N
-idx_finite = np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"]) # to get rid of nans
-idx_sane = (np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"])) & \
-                ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.)) # get rid of clearly unphysical values
 
+# less restrictive: just get rid of nans
+idx_finite = np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"])
+
+# more restrictive: get rid of clearly unphysical values
+idx_sane = (np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"])) & \
+                ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.))
 idx_sane_abs_only = (np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"])) & \
-                ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.)) & (df_merged_1["type_mode"] == "ab")
+                ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.)) & (df_merged_1["type_mode_0"] == "ab")
 idx_sane_cs_only = (np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"])) & \
-                ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.)) & (df_merged_1["type_mode"] == "c")
+                ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.)) & (df_merged_1["type_mode_0"] == "c")
+
 import ipdb; ipdb.set_trace()
 
 df_merged_merged_abs_only = df_merged_1[idx_sane_abs_only]
@@ -78,19 +87,20 @@ coeffs_flip = np.array([np.divide(1.,coeffs[0]), coeffs[1]*np.divide(1.-np.divid
 
 print("Coeffs of line of best fit:",coeffs)
 print("Coeffs of line flipped around 1-to-1:",coeffs_flip)
-# comparison of Fe/H values
+
+# plot comparison of Fe/H values
 plt.clf()
 plt.figure(figsize=(10,5))
-plt.plot([-3.0,0.0],[-3.0,0.0], linestyle="--", color="black", zorder=0) # one-to-one
-plt.plot([-3.0,0.0],[coeffs[0]*(-3.0)+coeffs[1],coeffs[0]*(0.0)+coeffs[1]], linestyle="-", zorder=0) # line of best fit, both types
+plt.plot([-4.0,0.0],[-4.0,0.0], linestyle="--", color="black", zorder=0) # one-to-one
+plt.plot([-4.0,0.0],[coeffs[0]*(-4.0)+coeffs[1],coeffs[0]*(0.0)+coeffs[1]], linestyle="-", label="best-fit, RRabs and cs", zorder=0) # line of best fit, both types
 #plt.plot([-3.0,0.0],[coeffs_flip[0]*(-3.0)+coeffs_flip[1],coeffs_flip[0]*(0.0)+coeffs_flip[1]], linestyle="-", zorder=0) # line flipped around 1-to-1
 plt.scatter(df_low_s2n["feh_direct_nsspp"], df_low_s2n["feh_retrieved"],
-            c="gray", s=50, alpha=0.5, zorder=0)
+            c="gray", s=50, alpha=0.5, label="S/N<15", zorder=0)
 #plt.plot(df_merged_1["feh_direct_nsspp"], np.add(coeffs[1],np.multiply(coeffs[0],df_merged_1["feh_direct_nsspp"])), linestyle="-", color="gray")
 
 # if we want to compare Feh
 plt.scatter(df_merged_1["feh_direct_nsspp"][idx_finite], df_merged_1["feh_retrieved"][idx_finite],
-            c=df_merged_1["s_to_n"][idx_finite], cmap="Greens", s=50, edgecolors="k")
+            c=df_merged_1["s_to_n"][idx_finite], cmap="Greens", s=50, label="S/N>15", edgecolors="k")
 
 '''
 # if we want to compare retrieved Teffs
@@ -105,6 +115,7 @@ cbar = plt.colorbar()
 cbar.set_label("S/N",fontsize=20)
 cbar.ax.tick_params(labelsize=20)
 plt.tight_layout()
+plt.legend()
 #plt.gca().set_aspect('equal', adjustable='box') # for equal x and y scale
 file_name_write = "junk.pdf"
 import ipdb; ipdb.set_trace()
@@ -117,19 +128,18 @@ plt.clf()
 plt.figure(figsize=(10,5))
 
 # Fe/H retrievals
-plt.plot([-3.0,0.0],[-3.0,0.0], linestyle="--", color="black", zorder=0) # one-to-one
-plt.plot([-3.0,0.0],[coeffs[0]*(-3.0)+coeffs[1],coeffs[0]*(0.0)+coeffs[1]], linestyle="-", color="k", zorder=0) # line of best fit
-plt.plot([-3.0,0.0],[coeffs_ab[0]*(-3.0)+coeffs_ab[1],coeffs_ab[0]*(0.0)+coeffs_ab[1]], linestyle="-", color="red", zorder=0) # line of best fit, RRabs
-plt.plot([-3.0,0.0],[coeffs_c[0]*(-3.0)+coeffs_c[1],coeffs_c[0]*(0.0)+coeffs_c[1]], linestyle="-", color="blue", zorder=0) # line of best fit, RRcs
+plt.plot([-4.0,0.0],[-4.0,0.0], linestyle="--", color="black", zorder=0) # one-to-one
+plt.plot([-4.0,0.0],[coeffs[0]*(-4.0)+coeffs[1],coeffs[0]*(0.0)+coeffs[1]], linestyle="-", color="orange", label="best-fit, RRabs and cs", zorder=0) # line of best fit
+plt.plot([-4.0,0.0],[coeffs_ab[0]*(-4.0)+coeffs_ab[1],coeffs_ab[0]*(0.0)+coeffs_ab[1]], linestyle="-", color="blue", label="best-fit, RRabs", zorder=0) # line of best fit, RRabs
+plt.plot([-4.0,0.0],[coeffs_c[0]*(-4.0)+coeffs_c[1],coeffs_c[0]*(0.0)+coeffs_c[1]], linestyle="-", color="red", label="best-fit, RRcs", zorder=0) # line of best fit, RRcs
 #plt.plot([-3.0,0.0],[coeffs_flip[0]*(-3.0)+coeffs_flip[1],coeffs_flip[0]*(0.0)+coeffs_flip[1]], linestyle="-", zorder=0) # line flipped around 1-to-1
-plt.title("best-fits in black: all; red: RRabs; blue: RRcs")
+plt.legend()
 plt.xlabel("[Fe/H], nSSPP", fontsize=25)
 plt.ylabel("[Fe/H], rrlfe", fontsize=25)
 plt.scatter(df_merged_1["feh_direct_nsspp"][idx_sane_abs_only], df_merged_1["feh_retrieved"][idx_sane_abs_only],
-            label="ab", s=50, edgecolors="k")
+            label="ab", s=50, color="blue", edgecolors="k")
 plt.scatter(df_merged_1["feh_direct_nsspp"][idx_sane_cs_only], df_merged_1["feh_retrieved"][idx_sane_cs_only],
-            label="c", s=50, edgecolors="k")
-
+            label="c", s=50, color="red", edgecolors="k")
 
 # if we want to compare retrieved Teffs
 '''
@@ -150,6 +160,7 @@ import ipdb; ipdb.set_trace()
 plt.savefig(file_name_write)
 
 # density plot
+CONTINUE HERE ## ##
 fig, ax = plt.subplots(figsize=(15,10))
 x = df_merged_1["feh_direct_nsspp"][idx_sane_cs_only] # idx_finite, idx_sane_abs_only, idx_sane_cs_only
 y = df_merged_1["feh_retrieved"][idx_sane_cs_only]
