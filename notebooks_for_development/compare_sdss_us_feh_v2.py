@@ -70,6 +70,11 @@ idx_sane_abs_only = (np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(
 idx_sane_cs_only = (np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"])) & \
                 ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.)) & (df_merged_1["type_mode_0"] == "c")
 
+# experiment: if we artifically split the stars by 7000K (ab/c boundary), are things better behaved?
+idx_sane_cool_7000 = (np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"])) & \
+                ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.)) & (df_merged_1["teff"] < 7000)
+idx_sane_hot_7000 = (np.isfinite(df_merged_1["feh_direct_nsspp"]) & np.isfinite(df_merged_1["feh_retrieved"])) & \
+                ((np.abs(df_merged_1["feh_retrieved"]) < 5.) & (np.abs(df_merged_1["feh_direct_nsspp"]) < 5.)) & (df_merged_1["teff"] > 7000)
 import ipdb; ipdb.set_trace()
 
 df_merged_merged_abs_only = df_merged_1[idx_sane_abs_only]
@@ -140,15 +145,6 @@ plt.scatter(df_merged_1["feh_direct_nsspp"][idx_sane_abs_only], df_merged_1["feh
             label="ab", s=50, color="blue", edgecolors="k")
 plt.scatter(df_merged_1["feh_direct_nsspp"][idx_sane_cs_only], df_merged_1["feh_retrieved"][idx_sane_cs_only],
             label="c", s=50, color="red", edgecolors="k")
-
-# if we want to compare retrieved Teffs
-'''
-#plt.scatter(df_merged_1["teff"], df_merged_1["teff_retrieved"],
-#            c=df_merged_1["s_to_n"], cmap="Greens", s=50, edgecolors="k")
-plt.plot([6000,8000],[6000,8000], linestyle="--", color="black", zorder=0) # one-to-one
-plt.scatter(df_merged_1["teff"][idx_sane_abs_only], df_merged_1["teff_retrieved"][idx_sane_abs_only], s=50, edgecolors="k", label="ab")
-plt.scatter(df_merged_1["teff"][idx_sane_cs_only], df_merged_1["teff_retrieved"][idx_sane_cs_only], s=50, edgecolors="k", label="c")
-'''
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 plt.legend()
@@ -159,29 +155,131 @@ import ipdb; ipdb.set_trace()
 #plt.show()
 plt.savefig(file_name_write)
 
-# density plot
-CONTINUE HERE ## ##
+
+# if we want to compare retrieved Teffs
+
+#plt.scatter(df_merged_1["teff"], df_merged_1["teff_retrieved"],
+#            c=df_merged_1["s_to_n"], cmap="Greens", s=50, edgecolors="k")
+plt.clf()
+fig, ax = plt.subplots(figsize=(15,10))
+ax.plot([6000,8000],[6000,8000], linestyle="--", color="black", zorder=0, label="1-to-1") # one-to-one
+ax.scatter(df_merged_1["teff"][idx_sane_abs_only], df_merged_1["teff_retrieved"][idx_sane_abs_only], s=50, edgecolors="k", label="RRabs")
+ax.scatter(df_merged_1["teff"][idx_sane_cs_only], df_merged_1["teff_retrieved"][idx_sane_cs_only], s=50, edgecolors="k", label="RRcs")
+ax.set_xlabel("Teff, nSSPP")
+ax.set_ylabel("Teff, rrlfe")
+fig.legend()
+plt.savefig("junk_teff_retr.png")
+
+# density plots
+
+# all RRLs
+plt.clf()
+fig, ax = plt.subplots(figsize=(15,10))
+x = df_merged_1["feh_direct_nsspp"][idx_sane] # idx_finite, idx_sane, idx_sane
+y = df_merged_1["feh_retrieved"][idx_sane]
+hb = ax.hexbin(x,y, extent=(-3.5,0.5,-3.5,0.5))
+ax.plot([-3.5,0.5],[-3.5,0.5], linestyle="--", color="white", zorder=1, label="1-to-1")
+ax.plot([-3.0,0.0],[coeffs[0]*(-3.0)+coeffs[1],coeffs[0]*(0.0)+coeffs[1]], linestyle="-", color="k", zorder=1, label="best fit, all")
+ax.plot([-3.0,0.0],[coeffs_ab[0]*(-3.0)+coeffs_ab[1],coeffs_ab[0]*(0.0)+coeffs_ab[1]], linestyle="-", color="red", zorder=1, label="best fit, RRabs")
+ax.plot([-3.0,0.0],[coeffs_c[0]*(-3.0)+coeffs_c[1],coeffs_c[0]*(0.0)+coeffs_c[1]], linestyle="-", color="blue", zorder=1, label="best fit, RRcs")
+plt.title("Hexbin of RRabs and RRcs")
+ax.set_xlabel("Fe/H, nSSPP")
+ax.set_ylabel("Fe/H, rrlfe")
+ax.set_xlim([-3.5,0.5])
+ax.set_ylim([-3.5,0.5])
+cb = fig.colorbar(hb, ax=ax)
+cb.set_label('counts')
+fig.legend()
+plt.savefig("junk_all_hex.png")
+
+# RRabs
+plt.clf()
+fig, ax = plt.subplots(figsize=(15,10))
+x = df_merged_1["feh_direct_nsspp"][idx_sane_abs_only] # idx_finite, idx_sane_abs_only, idx_sane_abs_only
+y = df_merged_1["feh_retrieved"][idx_sane_abs_only]
+hb = ax.hexbin(x,y, extent=(-3.5,0.5,-3.5,0.5))
+ax.plot([-3.5,0.5],[-3.5,0.5], linestyle="--", color="white", zorder=1, label="1-to-1")
+ax.plot([-3.0,0.0],[coeffs[0]*(-3.0)+coeffs[1],coeffs[0]*(0.0)+coeffs[1]], linestyle="-", color="k", zorder=1, label="best fit, all")
+ax.plot([-3.0,0.0],[coeffs_ab[0]*(-3.0)+coeffs_ab[1],coeffs_ab[0]*(0.0)+coeffs_ab[1]], linestyle="-", color="red", zorder=1, label="best fit, RRabs")
+ax.plot([-3.0,0.0],[coeffs_c[0]*(-3.0)+coeffs_c[1],coeffs_c[0]*(0.0)+coeffs_c[1]], linestyle="-", color="blue", zorder=1, label="best fit, RRcs")
+plt.title("Hexbin of RRabs only")
+ax.set_xlabel("Fe/H, nSSPP")
+ax.set_ylabel("Fe/H, rrlfe")
+ax.set_xlim([-3.5,0.5])
+ax.set_ylim([-3.5,0.5])
+cb = fig.colorbar(hb, ax=ax)
+cb.set_label('counts')
+fig.legend()
+plt.savefig("junk_abs_hex.png")
+
+# RRcs
+plt.clf()
 fig, ax = plt.subplots(figsize=(15,10))
 x = df_merged_1["feh_direct_nsspp"][idx_sane_cs_only] # idx_finite, idx_sane_abs_only, idx_sane_cs_only
 y = df_merged_1["feh_retrieved"][idx_sane_cs_only]
-hh = ax.hist2d(x, y, bins=150)
-plt.plot([-3.0,0.0],[-3.0,0.0], linestyle="--", color="black", zorder=1) # one-to-one
-ax.plot([-3.0,0.0],[coeffs[0]*(-3.0)+coeffs[1],coeffs[0]*(0.0)+coeffs[1]], linestyle="-", color="k", zorder=1)
-ax.plot([-3.0,0.0],[coeffs_ab[0]*(-3.0)+coeffs_ab[1],coeffs_ab[0]*(0.0)+coeffs_ab[1]], linestyle="-", color="red", zorder=1)
-ax.plot([-3.0,0.0],[coeffs_c[0]*(-3.0)+coeffs_c[1],coeffs_c[0]*(0.0)+coeffs_c[1]], linestyle="-", color="blue", zorder=1)
-ax.set_xlim(-3.,0.5)
-ax.set_ylim(-3.,0.5)
-fig.colorbar(hh[3], ax=ax)
-plt.savefig("junk_density.png")
+hb = ax.hexbin(x,y, extent=(-3.5,0.5,-3.5,0.5))
+ax.plot([-3.5,0.5],[-3.5,0.5], linestyle="--", color="white", zorder=1, label="1-to-1")
+ax.plot([-3.0,0.0],[coeffs[0]*(-3.0)+coeffs[1],coeffs[0]*(0.0)+coeffs[1]], linestyle="-", color="k", zorder=1, label="best fit, all")
+ax.plot([-3.0,0.0],[coeffs_ab[0]*(-3.0)+coeffs_ab[1],coeffs_ab[0]*(0.0)+coeffs_ab[1]], linestyle="-", color="red", zorder=1, label="best fit, RRabs")
+ax.plot([-3.0,0.0],[coeffs_c[0]*(-3.0)+coeffs_c[1],coeffs_c[0]*(0.0)+coeffs_c[1]], linestyle="-", color="blue", zorder=1, label="best fit, RRcs")
+plt.title("Hexbin of RRcs only")
+ax.set_xlabel("Fe/H, nSSPP")
+ax.set_ylabel("Fe/H, rrlfe")
+ax.set_xlim([-3.5,0.5])
+ax.set_ylim([-3.5,0.5])
+cb = fig.colorbar(hb, ax=ax)
+cb.set_label('counts')
+fig.legend()
+plt.savefig("junk_cs_hex.png")
 
-# histograms of types
-binedges = np.linspace(-3.5,0.5,num=401,endpoint=True)
-plt.hist(df_merged_1["feh_direct_nsspp"].where(idx_ab), bins=binedges, label="ab")
-plt.hist(df_merged_1["feh_direct_nsspp"].where(idx_c), bins=binedges, label="c")
-plt.xlabel("nSSPP [Fe/H]")
-plt.legend()
-file_name_write = "junk_bytype_hist.pdf"
-plt.savefig(file_name_write)
+## 1d residual plots
+
+# all RRLs
+plt.clf()
+fig, ax = plt.subplots(figsize=(15,10))
+x = df_merged_1["feh_direct_nsspp"][idx_sane] # idx_finite, idx_sane, idx_sane
+y = np.subtract(df_merged_1["feh_retrieved"][idx_sane],df_merged_1["feh_direct_nsspp"][idx_sane])
+#hb = ax.hexbin(x,y, extent=(-3.5,0.5,-3.5,0.5))
+ax.scatter(x,y,s=2)
+ax.plot([-3.5,0.5],[0.,0.], linestyle="-", color="k", zorder=1)
+plt.title("[Fe/H] residuals for RRabs and RRcs")
+ax.set_ylabel("(Fe/H, rrlfe) - (Fe/H, nSSPP)")
+ax.set_xlabel("Fe/H, nSSPP")
+ax.set_xlim([-3.5,0.5])
+ax.set_ylim([-1.0,1.0])
+plt.savefig("junk_resids_feh_all.png")
+
+# RRabs
+plt.clf()
+fig, ax = plt.subplots(figsize=(15,10))
+x = df_merged_1["feh_direct_nsspp"][idx_sane_abs_only] # idx_finite, idx_sane, idx_sane
+y = np.subtract(df_merged_1["feh_retrieved"][idx_sane_abs_only],df_merged_1["feh_direct_nsspp"][idx_sane_abs_only])
+#hb = ax.hexbin(x,y, extent=(-3.5,0.5,-3.5,0.5))
+ax.scatter(x,y,s=2)
+ax.plot([-3.5,0.5],[0.,0.], linestyle="-", color="k", zorder=1)
+plt.title("[Fe/H] residuals for RRabs only")
+ax.set_ylabel("(Fe/H, rrlfe) - (Fe/H, nSSPP)")
+ax.set_xlabel("Fe/H, nSSPP")
+ax.set_xlim([-3.5,0.5])
+ax.set_ylim([-1.0,1.0])
+plt.savefig("junk_resids_feh_abs.png")
+
+# RRcs
+plt.clf()
+fig, ax = plt.subplots(figsize=(15,10))
+x = df_merged_1["feh_direct_nsspp"][idx_sane_cs_only] # idx_finite, idx_sane, idx_sane
+y = np.subtract(df_merged_1["feh_retrieved"][idx_sane_cs_only],df_merged_1["feh_direct_nsspp"][idx_sane_cs_only])
+#hb = ax.hexbin(x,y, extent=(-3.5,0.5,-3.5,0.5))
+ax.scatter(x,y,s=2)
+ax.plot([-3.5,0.5],[0.,0.], linestyle="-", color="k", zorder=1)
+plt.title("[Fe/H] residuals for RRcs only")
+ax.set_ylabel("(Fe/H, rrlfe) - (Fe/H, nSSPP)")
+ax.set_xlabel("Fe/H, nSSPP")
+ax.set_xlim([-3.5,0.5])
+ax.set_ylim([-1.0,1.0])
+plt.savefig("junk_resids_feh_cs.png")
+
+
 
 # histogram of Stripe 82 Fe/H
 plt.clf()
