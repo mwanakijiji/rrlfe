@@ -4,6 +4,7 @@ Initialization
 
 from configparser import ConfigParser, ExtendedInterpolation
 import os
+import git
 import sys
 import multiprocessing
 import logging
@@ -11,8 +12,15 @@ from setuptools import Distribution
 from setuptools.command.install import install
 from datetime import datetime
 
+# get pipeline hash
+# warning: may throw error on cluster
+repo = git.Repo(search_parent_directories=True)
+sha = repo.head.object.hexsha
+
 # set up logging, to print to screen and save to file simultaneously
-timestring_start = datetime.now().strftime("%Y%m%d_%H%M%S")
+time_start = datetime.now()
+timestring_human = str(time_start)
+timestring_start = time_start.strftime("%Y%m%d_%H%M%S")
 log_filename = timestring_start + ".log"
 logging.basicConfig(
     level=logging.INFO,
@@ -106,11 +114,24 @@ def make_dirs(objective="apply_calib"):
             logging.info("Made directory " + abs_path_name)
             os.umask(original_umask) # revert to previous permission status
 
+'''
+def get_hash():
+    # Retrieve git hash
+
+    # warning: may throw error on cluster
+    repo = git.Repo(search_parent_directories=True)
+    sha = repo.head.object.hexsha
+
+    return sha
+'''
+
 def config_init(objective="apply_calib"):
     '''
     Print parameters from the config file to log
     '''
     logging.info("## Begin pipeline configuration parameters ##")
+
+    logging.info("rrlfe git hash: " + sha)
 
     if (objective == "apply_calib"):
         config_choice = config_apply
@@ -127,7 +148,7 @@ def config_init(objective="apply_calib"):
 
     logging.info("----")
     logging.info("## End pipeline configuration parameters ##")
-    exit()
+
 
 def phase_regions():
     '''
