@@ -106,6 +106,29 @@ def make_dirs(objective="apply_calib"):
             logging.info("Made directory " + abs_path_name)
             os.umask(original_umask) # revert to previous permission status
 
+def config_init(objective="apply_calib"):
+    '''
+    Print parameters from the config file to log
+    '''
+    logging.info("## Begin pipeline configuration parameters ##")
+
+    if (objective == "apply_calib"):
+        config_choice = config_apply
+    elif (objective == "find_calib"):
+        config_choice = config_red
+
+    import ipdb; ipdb.set_trace()
+
+    for each_section in config_choice.sections():
+        logging.info("----")
+        logging.info("- " + each_section + " -")
+        for (each_key, each_val) in config_choice.items(each_section):
+            logging.info(each_key + ": " + each_val)
+
+    logging.info("----")
+    logging.info("## End pipeline configuration parameters ##")
+    exit()
+
 def phase_regions():
     '''
     Read in the boundary between good and bad phase regions
