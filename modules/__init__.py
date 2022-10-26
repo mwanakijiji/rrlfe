@@ -94,8 +94,7 @@ def make_dirs(objective="apply_calib"):
     # make directories for
     # 1. reduction of spectra to find a, b, c, d (objective = "find_calib"), or
     # 2. to apply the solution (objective = "apply_calib"; default)
-    print("----------")
-    print(objective)
+
     if (objective == "apply_calib"):
         config_choice = config_apply
     elif (objective == "find_calib"):
@@ -113,6 +112,25 @@ def make_dirs(objective="apply_calib"):
             #os.mkdir(abs_path_name)
             logging.info("Made directory " + abs_path_name)
             os.umask(original_umask) # revert to previous permission status
+
+        # if it does exist, check if it is not already empty;
+        # if it is non-empty, prompt user (as long as prompt_user
+        # flag has been set further above)
+        # (this needs to be refined, since some directories are not supposed to be empty)
+        if prompt_user and os.path.exists(abs_path_name):
+            print("------ YADA ---------")
+            with os.scandir(abs_path_name) as list_of_entries1:
+                counter1 = 0
+                for entry1 in list_of_entries1:
+                    if entry1.is_file():
+                        counter1 += 1
+            if (counter1 != 0):
+                logging.info("------------------------------")
+                logging.info(abs_path_name)
+                print("The above is a non-empty directory. Do you want to proceed? [Yes]")
+                print("(N.b. You will be prompted again when the directory is written to.)")
+                input()
+                logging.info("------------------------------")
 
 '''
 def get_hash():
@@ -137,6 +155,8 @@ def config_init(objective="apply_calib"):
         config_choice = config_apply
     elif (objective == "find_calib"):
         config_choice = config_red
+
+    logging.info("Pipeline purpose: find or apply a solution? " + objective)
 
     import ipdb; ipdb.set_trace()
 
