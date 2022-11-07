@@ -16,6 +16,29 @@ import csv
 import git
 from . import *
 
+'''
+def junkAccordionFcn_22():
+
+    print("hello 3")
+    print(self.name)
+'''
+
+class junkAccordionFcn_zap():
+
+    def __init__(self, module_name):
+
+        self.name = module_name
+
+    def run_step(self):
+        print("hello 33")
+
+
+class junkAccordionFcn_2():
+
+    def __init__(self):
+        pass
+
+    print("hello 2")
 
 def line_fit_temp_range(x_data_pass, y_data_pass, t_min, t_max):
     '''

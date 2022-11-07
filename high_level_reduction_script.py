@@ -19,6 +19,9 @@ def main():
 
     model_choice = "abcdfghk"
 
+    # print configuration params to log file
+    config_init(objective = "find_calib")
+
     # make all the directories
     make_dirs(objective = "find_calib") ## find_calib as opposed to apply_calib
     '''
