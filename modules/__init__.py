@@ -158,8 +158,6 @@ def config_init(objective="apply_calib"):
 
     logging.info("Pipeline purpose: find or apply a solution? " + objective)
 
-    import ipdb; ipdb.set_trace()
-
     for each_section in config_choice.sections():
         logging.info("----")
         logging.info("- " + each_section + " -")
