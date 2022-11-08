@@ -1,17 +1,17 @@
 
 import high_level_reduction_accordion as pipeline
-import ipdb; ipdb.set_trace()
+
 # instantiate object that will contain the series of reduction steps
 test_gen = pipeline.GenerateCalib(model_choice="abcdfghk")
 
 # print configuration params to log file
-step = pipeline.config_init(objective = "find_calib", module_name="module1")
+step = pipeline.config_init(module_name="module1", objective = "find_calib")
 
 # add step to procedure
 test_gen.add_step(step)
 
 # make all the directories
-step = pipeline.make_dirs(objective = "find_calib")
+step = pipeline.make_dirs(module_name="module2", objective = "find_calib")
 
 # add step to procedure
 test_gen.add_step(step)
@@ -20,6 +20,15 @@ test_gen.add_step(step)
 test_gen.run()
 
 '''
+
+
+# add step to procedure
+test_gen.add_step(step)
+
+# run the pipeline
+test_gen.run()
+
+
 # compile the C spectral normalization script
 pipeline.compile_normalization.compile_bkgrnd()
 
