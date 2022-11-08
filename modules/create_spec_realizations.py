@@ -327,16 +327,8 @@ def write_bckgrnd_input(name_list, indir, normdir):
 # -------------
 # Main Function
 # -------------
-def create_spec_realizations_main(noise_level,
-                                spec_file_type,
-                                num = 100,
-                                  input_spec_list_dir = config_red["data_dirs"]["DIR_SRC"],
-                                  input_list = config_red["data_dirs"]["DIR_SRC"] + config_red["file_names"]["LIST_SPEC_PHASE"],
-                                  unnorm_empirical_spectra_dir = config_red["data_dirs"]["DIR_RAW_SPEC_DATA"],
-                                  unnorm_noise_churned_spectra_dir = config_red["data_dirs"]["DIR_REZNS_SPEC"],
-                                  bkgrnd_output_dir = config_red["data_dirs"]["DIR_REZNS_SPEC_NORM"],
-                                  final_dir = config_red["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"],
-                                  verb=False):
+class create_spec_realizations_main():
+
     '''
     INPUTS:
     num: number of spectrum realizations to make, per empirical spectrum
@@ -354,140 +346,164 @@ def create_spec_realizations_main(noise_level,
     (text files written)
     '''
 
-    logging.info("--------------------------")
-    logging.info("Making "+str(num)+" realizations of each input spectrum")
+    def __init__(self, module_name, num, noise_level, spec_file_type,
+                input_spec_list_dir=None,
+                input_list=None,
+                unnorm_empirical_spectra_dir=None,
+                unnorm_noise_churned_spectra_dir=None,
+                bkgrnd_output_dir=None,
+                final_dir=None,
+                verb=None):
 
-    if (num > 1) and (noise_level == "None"):
-        logging.warning("Realizing multiple spectra but noise level is zero")
-        input("Hit [Enter] to continue")
+        self.name = module_name
+        self.noise_level = noise_level
+        self.spec_file_type = spec_file_type
+        self.num = 100
+        self.input_spec_list_dir = config_red["data_dirs"]["DIR_SRC"]
+        self.input_list = config_red["data_dirs"]["DIR_SRC"] + config_red["file_names"]["LIST_SPEC_PHASE"]
+        self.unnorm_empirical_spectra_dir = config_red["data_dirs"]["DIR_RAW_SPEC_DATA"]
+        self.unnorm_noise_churned_spectra_dir = config_red["data_dirs"]["DIR_REZNS_SPEC"]
+        self.bkgrnd_output_dir = config_red["data_dirs"]["DIR_REZNS_SPEC_NORM"]
+        self.final_dir = config_red["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"]
+        self.verb = False
+        #module_name="module4", num = 1, noise_level=0.0, spec_file_type="ascii.no_header"
 
-    # Read list of input spectra
-    # input_list ALREADY SET IN DEFAULTS ## input_list = input_spec_list_dir + config_red["file_names"]["LIST_SPEC_PHASE"]
-    list_arr = read_list(input_list)
+    def run_step(self):
 
-    #logging.info('list_arr')
-    #logging.info(list_arr)
+        logging.info("--------------------------")
+        logging.info("Making "+str(self.num)+" realizations of each input spectrum")
 
-    # Check to make sure the files in the list are actually in the input directory;
-    # if not, just remove those from the list and set a warning
-    logging.info("Reading in unnormalized spectra from dir " + unnorm_empirical_spectra_dir)
-    list_actually_there = glob.glob(unnorm_empirical_spectra_dir + "*.*")
-    list_actually_basenames = np.array([os.path.basename(t) for t in list_actually_there])
+        if (self.num > 1) and (self.noise_level == "None"):
+            logging.warning("Realizing multiple spectra but noise level is zero")
+            input("Hit [Enter] to continue")
 
-    num_sought = len(list_arr) # number of wanted files
-    num_existing = np.sum(np.in1d(list_arr, list_actually_basenames)) # number of wanted files found
-    bool_present = np.in1d(list_arr, list_actually_basenames, invert=False)
-    bool_missing = np.in1d(list_arr, list_actually_basenames, invert=True)
-    files_missing = list_arr[bool_missing] # files in input list, but not found
-    files_present = list_arr[bool_present] # files in input list, and found
-    num_extra = np.sum(np.in1d(list_actually_basenames, list_arr, invert=True)) # number of extra files found in the input directory
+        # Read list of input spectra
+        # input_list ALREADY SET IN DEFAULTS ## input_list = input_spec_list_dir + config_red["file_names"]["LIST_SPEC_PHASE"]
+        list_arr = read_list(self.input_list)
 
-    # did we find all the spectra we wanted?
-    if (num_existing < num_sought):
-        logging.warning(print("Found only "+str(num_existing)+" of "+str(num_sought)+" spectra in input list"))
-        logging.warning("Files missing from input directory:")
-        logging.warning(files_missing)
-    else:
-        logging.info("All spectra in input list found in input directory")
+        #logging.info('list_arr')
+        #logging.info(list_arr)
 
-    # did any other spectra appear in the directory, which may or may not be a good thing?
-    if (num_extra > 1):
-        logging.warning(print("Found "+str(num_extra)+" files in directory which do not appear in input list"))
-    else:
-        logging.info("No spectra found in input directory which do not appear in input list.")
+        # Check to make sure the files in the list are actually in the input directory;
+        # if not, just remove those from the list and set a warning
+        logging.info("Reading in unnormalized spectra from dir " + self.unnorm_empirical_spectra_dir)
+        list_actually_there = glob.glob(self.unnorm_empirical_spectra_dir + "*.*")
+        list_actually_basenames = np.array([os.path.basename(t) for t in list_actually_there])
 
-    # if there are files missing from the directory, just remove those from the input list
-    list_arr = files_present
+        num_sought = len(list_arr) # number of wanted files
+        num_existing = np.sum(np.in1d(list_arr, list_actually_basenames)) # number of wanted files found
+        bool_present = np.in1d(list_arr, list_actually_basenames, invert=False)
+        bool_missing = np.in1d(list_arr, list_actually_basenames, invert=True)
+        files_missing = list_arr[bool_missing] # files in input list, but not found
+        files_present = list_arr[bool_present] # files in input list, and found
+        num_extra = np.sum(np.in1d(list_actually_basenames, list_arr, invert=True)) # number of extra files found in the input directory
 
-    # Check to make sure outdir (to receive realizations of spectra) exists
-    outdir = unnorm_noise_churned_spectra_dir
-    if not os.path.isdir(outdir):
-        os.mkdir(outdir)
-    else:
-        # Check to see if there are any files in the output directories (if not,
-        # there is data from a previous run that will inadvertently be used later)
-        # read the entries
+        # did we find all the spectra we wanted?
+        if (num_existing < num_sought):
+            logging.warning(print("Found only "+str(num_existing)+" of "+str(num_sought)+" spectra in input list"))
+            logging.warning("Files missing from input directory:")
+            logging.warning(files_missing)
+        else:
+            logging.info("All spectra in input list found in input directory")
 
+        # did any other spectra appear in the directory, which may or may not be a good thing?
+        if (num_extra > 1):
+            logging.warning(print("Found "+str(num_extra)+" files in directory which do not appear in input list"))
+        else:
+            logging.info("No spectra found in input directory which do not appear in input list.")
+
+        # if there are files missing from the directory, just remove those from the input list
+        list_arr = files_present
+
+        # Check to make sure outdir (to receive realizations of spectra) exists
+        outdir = self.unnorm_noise_churned_spectra_dir
+        if not os.path.isdir(outdir):
+            os.mkdir(outdir)
+        else:
+            # Check to see if there are any files in the output directories (if not,
+            # there is data from a previous run that will inadvertently be used later)
+            # read the entries
+
+            #import ipdb; ipdb.set_trace()
+
+            with os.scandir(outdir) as list_of_entries1:
+                counter1 = 0
+                for entry1 in list_of_entries1:
+                    if entry1.is_file():
+                        counter1 += 1
+            if (counter1 != 0):
+                logging.info("------------------------------")
+                logging.info("Directory to write realizations not empty!!")
+                logging.info(outdir)
+                logging.info("------------------------------")
+                if prompt_user:
+                    input("Do what you want with those files, then hit [Enter]")
+
+            with os.scandir(self.bkgrnd_output_dir) as list_of_entries2:
+                counter2 = 0
+                for entry2 in list_of_entries2:
+                    if entry2.is_file():
+                        counter2 += 1
+            if (counter2 != 0):
+                logging.info("------------------------------")
+                logging.info("Directory to write raw normalization output not empty!!")
+                logging.info(self.bkgrnd_output_dir)
+                logging.info("------------------------------")
+                if prompt_user:
+                    input("Do what you want with those files, then hit [Enter]")
+
+            with os.scandir(self.final_dir) as list_of_entries3:
+                counter3 = 0
+                for entry3 in list_of_entries3:
+                    if entry3.is_file():
+                        counter3 += 1
+            if (counter3 != 0):
+                logging.info("------------------------------")
+                logging.info("Directory to write final normalization output not empty!!")
+                logging.info(self.final_dir)
+                logging.info("------------------------------")
+                if prompt_user:
+                    input("Do what you want with those files, then hit [Enter]")
+
+        # create noise-churned realizations for each spectrum
+        name_list = list() # initialize
         #import ipdb; ipdb.set_trace()
+        for i in range(len(list_arr)): # make spectrum realizations and list of their filenames
+            #import ipdb; ipdb.set_trace()
+            print(i)
+            name_list.extend(generate_realizations(spec_name=self.unnorm_empirical_spectra_dir+"/"+list_arr[i],
+                                                   outdir=outdir,
+                                                   spec_file_format=self.spec_file_type,
+                                                   num=self.num,
+                                                   noise_level=self.noise_level))
 
-        with os.scandir(outdir) as list_of_entries1:
-            counter1 = 0
-            for entry1 in list_of_entries1:
-                if entry1.is_file():
-                    counter1 += 1
-        if (counter1 != 0):
-            logging.info("------------------------------")
-            logging.info("Directory to write realizations not empty!!")
-            logging.info(outdir)
-            logging.info("------------------------------")
-            if prompt_user:
-                input("Do what you want with those files, then hit [Enter]")
+        # next we need to normalize the spectra; begin by creating input list of
+        # spectrum realizations written in the previous step
+        bkg_input_file = write_bckgrnd_input(name_list, outdir, self.bkgrnd_output_dir)
+        logging.info("-------------------------------------------")
+        logging.info('The file containing the list of spectra which will be fed ' + \
+                    'into the normalization routine is ' + bkg_input_file)
 
-        with os.scandir(bkgrnd_output_dir) as list_of_entries2:
-            counter2 = 0
-            for entry2 in list_of_entries2:
-                if entry2.is_file():
-                    counter2 += 1
-        if (counter2 != 0):
-            logging.info("------------------------------")
-            logging.info("Directory to write raw normalization output not empty!!")
-            logging.info(bkgrnd_output_dir)
-            logging.info("------------------------------")
-            if prompt_user:
-                input("Do what you want with those files, then hit [Enter]")
+        # normalize each spectrum realization (smoothing parameter is set in __init__)
+        bkgrnd = Popen([str(config_red["data_dirs"]["DIR_BIN"]) + "bkgrnd", "--smooth "+str(config_red["reduc_params"]["SMOOTH"]),
+                        "--sismoo 1", "--no-plot", "{}".format(bkg_input_file)], stdout=PIPE, stderr=PIPE)
+        (out, err) = bkgrnd.communicate() # returns tuple (stdout, stderr)
 
-        with os.scandir(final_dir) as list_of_entries3:
-            counter3 = 0
-            for entry3 in list_of_entries3:
-                if entry3.is_file():
-                    counter3 += 1
-        if (counter3 != 0):
-            logging.info("------------------------------")
-            logging.info("Directory to write final normalization output not empty!!")
-            logging.info(final_dir)
-            logging.info("------------------------------")
-            if prompt_user:
-                input("Do what you want with those files, then hit [Enter]")
+        if self.verb == True: ## ## decode messages (are they used later? why take this step?)
+            logging.info(out.decode("utf-8"))
+            logging.info(err.decode("utf-8"))
 
-    # create noise-churned realizations for each spectrum
-    name_list = list() # initialize
-    #import ipdb; ipdb.set_trace()
-    for i in range(len(list_arr)): # make spectrum realizations and list of their filenames
-        #import ipdb; ipdb.set_trace()
-        print(i)
-        name_list.extend(generate_realizations(spec_name=unnorm_empirical_spectra_dir+"/"+list_arr[i],
-                                               outdir=outdir,
-                                               spec_file_format=spec_file_type,
-                                               num=num,
-                                               noise_level=noise_level))
+        # read in input files, normalize them, write out, and return list of those filenames
+        final_list = create_norm_spec(name_list, self.bkgrnd_output_dir, self.final_dir)
 
-    # next we need to normalize the spectra; begin by creating input list of
-    # spectrum realizations written in the previous step
-    bkg_input_file = write_bckgrnd_input(name_list, outdir, bkgrnd_output_dir)
-    logging.info("-------------------------------------------")
-    logging.info('The file containing the list of spectra which will be fed ' + \
-                'into the normalization routine is ' + bkg_input_file)
+        logging.info("-------------------------------------------")
+        logging.info("Wrote realizations of original spectra to directory")
+        logging.info(outdir)
+        logging.info("-------------------------------------------")
+        logging.info("Wrote raw normalization output to directory")
+        logging.info(self.bkgrnd_output_dir)
+        logging.info("-------------------------------------------")
+        logging.info("Wrote final normalized spectra to directory")
+        logging.info(self.final_dir)
 
-    # normalize each spectrum realization (smoothing parameter is set in __init__)
-    bkgrnd = Popen([str(config_red["data_dirs"]["DIR_BIN"]) + "bkgrnd", "--smooth "+str(config_red["reduc_params"]["SMOOTH"]),
-                    "--sismoo 1", "--no-plot", "{}".format(bkg_input_file)], stdout=PIPE, stderr=PIPE)
-    (out, err) = bkgrnd.communicate() # returns tuple (stdout, stderr)
-
-    if verb == True: ## ## decode messages (are they used later? why take this step?)
-        logging.info(out.decode("utf-8"))
-        logging.info(err.decode("utf-8"))
-
-    # read in input files, normalize them, write out, and return list of those filenames
-    final_list = create_norm_spec(name_list, bkgrnd_output_dir, final_dir)
-
-    logging.info("-------------------------------------------")
-    logging.info("Wrote realizations of original spectra to directory")
-    logging.info(outdir)
-    logging.info("-------------------------------------------")
-    logging.info("Wrote raw normalization output to directory")
-    logging.info(bkgrnd_output_dir)
-    logging.info("-------------------------------------------")
-    logging.info("Wrote final normalized spectra to directory")
-    logging.info(final_dir)
-
-    return final_list
+        return final_list

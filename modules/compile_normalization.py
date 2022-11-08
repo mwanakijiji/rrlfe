@@ -21,30 +21,40 @@ def func(arg1, arg2):
     """
     return True
 
-def compile_bkgrnd(
-                    compiled_bkgrnd_file_path_abs_pass = compiled_bkgrnd_file_path_abs,
-                    cc_bkgrnd_file_path_abs_pass = cc_bkgrnd_file_path_abs
-                    ):
+class compileBkgrnd():
+    '''
+    Make directories for housing files/info if they don't already exist
+    '''
 
-    _COMPILE_BKGRND = True
-    if _COMPILE_BKGRND:
-        if True:
+    def __init__(self, module_name):
 
-            logging.info("--------------------------")
-            logging.info("Compiling background normalization script...")
-            bkgrnd_compile = Popen(["g++", "-o",
-                                    compiled_bkgrnd_file_path_abs_pass,
-                                    cc_bkgrnd_file_path_abs_pass],
-                                    stdout=PIPE, stderr=PIPE)
+        self.name = module_name
+        self.compiled_bkgrnd_file_path_abs_pass = compiled_bkgrnd_file_path_abs
+        self.cc_bkgrnd_file_path_abs_pass = cc_bkgrnd_file_path_abs
 
-            output, error = bkgrnd_compile.communicate()
-            if bkgrnd_compile.returncode != 0:
-                print("Compile error %d %s %s" % (bkgrnd_compile.returncode, output, error))
-                success_val = bool(False)
-            else:
-                logging.info("Binary for spectrum normalization saved to")
-                logging.info(compiled_bkgrnd_file_path_abs_pass)
+    def run_step(self):
+
+        logging.info("## Making directories ##")
+
+        _COMPILE_BKGRND = True
+        if _COMPILE_BKGRND:
+            if True:
+
                 logging.info("--------------------------")
-                success_val = bool(True)
+                logging.info("Compiling background normalization script...")
+                bkgrnd_compile = Popen(["g++", "-o",
+                                        self.compiled_bkgrnd_file_path_abs_pass,
+                                        self.cc_bkgrnd_file_path_abs_pass],
+                                        stdout=PIPE, stderr=PIPE)
 
-    return success_val
+                output, error = bkgrnd_compile.communicate()
+                if bkgrnd_compile.returncode != 0:
+                    print("Compile error %d %s %s" % (bkgrnd_compile.returncode, output, error))
+                    success_val = bool(False)
+                else:
+                    logging.info("Binary for spectrum normalization saved to")
+                    logging.info(self.compiled_bkgrnd_file_path_abs_pass)
+                    logging.info("--------------------------")
+                    success_val = bool(True)
+
+        return success_val

@@ -43,8 +43,8 @@ config_apply = ConfigParser(interpolation=ExtendedInterpolation())
 config_apply.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_apply.ini'))
 
 # set pathnames for important files that are used by different modules
-cc_bkgrnd_file_path_abs = config_red["data_dirs"]["DIR_SRC"] + "/bkgrnd.cc"
-compiled_bkgrnd_file_path_abs = config_red["data_dirs"]["DIR_BIN"] + "/bkgrnd"
+cc_bkgrnd_file_path_abs = str(config_red["data_dirs"]["DIR_SRC"] + "/bkgrnd.cc")
+compiled_bkgrnd_file_path_abs = str(config_red["data_dirs"]["DIR_BIN"] + "/bkgrnd")
 
 # number of cores to use
 #ncpu = multiprocessing.cpu_count()
@@ -86,7 +86,7 @@ def get_setuptools_script_dir():
     return dist.install_scripts
 
 
-class make_dirs():
+class makeDirs():
     '''
     Make directories for housing files/info if they don't already exist
     '''
@@ -152,7 +152,7 @@ def get_hash():
     return sha
 '''
 
-class config_init():
+class configInit():
     '''
     Print parameters from the config file to log
     '''
