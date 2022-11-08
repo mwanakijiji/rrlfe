@@ -73,10 +73,10 @@ def line_fit_temp_range(x_data_pass, y_data_pass, t_min, t_max):
     return m, err_m, b, err_b
 
 
-def temp_vs_balmer(df_poststack_file_name_read = config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["RESTACKED_EW_DATA_W_METADATA"],
-                    df_poststack_file_name_write = config_red["data_dirs"]["DIR_EW_PRODS"] + config_red["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"],
-                    plot_write = config_red["data_dirs"]["DIR_BIN"] + config_red["file_names"]["PLOT_TEFF_VS_BALMER"],
-                    teff_data_write = config_red["data_dirs"]["DIR_BIN"] + config_red["file_names"]["TREND_TEFF_VS_BALMER"],
+def temp_vs_balmer(df_poststack_file_name_read = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["RESTACKED_EW_DATA_W_METADATA"],
+                    df_poststack_file_name_write = config_choice["data_dirs"]["DIR_EW_PRODS"] + config_choice["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"],
+                    plot_write = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["PLOT_TEFF_VS_BALMER"],
+                    teff_data_write = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["TREND_TEFF_VS_BALMER"],
                     plot = True,
                     test_flag=False):
     '''
@@ -103,8 +103,8 @@ def temp_vs_balmer(df_poststack_file_name_read = config_red["data_dirs"]["DIR_EW
     '''
 
     # the min and max Teff of spectra that the linear fit will be made to
-    t_min = int(config_red["teff_linear"]["MIN_TEFF"])
-    t_max = int(config_red["teff_linear"]["MAX_TEFF"])
+    t_min = int(config_choice["teff_linear"]["MIN_TEFF"])
+    t_max = int(config_choice["teff_linear"]["MAX_TEFF"])
 
     # read in data
     df_poststack = pd.read_csv(df_poststack_file_name_read)

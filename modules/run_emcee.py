@@ -18,8 +18,8 @@ from . import *
 
 
 def corner_plot(model,
-                mcmc_text_output_file_name = config_red["data_dirs"]["DIR_BIN"] + config_red["file_names"]["MCMC_OUTPUT"],
-                corner_plot_putput_file_name = config_red["data_dirs"]["DIR_BIN"] + config_red["file_names"]["MCMC_CORNER"]):
+                mcmc_text_output_file_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["MCMC_OUTPUT"],
+                corner_plot_putput_file_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["MCMC_CORNER"]):
     '''
     Reads in MCMC output and writes out a corner plot
     '''
@@ -311,9 +311,9 @@ def chi_sqd_fcn(Bal_pass,
 
 
 def write_soln_to_fits(model,
-                        mcmc_text_output_file_name = config_red["data_dirs"]["DIR_BIN"] + config_red["file_names"]["MCMC_OUTPUT"],
-                        teff_data_retrieve_file_name = config_red["data_dirs"]["DIR_BIN"] + config_red["file_names"]["TREND_TEFF_VS_BALMER"],
-                        soln_write_name = config_red["data_dirs"]["DIR_BIN"] + config_red["file_names"]["CALIB_SOLN"],
+                        mcmc_text_output_file_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["MCMC_OUTPUT"],
+                        teff_data_retrieve_file_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["TREND_TEFF_VS_BALMER"],
+                        soln_write_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["CALIB_SOLN"],
                         test_flag=False):
     '''
     Takes the full reduction solution and writes it to a FITS file with
@@ -420,8 +420,8 @@ class RunEmcee():
     '''
 
     def __init__(self,
-                 scraped_ews_good_only_file_name = config_red["data_dirs"]["DIR_EW_PRODS"] + config_red["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"],
-                 mcmc_text_output_file_name = config_red["data_dirs"]["DIR_BIN"] + config_red["file_names"]["MCMC_OUTPUT"]
+                 scraped_ews_good_only_file_name = config_choice["data_dirs"]["DIR_EW_PRODS"] + config_choice["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"],
+                 mcmc_text_output_file_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["MCMC_OUTPUT"]
                  ):
 
         # name of file with final K, H, FeH, and error values (and not the others from the noise-churned spectra)

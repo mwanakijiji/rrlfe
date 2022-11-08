@@ -17,13 +17,6 @@ from modules import (compile_normalization,
                       run_emcee,
                       teff_retrieval)
 
-'''
-Example call:
-
-import high_level_reduction_accordion
-test_gen = high_level_reduction_accordion.GenerateCalib(model_choice="abcdfghk")
-test_gen.add_module()
-'''
 
 class GenerateCalib():
     '''
@@ -31,11 +24,16 @@ class GenerateCalib():
     '''
     def __init__(self,
         model_choice = None):
-        '''
-        Might put some initialization stuff here
-        '''
+
+        # dictionary to contain pipeline steps
         self._dict_steps = collections.OrderedDict()
+
+        # define the calibration model
         self.model_choice = model_choice
+
+        # GenerateCalib() is for finding a calibration
+        #global objective
+        #self.objective = "find_calib"
 
 
     def add_step(self, module):

@@ -57,10 +57,10 @@ class Scraper():
     Scrape all the equivalent width info from the Robospect *robolines files
     '''
 
-    def __init__(self,
-                 subdir=config_red["data_dirs"]["DIR_ROBO_OUTPUT"],
-                 file_scraped_info=config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["SCRAPED_EW_ALL_DATA"],
-                 orig_spec_list = config_red["data_dirs"]["DIR_SRC"] + config_red["file_names"]["LIST_SPEC_PHASE"],
+    def __init__(self, module_name,
+                 subdir=config_choice["data_dirs"]["DIR_ROBO_OUTPUT"],
+                 file_scraped_info=config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["SCRAPED_EW_ALL_DATA"],
+                 orig_spec_list = config_choice["data_dirs"]["DIR_SRC"] + config_choice["file_names"]["LIST_SPEC_PHASE"],
                  verbose=False):
 
         '''
@@ -92,7 +92,7 @@ class Scraper():
         # return tables of EW data?
         self.verbose = verbose
 
-    def __call__(self):
+    def run_step(self):
 
         df_master = pd.DataFrame() # initialize
 
@@ -187,9 +187,9 @@ class Scraper():
         return df_master
 
 
-def add_synthetic_meta_data(input_list = config_red["data_dirs"]["DIR_SRC"] + config_red["file_names"]["LIST_SPEC_PHASE"],
-                            read_in_filename = config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"],
-                            write_out_filename = config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["RESTACKED_EW_DATA_W_METADATA"]):
+def add_synthetic_meta_data(input_list = config_choice["data_dirs"]["DIR_SRC"] + config_choice["file_names"]["LIST_SPEC_PHASE"],
+                            read_in_filename = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"],
+                            write_out_filename = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["RESTACKED_EW_DATA_W_METADATA"]):
 
     '''
     For the generation of a calibration, this reads in a file with spectrum file
@@ -220,8 +220,8 @@ def add_synthetic_meta_data(input_list = config_red["data_dirs"]["DIR_SRC"] + co
 
 
 def quality_check(
-    read_in_filename = config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["SCRAPED_EW_ALL_DATA"],
-    write_out_filename = config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"]):
+    read_in_filename = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["SCRAPED_EW_ALL_DATA"],
+    write_out_filename = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"]):
     '''
     This reads in all the scraped EW data in raw form, removes spectra that have fits
     which are bad based on multiple criteria, and writes out another data_table
@@ -307,8 +307,8 @@ def quality_check(
     return pruned_data
 
 
-def generate_net_balmer(read_in_filename = config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY"],
-                        write_out_filename = config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER"]):
+def generate_net_balmer(read_in_filename = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY"],
+                        write_out_filename = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER"]):
     '''
     Takes stacked spectra data and adds a column representing a net Balmer line,
     and populates another column for the error (based on propagation of the Robo
@@ -372,8 +372,8 @@ def generate_net_balmer(read_in_filename = config_red["data_dirs"]["DIR_EW_PRODS
     return [m, err_m, b, err_b], df_poststack
 
 
-def generate_addl_ew_errors(read_in_filename = config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER"],
-                            write_out_filename = config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"],
+def generate_addl_ew_errors(read_in_filename = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER"],
+                            write_out_filename = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"],
                             groupby_parent = True):
     '''
     Calculates errors in EW using the method of finding the stdev of EWs across
@@ -478,9 +478,9 @@ def generate_addl_ew_errors(read_in_filename = config_red["data_dirs"]["DIR_EW_P
 
 
 def stack_spectra(
-    read_in_filename = config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"],
-    write_out_filename = config_red["data_dirs"]["DIR_EW_PRODS"]+config_red["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY"],
-    input_list = config_red["data_dirs"]["DIR_SRC"] + config_red["file_names"]["LIST_SPEC_PHASE"]):
+    read_in_filename = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"],
+    write_out_filename = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY"],
+    input_list = config_choice["data_dirs"]["DIR_SRC"] + config_choice["file_names"]["LIST_SPEC_PHASE"]):
     '''
     Takes output of quality_check() and transposes and stacks data so that the data has *rows* of spectra and *cols* of absorption lines
 

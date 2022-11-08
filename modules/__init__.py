@@ -33,18 +33,20 @@ logging.basicConfig(
 )
 
 # configuration data for reduction
-config_red = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
+config_choice = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
 # config for reduction to find a, b, c, d
-config_red.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_red.ini'))
+config_choice.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_red.ini')) ## ## THIS HAS TO BE MANUALLY SET BY USER HERE; NEED TO CHANGE THIS
 
 # config for applying a calibration
+'''
 config_apply = ConfigParser(interpolation=ExtendedInterpolation())
 
 config_apply.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_apply.ini'))
+'''
 
 # set pathnames for important files that are used by different modules
-cc_bkgrnd_file_path_abs = str(config_red["data_dirs"]["DIR_SRC"] + "/bkgrnd.cc")
-compiled_bkgrnd_file_path_abs = str(config_red["data_dirs"]["DIR_BIN"] + "/bkgrnd")
+cc_bkgrnd_file_path_abs = str(config_choice["data_dirs"]["DIR_SRC"] + "/bkgrnd.cc")
+compiled_bkgrnd_file_path_abs = str(config_choice["data_dirs"]["DIR_BIN"] + "/bkgrnd")
 
 # number of cores to use
 #ncpu = multiprocessing.cpu_count()
@@ -104,10 +106,12 @@ class makeDirs():
         # 1. reduction of spectra to find a, b, c, d (objective = "find_calib"), or
         # 2. to apply the solution (objective = "apply_calib"; default)
 
+        '''
         if (self.objective == "apply_calib"):
             config_choice = config_apply
         elif (self.objective == "find_calib"):
             config_choice = config_red
+        '''
 
         # loop over all directory paths we will need
         for vals in config_choice["data_dirs"]:
@@ -157,10 +161,10 @@ class configInit():
     Print parameters from the config file to log
     '''
 
-    def __init__(self, module_name, objective=None):
+    def __init__(self, module_name):
 
         self.name = module_name
-        self.objective = "apply_calib"
+        #self.objective = "apply_calib"
 
     def run_step(self):
 
@@ -168,12 +172,14 @@ class configInit():
 
         logging.info("rrlfe git hash: " + sha)
 
-        if (self.objective == "apply_calib"):
+        '''
+        if (objective == "apply_calib"):
             config_choice = config_apply
-        elif (self.objective == "find_calib"):
+        elif (objective == "find_calib"):
             config_choice = config_red
+        '''
 
-        logging.info("Pipeline purpose: find or apply a solution? " + self.objective)
+        logging.info("Pipeline purpose: find or apply a solution? " + objective)
 
         for each_section in config_choice.sections():
             logging.info("----")
