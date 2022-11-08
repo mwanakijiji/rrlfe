@@ -10,6 +10,9 @@ from . import *
 
 
 class RunRobo:
+    '''
+    Class to enable multiprocessing
+    '''
 
     def __init__(self, write_dir, robo_dir):
 
@@ -77,63 +80,72 @@ class RunRobo:
             logging.error("Failed to carry out cmd " + cmd_string)
 
 
-def main(
-        normzed_spec_source_dir = config_red["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"],
-        write_dir=config_red["data_dirs"]["DIR_ROBO_OUTPUT"],
-        robo_dir=config_red["sys_dirs"]["DIR_ROBO"]
-        ):
-    '''
-    Accumulate list of filenames of normalized synthetic spectra, then
-    measure EWs
+class Robo():
 
-    INPUTS:
-    normzed_spec_source_dir: source directory of normalized spectra which
-        Robospect will be run on
-    write_dir: directory to which Robospect output will be written to
-    robo_dir: directory of the robospect.py repo
+    def __init__(self, module_name,
+                normzed_spec_source_dir=None,
+                write_dir=None,
+                robo_dir=None):
 
-    OUTPUTS:
-    (EW data written to file)
-    '''
+        self.name = module_name
+        self.normzed_spec_source_dir = config_red["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"]
+        self.write_dir = config_red["data_dirs"]["DIR_ROBO_OUTPUT"]
+        self.robo_dir = config_red["sys_dirs"]["DIR_ROBO"]
 
-    ## ## note that I have put in a specific string to look for
-    ## ## in the file name here; this might be a weakness later on
+    def run_step(self):
 
-    pool = multiprocessing.Pool(ncpu)
+        '''
+        Accumulate list of filenames of normalized synthetic spectra, then
+        measure EWs
 
-    ## ## note the below file name list collects ALL files in that directory,
-    ## ## not just the ones listed in the initial .list file
-    file_name_list = glob.glob(normzed_spec_source_dir+"*")
-    logging.info('Reading in spectra from directory')
-    logging.info(normzed_spec_source_dir)
+        INPUTS:
+        normzed_spec_source_dir: source directory of normalized spectra which
+            Robospect will be run on
+        write_dir: directory to which Robospect output will be written to
+        robo_dir: directory of the robospect.py repo
 
-    # Check to see if it is empty (if not, there is data from a previous
-    # run that will inadvertently be used later)
-    preexisting_file_list = glob.glob(write_dir + "/*", recursive=False)
-    #print(preexisting_file_list)
+        OUTPUTS:
+        (EW data written to file)
+        '''
 
-    #print(len(preexisting_file_list))
-    if (len(preexisting_file_list) > 0):
-        logging.info("------------------------------")
-        logging.info("Directory to receive Robospect output not empty!!")
-        logging.info(write_dir)
-        logging.info("------------------------------")
-        if prompt_user:
-            input("Do what you want with those files, then hit [Enter]")
+        ## ## note that I have put in a specific string to look for
+        ## ## in the file name here; this might be a weakness later on
 
-    # run Robospect on normalized spectra in parallel
-    # (N.b. Setting the config files allows Robospect to dump files in the right places)
-    run_robospect_instance = RunRobo(write_dir = write_dir, robo_dir = robo_dir)
-    #if (configuration == "config"):
-    #    run_robospect_instance = RunRobo(config_data=configuration)
-    #elif (configuration == "config_apply"):
-    #    run_robospect_instance = RunRobo(config_data=config_apply)
+        pool = multiprocessing.Pool(ncpu)
 
-    # in parallel
-    pool.map(run_robospect_instance, file_name_list)
+        ## ## note the below file name list collects ALL files in that directory,
+        ## ## not just the ones listed in the initial .list file
+        file_name_list = glob.glob(self.normzed_spec_source_dir+"*")
+        logging.info('Reading in spectra from directory')
+        logging.info(self.normzed_spec_source_dir)
 
-    # serial (testing only)
-    #run_robospect_instance(file_name_list[0])
+        # Check to see if it is empty (if not, there is data from a previous
+        # run that will inadvertently be used later)
+        preexisting_file_list = glob.glob(self.write_dir + "/*", recursive=False)
+        #print(preexisting_file_list)
 
-    logging.info("Done with Robospect")
-    logging.info("-------------------")
+        #print(len(preexisting_file_list))
+        if (len(preexisting_file_list) > 0):
+            logging.info("------------------------------")
+            logging.info("Directory to receive Robospect output not empty!!")
+            logging.info(self.write_dir)
+            logging.info("------------------------------")
+            if prompt_user:
+                input("Do what you want with those files, then hit [Enter]")
+
+        # run Robospect on normalized spectra in parallel
+        # (N.b. Setting the config files allows Robospect to dump files in the right places)
+        run_robospect_instance = RunRobo(write_dir = self.write_dir, robo_dir = self.robo_dir)
+        #if (configuration == "config"):
+        #    run_robospect_instance = RunRobo(config_data=configuration)
+        #elif (configuration == "config_apply"):
+        #    run_robospect_instance = RunRobo(config_data=config_apply)
+
+        # in parallel
+        pool.map(run_robospect_instance, file_name_list)
+
+        # serial (testing only)
+        #run_robospect_instance(file_name_list[0])
+
+        logging.info("Done with Robospect")
+        logging.info("-------------------")

@@ -28,6 +28,12 @@ step = pipeline.create_spec_realizations.create_spec_realizations_main(module_na
 # add step to procedure
 test_gen.add_step(step)
 
+# run_robospect on normalized synthetic spectra
+step = pipeline.run_robo.Robo(module_name="module5")
+
+# add step to procedure
+test_gen.add_step(step)
+
 # run the pipeline
 test_gen.run()
 
@@ -38,8 +44,7 @@ test_gen.run()
 
 
 
-# run_robospect on normalized synthetic spectra
-pipeline.run_robo.main()
+
 
 
 
