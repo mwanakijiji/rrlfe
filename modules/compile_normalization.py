@@ -29,10 +29,11 @@ class compileBkgrnd():
     def __init__(self, module_name):
 
         self.name = module_name
-        self.compiled_bkgrnd_file_path_abs_pass = compiled_bkgrnd_file_path_abs
-        self.cc_bkgrnd_file_path_abs_pass = cc_bkgrnd_file_path_abs
 
-    def run_step(self):
+    def run_step(self, attribs = None):
+
+        cc_bkgrnd_file_path_abs = str(attribs["data_dirs"]["DIR_SRC"] + "/bkgrnd.cc")
+        compiled_bkgrnd_file_path_abs = str(attribs["data_dirs"]["DIR_BIN"] + "/bkgrnd")
 
         logging.info("## Making directories ##")
 
@@ -43,8 +44,8 @@ class compileBkgrnd():
                 logging.info("--------------------------")
                 logging.info("Compiling background normalization script...")
                 bkgrnd_compile = Popen(["g++", "-o",
-                                        self.compiled_bkgrnd_file_path_abs_pass,
-                                        self.cc_bkgrnd_file_path_abs_pass],
+                                        compiled_bkgrnd_file_path_abs,
+                                        cc_bkgrnd_file_path_abs],
                                         stdout=PIPE, stderr=PIPE)
 
                 output, error = bkgrnd_compile.communicate()
@@ -53,7 +54,7 @@ class compileBkgrnd():
                     success_val = bool(False)
                 else:
                     logging.info("Binary for spectrum normalization saved to")
-                    logging.info(self.compiled_bkgrnd_file_path_abs_pass)
+                    logging.info(compiled_bkgrnd_file_path_abs)
                     logging.info("--------------------------")
                     success_val = bool(True)
 

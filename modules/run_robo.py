@@ -82,17 +82,11 @@ class RunRobo:
 
 class Robo():
 
-    def __init__(self, module_name,
-                normzed_spec_source_dir=None,
-                write_dir=None,
-                robo_dir=None):
+    def __init__(self, module_name):
 
         self.name = module_name
-        self.normzed_spec_source_dir = config_red["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"]
-        self.write_dir = config_red["data_dirs"]["DIR_ROBO_OUTPUT"]
-        self.robo_dir = config_red["sys_dirs"]["DIR_ROBO"]
 
-    def run_step(self):
+    def run_step(self, attribs = None):
 
         '''
         Accumulate list of filenames of normalized synthetic spectra, then
@@ -108,6 +102,10 @@ class Robo():
         (EW data written to file)
         '''
 
+        normzed_spec_source_dir = attribs["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"]
+        write_dir = attribs["data_dirs"]["DIR_ROBO_OUTPUT"]
+        robo_dir = attribs["sys_dirs"]["DIR_ROBO"]
+
         ## ## note that I have put in a specific string to look for
         ## ## in the file name here; this might be a weakness later on
 
@@ -115,27 +113,27 @@ class Robo():
 
         ## ## note the below file name list collects ALL files in that directory,
         ## ## not just the ones listed in the initial .list file
-        file_name_list = glob.glob(self.normzed_spec_source_dir+"*")
+        file_name_list = glob.glob(normzed_spec_source_dir+"*")
         logging.info('Reading in spectra from directory')
-        logging.info(self.normzed_spec_source_dir)
+        logging.info(normzed_spec_source_dir)
 
         # Check to see if it is empty (if not, there is data from a previous
         # run that will inadvertently be used later)
-        preexisting_file_list = glob.glob(self.write_dir + "/*", recursive=False)
+        preexisting_file_list = glob.glob(write_dir + "/*", recursive=False)
         #print(preexisting_file_list)
 
         #print(len(preexisting_file_list))
         if (len(preexisting_file_list) > 0):
             logging.info("------------------------------")
             logging.info("Directory to receive Robospect output not empty!!")
-            logging.info(self.write_dir)
+            logging.info(write_dir)
             logging.info("------------------------------")
             if prompt_user:
                 input("Do what you want with those files, then hit [Enter]")
 
         # run Robospect on normalized spectra in parallel
         # (N.b. Setting the config files allows Robospect to dump files in the right places)
-        run_robospect_instance = RunRobo(write_dir = self.write_dir, robo_dir = self.robo_dir)
+        run_robospect_instance = RunRobo(write_dir = write_dir, robo_dir = robo_dir)
         #if (configuration == "config"):
         #    run_robospect_instance = RunRobo(config_data=configuration)
         #elif (configuration == "config_apply"):

@@ -2,7 +2,6 @@
 Initialization
 '''
 
-from configparser import ConfigParser, ExtendedInterpolation
 import os
 import git
 import sys
@@ -32,21 +31,6 @@ logging.basicConfig(
     ]
 )
 
-# configuration data for reduction
-config_choice = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
-# config for reduction to find a, b, c, d
-config_choice.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_red.ini')) ## ## THIS HAS TO BE MANUALLY SET BY USER HERE; NEED TO CHANGE THIS
-
-# config for applying a calibration
-'''
-config_apply = ConfigParser(interpolation=ExtendedInterpolation())
-
-config_apply.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_apply.ini'))
-'''
-
-# set pathnames for important files that are used by different modules
-cc_bkgrnd_file_path_abs = str(config_choice["data_dirs"]["DIR_SRC"] + "/bkgrnd.cc")
-compiled_bkgrnd_file_path_abs = str(config_choice["data_dirs"]["DIR_BIN"] + "/bkgrnd")
 
 # number of cores to use
 #ncpu = multiprocessing.cpu_count()
@@ -98,7 +82,7 @@ class makeDirs():
         self.name = module_name
         self.objective = "apply_calib"
 
-    def run_step(self):
+    def run_step(self, attribs = None):
 
         logging.info("## Making directories ##")
 
@@ -106,16 +90,10 @@ class makeDirs():
         # 1. reduction of spectra to find a, b, c, d (objective = "find_calib"), or
         # 2. to apply the solution (objective = "apply_calib"; default)
 
-        '''
-        if (self.objective == "apply_calib"):
-            config_choice = config_apply
-        elif (self.objective == "find_calib"):
-            config_choice = config_red
-        '''
 
         # loop over all directory paths we will need
-        for vals in config_choice["data_dirs"]:
-            abs_path_name = str(config_choice["data_dirs"][vals])
+        for vals in attribs["data_dirs"]:
+            abs_path_name = str(attribs["data_dirs"][vals])
             logging.info("Directory exists: " + abs_path_name)
 
             # if directory does not exist, create it
@@ -131,7 +109,6 @@ class makeDirs():
             # flag has been set further above)
             # (this needs to be refined, since some directories are not supposed to be empty)
             if prompt_user and os.path.exists(abs_path_name):
-                print("------ YADA ---------")
                 with os.scandir(abs_path_name) as list_of_entries1:
                     counter1 = 0
                     for entry1 in list_of_entries1:
@@ -166,25 +143,19 @@ class configInit():
         self.name = module_name
         #self.objective = "apply_calib"
 
-    def run_step(self):
+    def run_step(self, attribs = None):
 
         logging.info("## Begin pipeline configuration parameters ##")
 
         logging.info("rrlfe git hash: " + sha)
+        print(attribs.sections)
 
-        '''
-        if (objective == "apply_calib"):
-            config_choice = config_apply
-        elif (objective == "find_calib"):
-            config_choice = config_red
-        '''
+        logging.info("Pipeline purpose: find or apply a solution? ")# + objective)
 
-        logging.info("Pipeline purpose: find or apply a solution? " + objective)
-
-        for each_section in config_choice.sections():
+        for each_section in attribs.sections():
             logging.info("----")
             logging.info("- " + each_section + " -")
-            for (each_key, each_val) in config_choice.items(each_section):
+            for (each_key, each_val) in attribs.items(each_section):
                 logging.info(each_key + ": " + each_val)
 
         logging.info("----")

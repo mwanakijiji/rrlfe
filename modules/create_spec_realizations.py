@@ -346,29 +346,26 @@ class create_spec_realizations_main():
     (text files written)
     '''
 
-    def __init__(self, module_name, num, noise_level, spec_file_type,
-                input_spec_list_dir=None,
-                input_list=None,
-                unnorm_empirical_spectra_dir=None,
-                unnorm_noise_churned_spectra_dir=None,
-                bkgrnd_output_dir=None,
-                final_dir=None,
-                verb=None):
+    def __init__(self, module_name, num, noise_level, spec_file_type):
 
         self.name = module_name
+
+        ## shift the below to the config file
         self.noise_level = noise_level
         self.spec_file_type = spec_file_type
         self.num = 100
-        self.input_spec_list_dir = config_red["data_dirs"]["DIR_SRC"]
-        self.input_list = config_red["data_dirs"]["DIR_SRC"] + config_red["file_names"]["LIST_SPEC_PHASE"]
-        self.unnorm_empirical_spectra_dir = config_red["data_dirs"]["DIR_RAW_SPEC_DATA"]
-        self.unnorm_noise_churned_spectra_dir = config_red["data_dirs"]["DIR_REZNS_SPEC"]
-        self.bkgrnd_output_dir = config_red["data_dirs"]["DIR_REZNS_SPEC_NORM"]
-        self.final_dir = config_red["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"]
-        self.verb = False
+
         #module_name="module4", num = 1, noise_level=0.0, spec_file_type="ascii.no_header"
 
-    def run_step(self):
+    def run_step(self, attribs = None):
+
+        input_spec_list_dir = attribs["data_dirs"]["DIR_SRC"]
+        input_list = attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["LIST_SPEC_PHASE"]
+        unnorm_empirical_spectra_dir = attribs["data_dirs"]["DIR_RAW_SPEC_DATA"]
+        unnorm_noise_churned_spectra_dir = attribs["data_dirs"]["DIR_REZNS_SPEC"]
+        bkgrnd_output_dir = attribs["data_dirs"]["DIR_REZNS_SPEC_NORM"]
+        final_dir = attribs["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"]
+        verb = False
 
         logging.info("--------------------------")
         logging.info("Making "+str(self.num)+" realizations of each input spectrum")
@@ -379,15 +376,15 @@ class create_spec_realizations_main():
 
         # Read list of input spectra
         # input_list ALREADY SET IN DEFAULTS ## input_list = input_spec_list_dir + config_red["file_names"]["LIST_SPEC_PHASE"]
-        list_arr = read_list(self.input_list)
+        list_arr = read_list(input_list)
 
         #logging.info('list_arr')
         #logging.info(list_arr)
 
         # Check to make sure the files in the list are actually in the input directory;
         # if not, just remove those from the list and set a warning
-        logging.info("Reading in unnormalized spectra from dir " + self.unnorm_empirical_spectra_dir)
-        list_actually_there = glob.glob(self.unnorm_empirical_spectra_dir + "*.*")
+        logging.info("Reading in unnormalized spectra from dir " + unnorm_empirical_spectra_dir)
+        list_actually_there = glob.glob(unnorm_empirical_spectra_dir + "*.*")
         list_actually_basenames = np.array([os.path.basename(t) for t in list_actually_there])
 
         num_sought = len(list_arr) # number of wanted files
@@ -416,7 +413,7 @@ class create_spec_realizations_main():
         list_arr = files_present
 
         # Check to make sure outdir (to receive realizations of spectra) exists
-        outdir = self.unnorm_noise_churned_spectra_dir
+        outdir = unnorm_noise_churned_spectra_dir
         if not os.path.isdir(outdir):
             os.mkdir(outdir)
         else:
@@ -439,7 +436,7 @@ class create_spec_realizations_main():
                 if prompt_user:
                     input("Do what you want with those files, then hit [Enter]")
 
-            with os.scandir(self.bkgrnd_output_dir) as list_of_entries2:
+            with os.scandir(bkgrnd_output_dir) as list_of_entries2:
                 counter2 = 0
                 for entry2 in list_of_entries2:
                     if entry2.is_file():
@@ -447,12 +444,12 @@ class create_spec_realizations_main():
             if (counter2 != 0):
                 logging.info("------------------------------")
                 logging.info("Directory to write raw normalization output not empty!!")
-                logging.info(self.bkgrnd_output_dir)
+                logging.info(bkgrnd_output_dir)
                 logging.info("------------------------------")
                 if prompt_user:
                     input("Do what you want with those files, then hit [Enter]")
 
-            with os.scandir(self.final_dir) as list_of_entries3:
+            with os.scandir(final_dir) as list_of_entries3:
                 counter3 = 0
                 for entry3 in list_of_entries3:
                     if entry3.is_file():
@@ -460,7 +457,7 @@ class create_spec_realizations_main():
             if (counter3 != 0):
                 logging.info("------------------------------")
                 logging.info("Directory to write final normalization output not empty!!")
-                logging.info(self.final_dir)
+                logging.info(final_dir)
                 logging.info("------------------------------")
                 if prompt_user:
                     input("Do what you want with those files, then hit [Enter]")
@@ -471,7 +468,7 @@ class create_spec_realizations_main():
         for i in range(len(list_arr)): # make spectrum realizations and list of their filenames
             #import ipdb; ipdb.set_trace()
             print(i)
-            name_list.extend(generate_realizations(spec_name=self.unnorm_empirical_spectra_dir+"/"+list_arr[i],
+            name_list.extend(generate_realizations(spec_name=unnorm_empirical_spectra_dir+"/"+list_arr[i],
                                                    outdir=outdir,
                                                    spec_file_format=self.spec_file_type,
                                                    num=self.num,
@@ -479,31 +476,31 @@ class create_spec_realizations_main():
 
         # next we need to normalize the spectra; begin by creating input list of
         # spectrum realizations written in the previous step
-        bkg_input_file = write_bckgrnd_input(name_list, outdir, self.bkgrnd_output_dir)
+        bkg_input_file = write_bckgrnd_input(name_list, outdir, bkgrnd_output_dir)
         logging.info("-------------------------------------------")
         logging.info('The file containing the list of spectra which will be fed ' + \
                     'into the normalization routine is ' + bkg_input_file)
 
         # normalize each spectrum realization (smoothing parameter is set in __init__)
-        bkgrnd = Popen([str(config_red["data_dirs"]["DIR_BIN"]) + "bkgrnd", "--smooth "+str(config_red["reduc_params"]["SMOOTH"]),
+        bkgrnd = Popen([str(attribs["data_dirs"]["DIR_BIN"]) + "bkgrnd", "--smooth "+str(attribs["reduc_params"]["SMOOTH"]),
                         "--sismoo 1", "--no-plot", "{}".format(bkg_input_file)], stdout=PIPE, stderr=PIPE)
         (out, err) = bkgrnd.communicate() # returns tuple (stdout, stderr)
 
-        if self.verb == True: ## ## decode messages (are they used later? why take this step?)
+        if verb == True: ## ## decode messages (are they used later? why take this step?)
             logging.info(out.decode("utf-8"))
             logging.info(err.decode("utf-8"))
 
         # read in input files, normalize them, write out, and return list of those filenames
-        final_list = create_norm_spec(name_list, self.bkgrnd_output_dir, self.final_dir)
+        final_list = create_norm_spec(name_list, bkgrnd_output_dir, final_dir)
 
         logging.info("-------------------------------------------")
         logging.info("Wrote realizations of original spectra to directory")
         logging.info(outdir)
         logging.info("-------------------------------------------")
         logging.info("Wrote raw normalization output to directory")
-        logging.info(self.bkgrnd_output_dir)
+        logging.info(bkgrnd_output_dir)
         logging.info("-------------------------------------------")
         logging.info("Wrote final normalized spectra to directory")
-        logging.info(self.final_dir)
+        logging.info(final_dir)
 
         return final_list
