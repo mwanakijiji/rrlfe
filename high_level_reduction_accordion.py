@@ -24,7 +24,8 @@ from modules import (compile_normalization,
                       create_spec_realizations,
                       run_robo,
                       scrape_ew_and_errew,
-                      teff_retrieval)
+                      teff_retrieval,
+                      run_emcee)
 
 
 class GenerateCalib():

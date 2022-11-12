@@ -17,106 +17,114 @@ from astropy.io import fits
 from . import *
 
 
-def corner_plot(model,
-                mcmc_text_output_file_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["MCMC_OUTPUT"],
-                corner_plot_putput_file_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["MCMC_CORNER"]):
-    '''
-    Reads in MCMC output and writes out a corner plot
-    '''
+class CornerPlot():
 
-    if (model == "abcd"):
+    def __init__(self, module_name):
 
-        # corner plot (requires 'storechain=True' in enumerate above)
-        test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
-        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), names=["a", "b", "c", "d"])
-        fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$"],
-                            quantiles=[0.16, 0.5, 0.84],
-                            title_fmt='.2f',
-                            show_titles=True,
-                            verbose=True,
-                            title_kwargs={"fontsize": 12})
-        fig.savefig(corner_plot_putput_file_name)
-        logging.info("--------------------------")
-        logging.info("Corner plot of MCMC posteriors written out to")
-        print(corner_plot_putput_file_name)
+        self.name = module_name
 
-        # if its necessary to read in MCMC output again
-        #data = np.loadtxt(self.mcmc_text_output, usecols=range(1,5))
+    def run_step(self, attribs = None):
 
-        # This code snippet from Foreman-Mackey's emcee documentation, v2.2.1 of
-        # https://emcee.readthedocs.io/en/stable/user/line.html#results
-        a_mcmc, b_mcmc, c_mcmc, d_mcmc = map(lambda v: (v[1], v[2]-v[1], v[1]-v[0]),
-                                             zip(*np.percentile(samples, [16, 50, 84], axis=0)))
+        model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
+        mcmc_text_output_file_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"]
+        corner_plot_putput_file_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_CORNER"]
+        '''
+        Reads in MCMC output and writes out a corner plot
+        '''
 
-        print("--------------------------")
-        print("Coefficients a, b, c, d, and errors (see corner plot):")
-        print("coeff a: " + " ".join(map(str,a_mcmc)))
-        print("coeff b: " + " ".join(map(str,b_mcmc)))
-        print("coeff c: " + " ".join(map(str,c_mcmc)))
-        print("coeff d: " + " ".join(map(str,d_mcmc)))
-        logging.info("--------------------------")
-        logging.info("Coefficients a, b, c, d, and errors (see corner plot):")
-        logging.info("coeff a: " + " ".join(map(str,a_mcmc)))
-        logging.info("coeff b: " + " ".join(map(str,b_mcmc)))
-        logging.info("coeff c: " + " ".join(map(str,c_mcmc)))
-        logging.info("coeff d: " + " ".join(map(str,d_mcmc)))
+        if (model == "abcd"):
 
-        #logging.info("--------------------------")
-        #logging.info("MCMC data written to ")
-        #logging.info(self.mcmc_text_output)
+            # corner plot (requires 'storechain=True' in enumerate above)
+            test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), names=["a", "b", "c", "d"])
+            fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$"],
+                                quantiles=[0.16, 0.5, 0.84],
+                                title_fmt='.2f',
+                                show_titles=True,
+                                verbose=True,
+                                title_kwargs={"fontsize": 12})
+            fig.savefig(corner_plot_putput_file_name)
+            logging.info("--------------------------")
+            logging.info("Corner plot of MCMC posteriors written out to")
+            print(corner_plot_putput_file_name)
 
+            # if its necessary to read in MCMC output again
+            #data = np.loadtxt(mcmc_text_output_file_name, usecols=range(1,5))
 
-    elif (model == "abcdfghk"):
-        # corner plot (requires 'storechain=True' in enumerate above)
-        # just first few lines to test
-        test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
-        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), names=["a", "b", "c", "d", "f", "g", "h", "k"])
-        fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$", "$f$", "$g$", "$h$", "$k$"],
-                            quantiles=[0.16, 0.5, 0.84],
-                            title_fmt='.2f',
-                            show_titles=True,
-                            verbose=True,
-                            title_kwargs={"fontsize": 12})
-        fig.savefig(corner_plot_putput_file_name)
-        logging.info("--------------------------")
-        logging.info("Corner plot of MCMC posteriors written out to")
-        print(str(corner_plot_putput_file_name))
+            # This code snippet from Foreman-Mackey's emcee documentation, v2.2.1 of
+            # https://emcee.readthedocs.io/en/stable/user/line.html#results
+            a_mcmc, b_mcmc, c_mcmc, d_mcmc = map(lambda v: (v[1], v[2]-v[1], v[1]-v[0]),
+                                                 zip(*np.percentile(samples, [16, 50, 84], axis=0)))
 
-        # if its necessary to read in MCMC output again
-        #data = np.loadtxt(self.mcmc_text_output, usecols=range(1,5))
+            print("--------------------------")
+            print("Coefficients a, b, c, d, and errors (see corner plot):")
+            print("coeff a: " + " ".join(map(str,a_mcmc)))
+            print("coeff b: " + " ".join(map(str,b_mcmc)))
+            print("coeff c: " + " ".join(map(str,c_mcmc)))
+            print("coeff d: " + " ".join(map(str,d_mcmc)))
+            logging.info("--------------------------")
+            logging.info("Coefficients a, b, c, d, and errors (see corner plot):")
+            logging.info("coeff a: " + " ".join(map(str,a_mcmc)))
+            logging.info("coeff b: " + " ".join(map(str,b_mcmc)))
+            logging.info("coeff c: " + " ".join(map(str,c_mcmc)))
+            logging.info("coeff d: " + " ".join(map(str,d_mcmc)))
 
-        # This code snippet from Foreman-Mackey's emcee documentation, v2.2.1 of
-        # https://emcee.readthedocs.io/en/stable/user/line.html#results
-        a_mcmc, b_mcmc, c_mcmc, d_mcmc, f_mcmc, g_mcmc, h_mcmc, k_mcmc = map(lambda v: (v[1], v[2]-v[1], v[1]-v[0]),
-                                             zip(*np.percentile(samples, [16, 50, 84], axis=0)))
-
-        print("--------------------------")
-        print("Coefficients a, b, c, d, f, g, h, k, and errors (see corner plot):")
-        print("coeff a: " + " ".join(map(str,a_mcmc)))
-        print("coeff b: " + " ".join(map(str,b_mcmc)))
-        print("coeff c: " + " ".join(map(str,c_mcmc)))
-        print("coeff d: " + " ".join(map(str,d_mcmc)))
-        print("coeff f: " + " ".join(map(str,f_mcmc)))
-        print("coeff g: " + " ".join(map(str,g_mcmc)))
-        print("coeff h: " + " ".join(map(str,h_mcmc)))
-        print("coeff k: " + " ".join(map(str,k_mcmc)))
-        logging.info("--------------------------")
-        logging.info("Coefficients a, b, c, d, f, g, h, k, and errors (see corner plot):")
-        logging.info("coeff a: " + " ".join(map(str,a_mcmc)))
-        logging.info("coeff b: " + " ".join(map(str,b_mcmc)))
-        logging.info("coeff c: " + " ".join(map(str,c_mcmc)))
-        logging.info("coeff d: " + " ".join(map(str,d_mcmc)))
-        logging.info("coeff f: " + " ".join(map(str,f_mcmc)))
-        logging.info("coeff g: " + " ".join(map(str,g_mcmc)))
-        logging.info("coeff h: " + " ".join(map(str,h_mcmc)))
-        logging.info("coeff k: " + " ".join(map(str,k_mcmc)))
+            #logging.info("--------------------------")
+            #logging.info("MCMC data written to ")
+            #logging.info(mcmc_text_output_file_name)
 
 
-    else: # pragma: no cover
+        elif (model == "abcdfghk"):
+            # corner plot (requires 'storechain=True' in enumerate above)
+            # just first few lines to test
+            test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), names=["a", "b", "c", "d", "f", "g", "h", "k"])
+            fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$", "$f$", "$g$", "$h$", "$k$"],
+                                quantiles=[0.16, 0.5, 0.84],
+                                title_fmt='.2f',
+                                show_titles=True,
+                                verbose=True,
+                                title_kwargs={"fontsize": 12})
+            fig.savefig(corner_plot_putput_file_name)
+            logging.info("--------------------------")
+            logging.info("Corner plot of MCMC posteriors written out to")
+            print(str(corner_plot_putput_file_name))
 
-        logging.error("Error! No calibration model chosen for the MCMC posteriors!")
+            # if its necessary to read in MCMC output again
+            #data = np.loadtxt(self.mcmc_text_output, usecols=range(1,5))
 
-    return test_samples
+            # This code snippet from Foreman-Mackey's emcee documentation, v2.2.1 of
+            # https://emcee.readthedocs.io/en/stable/user/line.html#results
+            a_mcmc, b_mcmc, c_mcmc, d_mcmc, f_mcmc, g_mcmc, h_mcmc, k_mcmc = map(lambda v: (v[1], v[2]-v[1], v[1]-v[0]),
+                                                 zip(*np.percentile(samples, [16, 50, 84], axis=0)))
+
+            print("--------------------------")
+            print("Coefficients a, b, c, d, f, g, h, k, and errors (see corner plot):")
+            print("coeff a: " + " ".join(map(str,a_mcmc)))
+            print("coeff b: " + " ".join(map(str,b_mcmc)))
+            print("coeff c: " + " ".join(map(str,c_mcmc)))
+            print("coeff d: " + " ".join(map(str,d_mcmc)))
+            print("coeff f: " + " ".join(map(str,f_mcmc)))
+            print("coeff g: " + " ".join(map(str,g_mcmc)))
+            print("coeff h: " + " ".join(map(str,h_mcmc)))
+            print("coeff k: " + " ".join(map(str,k_mcmc)))
+            logging.info("--------------------------")
+            logging.info("Coefficients a, b, c, d, f, g, h, k, and errors (see corner plot):")
+            logging.info("coeff a: " + " ".join(map(str,a_mcmc)))
+            logging.info("coeff b: " + " ".join(map(str,b_mcmc)))
+            logging.info("coeff c: " + " ".join(map(str,c_mcmc)))
+            logging.info("coeff d: " + " ".join(map(str,d_mcmc)))
+            logging.info("coeff f: " + " ".join(map(str,f_mcmc)))
+            logging.info("coeff g: " + " ".join(map(str,g_mcmc)))
+            logging.info("coeff h: " + " ".join(map(str,h_mcmc)))
+            logging.info("coeff k: " + " ".join(map(str,k_mcmc)))
+
+
+        else: # pragma: no cover
+
+            logging.error("Error! No calibration model chosen for the MCMC posteriors!")
+
+        return test_samples
 
 
 def lnprob(walker_pos_array,
@@ -310,107 +318,115 @@ def chi_sqd_fcn(Bal_pass,
     return val
 
 
-def write_soln_to_fits(model,
-                        mcmc_text_output_file_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["MCMC_OUTPUT"],
-                        teff_data_retrieve_file_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["TREND_TEFF_VS_BALMER"],
-                        soln_write_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["CALIB_SOLN"],
-                        test_flag=False):
-    '''
-    Takes the full reduction solution and writes it to a FITS file with
-    1) The MCMC posteriors in tabular form
-    2) Meta-data in FITS header
+class WriteSolnToFits():
 
-    test_flag: if True, then terminal prompts are suppressed to enable continuous integration
-    '''
+    def __init__(self, module_name):
 
-    # initialize FITS header and append keys
-    hdr = fits.Header()
+        self.name = module_name
 
-    # retrieve git hash (throws error on cluster)
-    #repo = git.Repo(search_parent_directories=True)
-    #sha = repo.head.object.hexsha
-    #hdr["HASH"] = (sha, "Hash of rrlfe pipeline")
+    def run_step(self, attribs = None):
 
-    # get Teff vs Balmer line info
-    # set compound datatype
-    dtype=np.rec.fromrecords([['string_key', 189.6752158]]).dtype
-    # load data, skipping header and hash corresponding to that file
-    teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=1, usecols=(0,1), delimiter=':', dtype=dtype)
+        model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
+        mcmc_text_output_file_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"]
+        teff_data_retrieve_file_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["TREND_TEFF_VS_BALMER"]
+        soln_write_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["CALIB_SOLN"]
+        test_flag=False
+        '''
+        Takes the full reduction solution and writes it to a FITS file with
+        1) The MCMC posteriors in tabular form
+        2) Meta-data in FITS header
 
-    dict_teff_data = {}
-    for key, val in teff_data:
-        dict_teff_data.update({key: val})
+        test_flag: if True, then terminal prompts are suppressed to enable continuous integration
+        '''
 
-    hdr["MODEL"] = (model, "Calibration type")
-    hdr["TEFF_MIN"] = (dict_teff_data["Teff_min"], "Minimum Teff for linear Teff vs. Balmer EW fit")
-    hdr["TEFF_MAX"] = (dict_teff_data["Teff_max"], "Maximum Teff for linear Teff vs. Balmer EW fit")
-    hdr["SLOPE_M"] = (dict_teff_data["m"], "Slope of Teff vs. Balmer EW")
-    hdr["ESLOPE_M"] = (dict_teff_data["err_m"], "Error in slope of Teff vs. Balmer EW")
-    hdr["YINT_B"] = (dict_teff_data["b"], "Y-intercept of Teff vs. Balmer EW")
-    hdr["EYINT_B"] = (dict_teff_data["err_b"], "Error in y-intercept of Teff vs. Balmer EW")
-    # comment explaining the solution
-    hdr["COMMENT"] = "Coefficients are defined as "
-    hdr["COMMENT"] = "K = a + bH + cF + dHF + f(H^2) + g(F^2) + h(H^2)F + kH(F^2)"
-    # history
-    hdr["COMMENT"] = "------------------------------------------------------------"
-    hdr["HISTORY"] = "Solution generated with rrlfe, git hash " + sha
-    hdr["HISTORY"] = "Start time " + timestring_human
-    hdr["HISTORY"] = "Log file " + log_filename
+        # initialize FITS header and append keys
+        hdr = fits.Header()
 
-    # read in posterior in csv form
-    if (model == "abcd"):
+        # retrieve git hash (throws error on cluster)
+        #repo = git.Repo(search_parent_directories=True)
+        #sha = repo.head.object.hexsha
+        #hdr["HASH"] = (sha, "Hash of rrlfe pipeline")
 
-        # corner plot (requires 'storechain=True' in enumerate above)
-        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), names=["a", "b", "c", "d"])
-        c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
-        c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
-        c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
-        c4 = fits.Column(name="d", array=np.array(samples.iloc[:,3].values), format="D")
-        table_hdu = fits.BinTableHDU.from_columns([c1, c2, c3, c4], header=hdr)
+        # get Teff vs Balmer line info
+        # set compound datatype
+        dtype=np.rec.fromrecords([['string_key', 189.6752158]]).dtype
+        # load data, skipping header and hash corresponding to that file
+        teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=1, usecols=(0,1), delimiter=':', dtype=dtype)
 
+        dict_teff_data = {}
+        for key, val in teff_data:
+            dict_teff_data.update({key: val})
 
-    elif (model == "abcdfghk"):
-        # corner plot (requires 'storechain=True' in enumerate above)
-        # just first few lines to test
-        samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), names=["a", "b", "c", "d", "f", "g", "h", "k"])
-        c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
-        c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
-        c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
-        c4 = fits.Column(name="d", array=np.array(samples.iloc[:,3].values), format="D")
-        c5 = fits.Column(name="f", array=np.array(samples.iloc[:,4].values), format="D")
-        c6 = fits.Column(name="g", array=np.array(samples.iloc[:,5].values), format="D")
-        c7 = fits.Column(name="h", array=np.array(samples.iloc[:,6].values), format="D")
-        c8 = fits.Column(name="k", array=np.array(samples.iloc[:,7].values), format="D")
-        table_hdu = fits.BinTableHDU.from_columns([c1, c2, c3, c4, c5, c6, c7, c8], header=hdr)
+        hdr["MODEL"] = (model, "Calibration type")
+        hdr["TEFF_MIN"] = (dict_teff_data["Teff_min"], "Minimum Teff for linear Teff vs. Balmer EW fit")
+        hdr["TEFF_MAX"] = (dict_teff_data["Teff_max"], "Maximum Teff for linear Teff vs. Balmer EW fit")
+        hdr["SLOPE_M"] = (dict_teff_data["m"], "Slope of Teff vs. Balmer EW")
+        hdr["ESLOPE_M"] = (dict_teff_data["err_m"], "Error in slope of Teff vs. Balmer EW")
+        hdr["YINT_B"] = (dict_teff_data["b"], "Y-intercept of Teff vs. Balmer EW")
+        hdr["EYINT_B"] = (dict_teff_data["err_b"], "Error in y-intercept of Teff vs. Balmer EW")
+        # comment explaining the solution
+        hdr["COMMENT"] = "Coefficients are defined as "
+        hdr["COMMENT"] = "K = a + bH + cF + dHF + f(H^2) + g(F^2) + h(H^2)F + kH(F^2)"
+        # history
+        hdr["COMMENT"] = "------------------------------------------------------------"
+        hdr["HISTORY"] = "Solution generated with rrlfe, git hash " + sha
+        hdr["HISTORY"] = "Start time " + timestring_human
+        hdr["HISTORY"] = "Log file " + log_filename
+
+        # read in posterior in csv form
+        if (model == "abcd"):
+
+            # corner plot (requires 'storechain=True' in enumerate above)
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), names=["a", "b", "c", "d"])
+            c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
+            c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
+            c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
+            c4 = fits.Column(name="d", array=np.array(samples.iloc[:,3].values), format="D")
+            table_hdu = fits.BinTableHDU.from_columns([c1, c2, c3, c4], header=hdr)
 
 
-    # write out as FITS table
-    if not test_flag: # pragma: no cover
-        if os.path.exists(soln_write_name):
+        elif (model == "abcdfghk"):
+            # corner plot (requires 'storechain=True' in enumerate above)
+            # just first few lines to test
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), names=["a", "b", "c", "d", "f", "g", "h", "k"])
+            c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
+            c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
+            c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
+            c4 = fits.Column(name="d", array=np.array(samples.iloc[:,3].values), format="D")
+            c5 = fits.Column(name="f", array=np.array(samples.iloc[:,4].values), format="D")
+            c6 = fits.Column(name="g", array=np.array(samples.iloc[:,5].values), format="D")
+            c7 = fits.Column(name="h", array=np.array(samples.iloc[:,6].values), format="D")
+            c8 = fits.Column(name="k", array=np.array(samples.iloc[:,7].values), format="D")
+            table_hdu = fits.BinTableHDU.from_columns([c1, c2, c3, c4, c5, c6, c7, c8], header=hdr)
 
-            input("A calibration solution file already exists! \nDo " +\
-                    "what you want with that file and hit [ENTER] (will overwrite)")
 
-        table_hdu.writeto(soln_write_name, overwrite=True)
-        logging.info("Full calibration MCMC posterior written to " + soln_write_name)
+        # write out as FITS table
+        if not test_flag: # pragma: no cover
+            if os.path.exists(soln_write_name):
+
+                input("A calibration solution file already exists! \nDo " +\
+                        "what you want with that file and hit [ENTER] (will overwrite)")
+
+            table_hdu.writeto(soln_write_name, overwrite=True)
+            logging.info("Full calibration MCMC posterior written to " + soln_write_name)
 
 
-    # to read back in, can use this syntax
-    '''
-    test = fits.open(fits_table_filename)
-    test[1].data # whole table
-    test[1].data['a'] # one col
+        # to read back in, can use this syntax
+        '''
+        test = fits.open(fits_table_filename)
+        test[1].data # whole table
+        test[1].data['a'] # one col
 
-    OR
+        OR
 
-    from astropy.table import Table
-    table = Table.read(fits_table_filename)
-    x=np.array(table)
-    test2 = pd.DataFrame(x)
-    '''
+        from astropy.table import Table
+        table = Table.read(fits_table_filename)
+        x=np.array(table)
+        test2 = pd.DataFrame(x)
+        '''
 
-    # return FITS table for testing
-    return table_hdu
+        # return FITS table for testing
+        return table_hdu
 
 
 
@@ -419,19 +435,11 @@ class RunEmcee():
     Run the emcee MCMC to obtain coefficients a, b, c, d (+ f, g, h, k)
     '''
 
-    def __init__(self,
-                 scraped_ews_good_only_file_name = config_choice["data_dirs"]["DIR_EW_PRODS"] + config_choice["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"],
-                 mcmc_text_output_file_name = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["MCMC_OUTPUT"]
-                 ):
+    def __init__(self, module_name):
 
-        # name of file with final K, H, FeH, and error values (and not the others from the noise-churned spectra)
-        self.scraped_ew_filename = scraped_ews_good_only_file_name
+        self.name = module_name
 
-        # name of file of the MCMC output
-        self.mcmc_text_output = mcmc_text_output_file_name
-
-
-    def __call__(self, model, post_burn_in_links = 3e5):
+    def run_step(self, attribs = None):
         '''
         INPUTS
 
@@ -441,12 +449,17 @@ class RunEmcee():
         post_burn_in_links: chain links following burn-in
         '''
 
+        model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
+        post_burn_in_links = 3e5
+        scraped_ews_good_only_file_name = attribs["data_dirs"]["DIR_EW_PRODS"] + attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"]
+        mcmc_text_output_file_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"]
+
         # read in EWs, Fe/Hs, phases, errors, etc.
         logging.info("--------------------------")
-        logging.info("Reading in data from " + self.scraped_ew_filename)
+        logging.info("Reading in data from " + scraped_ews_good_only_file_name)
 
         ## ## make df_choice.Spectrum -> df_choice["Spectrum etc.
-        df_choice = pd.read_csv(self.scraped_ew_filename,delim_whitespace=False)
+        df_choice = pd.read_csv(scraped_ews_good_only_file_name,delim_whitespace=False)
 
         # EWs in table are in angstroms and are mislabeled as mA (2020 Jan 12)
         name = df_choice['orig_spec_file_name']
@@ -561,7 +574,7 @@ class RunEmcee():
         logging.info("Saving MCMC chains to file ...")
 
         # post-burn-in calculate and save iteratively
-        # self.mcmc_text_output,
+        # mcmc_text_output_file_name,
         post_burn_in_links = int(post_burn_in_links)
         sampler.run_mcmc(state, post_burn_in_links)
 
@@ -577,5 +590,5 @@ class RunEmcee():
 
         # test csv file
         logging.info("--------------------------")
-        np.savetxt(self.mcmc_text_output,samples,delimiter=",")
-        logging.info("MCMC chains written out as " + str(self.mcmc_text_output))
+        np.savetxt(mcmc_text_output_file_name,samples,delimiter=",")
+        logging.info("MCMC chains written out as " + str(mcmc_text_output_file_name))

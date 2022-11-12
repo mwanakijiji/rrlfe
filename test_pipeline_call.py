@@ -1,7 +1,7 @@
 import high_level_reduction_accordion as pipeline
 
 # instantiate object that will contain the series of reduction steps
-test_gen = pipeline.GenerateCalib(model_choice="abcdfghk") ## ## need to let this set config file being read in (currently in __init__)
+test_gen = pipeline.GenerateCalib() ## ## need to let this set config file being read in (currently in __init__)
 
 # print configuration params to log file
 step = pipeline.configInit(module_name="module1")
@@ -39,7 +39,7 @@ step = pipeline.scrape_ew_and_errew.Scraper(module_name="module6")
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.QualityCheck(module_name="module7")
 
@@ -76,11 +76,23 @@ step = pipeline.teff_retrieval.TempVsBalmer(module_name="module12")
 # add step to procedure
 test_gen.add_step(step)
 
-test_gen.run()
+# run_emcee
+# coeff defs: K = a + bH + cF + dHF + f(H^2) + g(F^2) + h(H^2)F + kH(F^2) + m(H^3) + n(F^3)
+# where K is CaII K EW; H is Balmer EW; F is [Fe/H]
+step = pipeline.run_emcee.RunEmcee(module_name="module13")
+
+# add step to procedure
+test_gen.add_step(step)
 '''
+step = pipeline.run_emcee.WriteSolnToFits(module_name="module14")
+
 # add step to procedure
 test_gen.add_step(step)
 
-# run the pipeline
+step = pipeline.run_emcee.CornerPlot(module_name="module15")
+
+# add step to procedure
+test_gen.add_step(step)
+
+
 test_gen.run()
-'''
