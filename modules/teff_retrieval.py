@@ -73,12 +73,7 @@ def line_fit_temp_range(x_data_pass, y_data_pass, t_min, t_max):
     return m, err_m, b, err_b
 
 
-def temp_vs_balmer(df_poststack_file_name_read = config_choice["data_dirs"]["DIR_EW_PRODS"]+config_choice["file_names"]["RESTACKED_EW_DATA_W_METADATA"],
-                    df_poststack_file_name_write = config_choice["data_dirs"]["DIR_EW_PRODS"] + config_choice["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"],
-                    plot_write = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["PLOT_TEFF_VS_BALMER"],
-                    teff_data_write = config_choice["data_dirs"]["DIR_BIN"] + config_choice["file_names"]["TREND_TEFF_VS_BALMER"],
-                    plot = True,
-                    test_flag=False):
+class TempVsBalmer():
     '''
     Finds a linear Teff vs. Balmer EW relation. This is an ancillary step before
     running the MCMC further downstream in the pipeline.
@@ -102,85 +97,98 @@ def temp_vs_balmer(df_poststack_file_name_read = config_choice["data_dirs"]["DIR
     err_b:  error in y-intercept
     '''
 
-    # the min and max Teff of spectra that the linear fit will be made to
-    t_min = int(config_choice["teff_linear"]["MIN_TEFF"])
-    t_max = int(config_choice["teff_linear"]["MAX_TEFF"])
+    def __init__(self, module_name):
 
-    # read in data
-    df_poststack = pd.read_csv(df_poststack_file_name_read)
+        self.name = module_name
 
-    # find linear trend of net Balmer EW with Teff
-    teff = df_poststack["teff"].values.astype(float)
-    # fit a straight line: net Balmer
-    ews_Balmer = df_poststack["EW_Balmer"].values.astype(float)
+    def run_step(self, attribs = None):
 
-    m, err_m, b, err_b = line_fit_temp_range(x_data_pass=ews_Balmer,
-                                                y_data_pass=teff,
-                                                t_min=t_min,
-                                                t_max=t_max)
+        df_poststack_file_name_read = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_METADATA"]
+        df_poststack_file_name_write = attribs["data_dirs"]["DIR_EW_PRODS"] + attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"]
+        plot_write = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["PLOT_TEFF_VS_BALMER"]
+        teff_data_write = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["TREND_TEFF_VS_BALMER"]
+        plot = True
+        test_flag=False
 
-    logging.info("Best-fit line for Teff=m*EW_Balmer + b is [m, err_m, b, err_b] = " +
-                "[" + str(m) + ", " + str(err_m) + ", " + str(b) + ", " + str(err_b) + "]")
+        # the min and max Teff of spectra that the linear fit will be made to
+        t_min = int(attribs["teff_linear"]["MIN_TEFF"])
+        t_max = int(attribs["teff_linear"]["MAX_TEFF"])
 
-    # add the best-fit Teffs to dataframe
-    teffs_bestfit = np.add(np.multiply(m,ews_Balmer),b)
-    df_poststack["teff_bestfit"] = teffs_bestfit
+        # read in data
+        df_poststack = pd.read_csv(df_poststack_file_name_read)
 
-    # write all the data to file
-    df_poststack.to_csv(df_poststack_file_name_write,index=False)
-    logging.info("Wrote out data file including linear-best-fit Teffs to " + df_poststack_file_name_write)
+        # find linear trend of net Balmer EW with Teff
+        teff = df_poststack["teff"].values.astype(float)
+        # fit a straight line: net Balmer
+        ews_Balmer = df_poststack["EW_Balmer"].values.astype(float)
 
-    # retrieve hash (throws error on cluster)
-    #repo = git.Repo(search_parent_directories=True)
-    #sha = repo.head.object.hexsha
+        m, err_m, b, err_b = line_fit_temp_range(x_data_pass=ews_Balmer,
+                                                    y_data_pass=teff,
+                                                    t_min=t_min,
+                                                    t_max=t_max)
 
-    # arrange info into dictionary
+        logging.info("Best-fit line for Teff=m*EW_Balmer + b is [m, err_m, b, err_b] = " +
+                    "[" + str(m) + ", " + str(err_m) + ", " + str(b) + ", " + str(err_b) + "]")
 
-    linfit_info={
-                "Teff_min"  :   t_min,
-                "Teff_max"  :   t_max,
-                "m"         :      m,
-                "err_m"     :  err_m,
-                "b"         :      b,
-                "err_b"     :  err_b
-                }
+        # add the best-fit Teffs to dataframe
+        teffs_bestfit = np.add(np.multiply(m,ews_Balmer),b)
+        df_poststack["teff_bestfit"] = teffs_bestfit
 
-    # write the Teff trend parameters alone to a separate text file
-    # (note this overwrites any previous existing file)
-    if (os.path.exists(teff_data_write) and test_flag==False): # pragma: no cover
+        # write all the data to file
+        df_poststack.to_csv(df_poststack_file_name_write,index=False)
+        logging.info("Wrote out data file including linear-best-fit Teffs to " + df_poststack_file_name_write)
 
-        print(teff_data_write)
-        input("Text file containing Teff linear fit trend already exists! \n" + \
-                teff_data_write + "\n" + \
-                "Do what you want with that file and hit [ENTER] (will overwrite)")
+        # retrieve hash (throws error on cluster)
+        #repo = git.Repo(search_parent_directories=True)
+        #sha = repo.head.object.hexsha
 
-    with open(teff_data_write, 'w') as file1:
+        # arrange info into dictionary
 
-        # header
-        file1.write("Linear fit to Teff vs Balmer EW\n")
+        linfit_info={
+                    "Teff_min"  :   t_min,
+                    "Teff_max"  :   t_max,
+                    "m"         :      m,
+                    "err_m"     :  err_m,
+                    "b"         :      b,
+                    "err_b"     :  err_b
+                    }
 
-        # data
-        for key, value in linfit_info.items():
-            file1.write('%s:%s\n' % (key, value))
+        # write the Teff trend parameters alone to a separate text file
+        # (note this overwrites any previous existing file)
+        if (os.path.exists(teff_data_write) and test_flag==False): # pragma: no cover
 
-    file1.close()
-    logging.info("Wrote out text file with linear-best-fit params to " + teff_data_write)
+            print(teff_data_write)
+            input("Text file containing Teff linear fit trend already exists! \n" + \
+                    teff_data_write + "\n" + \
+                    "Do what you want with that file and hit [ENTER] (will overwrite)")
 
-    # save an FYI plot
-    if plot: # pragma: no cover
-        plt.clf()
-        plt.title("Teff from the Balmer EW\n[m, err_m, b, err_b] = \n" +
-                    "[" + str(np.round(m,2)) + ", " + str(np.round(err_m,2)) + ", " + str(np.round(b,2)) + ", " + str(np.round(err_b,2)) + "]")
-        plt.axhline(y=t_max, color="k", alpha=0.4)
-        plt.axhline(y=t_min, color="k", alpha=0.4)
-        plt.plot(ews_Balmer, teffs_bestfit, linestyle='--')
-        plt.scatter(ews_Balmer, teff, color="k", s=3)
+        with open(teff_data_write, 'w') as file1:
 
-        plt.ylabel("Teff (K)")
-        plt.xlabel("EW (Angstr)")
-        plt.tight_layout()
-        plt.savefig(plot_write)
-        plt.clf()
-        logging.info("Wrote out plot of Teffs vs. Balmer EW to " + plot_write)
+            # header
+            file1.write("Linear fit to Teff vs Balmer EW\n")
 
-    return df_poststack
+            # data
+            for key, value in linfit_info.items():
+                file1.write('%s:%s\n' % (key, value))
+
+        file1.close()
+        logging.info("Wrote out text file with linear-best-fit params to " + teff_data_write)
+
+        # save an FYI plot
+        if plot: # pragma: no cover
+            plt.clf()
+            plt.title("Teff from the Balmer EW\n[m, err_m, b, err_b] = \n" +
+                        "[" + str(np.round(m,2)) + ", " + str(np.round(err_m,2)) + ", " + str(np.round(b,2)) + ", " + str(np.round(err_b,2)) + "]")
+            plt.axhline(y=t_max, color="k", alpha=0.4)
+            plt.axhline(y=t_min, color="k", alpha=0.4)
+            plt.plot(ews_Balmer, teffs_bestfit, linestyle='--')
+            plt.scatter(ews_Balmer, teff, color="k", s=3)
+
+            plt.ylabel("Teff (K)")
+            plt.xlabel("EW (Angstr)")
+            plt.tight_layout()
+            plt.savefig(plot_write)
+            plt.clf()
+            logging.info("Wrote out plot of Teffs vs. Balmer EW to " + plot_write)
+
+        return df_poststack

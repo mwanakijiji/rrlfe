@@ -22,7 +22,9 @@ from modules import (compile_normalization,
 '''
 from modules import (compile_normalization,
                       create_spec_realizations,
-                      run_robo)
+                      run_robo,
+                      scrape_ew_and_errew,
+                      teff_retrieval)
 
 
 class GenerateCalib():
@@ -64,7 +66,6 @@ class GenerateCalib():
         #if isinstance(module_name):
 
         self._dict_steps.update({module.name:module})
-        print(self._dict_steps)
 
         #self._dict_steps[module.name] = module
         '''

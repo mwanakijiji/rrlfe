@@ -14,7 +14,7 @@ step = pipeline.makeDirs(module_name="module2")
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # compile the C spectral normalization script
 step = pipeline.compile_normalization.compileBkgrnd(module_name="module3")
 
@@ -33,11 +33,51 @@ step = pipeline.run_robo.Robo(module_name="module5")
 
 # add step to procedure
 test_gen.add_step(step)
-test_gen.run()
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(module_name="module6")
 
+# add step to procedure
+test_gen.add_step(step)
+'''
+# scrape_ew_from_robo and calculate EWs + err_EW
+step = pipeline.scrape_ew_and_errew.QualityCheck(module_name="module7")
+
+# add step to procedure
+test_gen.add_step(step)
+
+# transpose/stack all the data, where each row corresponds to a spectrum
+step = pipeline.scrape_ew_and_errew.StackSpectra(module_name="module8")
+
+# add step to procedure
+test_gen.add_step(step)
+
+# make a net Balmer line from the H-delta and H-gamma lines
+step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(module_name="module9")
+
+# add step to procedure
+test_gen.add_step(step)
+
+# add errors from noise-churning (obsolete)
+step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(module_name="module10")
+
+# add step to procedure
+test_gen.add_step(step)
+
+# take meta-data from file names of synthetic spectra and add to table
+step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(module_name="module11")
+
+# add step to procedure
+test_gen.add_step(step)
+
+# scrape_ew_from_robo and calculate EWs + err_EW
+step = pipeline.teff_retrieval.TempVsBalmer(module_name="module12")
+
+# add step to procedure
+test_gen.add_step(step)
+
+test_gen.run()
+'''
 # add step to procedure
 test_gen.add_step(step)
 

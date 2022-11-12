@@ -353,7 +353,7 @@ class create_spec_realizations_main():
         ## shift the below to the config file
         self.noise_level = noise_level
         self.spec_file_type = spec_file_type
-        self.num = 100
+        self.num = num
 
         #module_name="module4", num = 1, noise_level=0.0, spec_file_type="ascii.no_header"
 
