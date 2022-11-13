@@ -72,9 +72,9 @@ class Scraper():
         orig_spec_list: the file containing the original file names of the spectra
         '''
 
-        subdir=attribs["data_dirs"]["DIR_ROBO_OUTPUT"]
-        file_scraped_info=attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_ALL_DATA"]
-        orig_spec_list = attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["LIST_SPEC_PHASE"]
+        subdir=str(attribs["data_dirs"]["DIR_ROBO_OUTPUT"])
+        file_scraped_info=str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_ALL_DATA"])
+        orig_spec_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["LIST_SPEC_PHASE"])
         verbose=False
 
         # directory containing the *.fits.robolines
@@ -209,9 +209,9 @@ class AddSyntheticMetaData():
 
     def run_step(self, attribs = None):
 
-        input_list = attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["LIST_SPEC_PHASE"]
-        read_in_filename = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"]
-        write_out_filename = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_METADATA"]
+        input_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["LIST_SPEC_PHASE"])
+        read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"])
+        write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_METADATA"])
 
         # read in metadata
         logging.info("Reading in meta-data from file " + str(input_list))
@@ -247,8 +247,8 @@ class QualityCheck():
 
     def run_step(self, attribs = None):
 
-        read_in_filename = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_ALL_DATA"]
-        write_out_filename = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"]
+        read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_ALL_DATA"])
+        write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"])
 
         # read in data
         logging.info("Reading in for quality check: " + str(read_in_filename))
@@ -327,6 +327,22 @@ class QualityCheck():
 
 
 class GenerateNetBalmer():
+    '''
+    Takes stacked spectra data and adds a column representing a net Balmer line,
+    and populates another column for the error (based on propagation of the Robo
+    errors of constituent lines, and then some error propagation)
+
+    INPUTS:
+    read_in_filename: name of the file with stacked EW data from Robospect, and
+        only including 'good' data
+    write_out_filename: name of the file to be written out; identical to the file read in,
+        except that additional columns contain info on a net Balmer line
+
+    OUTPUTS:
+    (writes out csv with net Balmer line EWs)
+    [m, err_m, b, err_b], [m_1to1, err_m_1to1, b_1to1, err_b_1to1], df_poststack:
+        info used in test functions
+    '''
 
     def __init__(self, module_name):
 
@@ -334,29 +350,11 @@ class GenerateNetBalmer():
 
     def run_step(self, attribs = None):
 
-        read_in_filename = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY"]
-        write_out_filename = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER"]
-        '''
-        Takes stacked spectra data and adds a column representing a net Balmer line,
-        and populates another column for the error (based on propagation of the Robo
-        errors of constituent lines, and then some error propagation)
-
-        INPUTS:
-        read_in_filename: name of the file with stacked EW data from Robospect, and
-            only including 'good' data
-        write_out_filename: name of the file to be written out; identical to the file read in,
-            except that additional columns contain info on a net Balmer line
-
-        OUTPUTS:
-        (writes out csv with net Balmer line EWs)
-        [m, err_m, b, err_b], [m_1to1, err_m_1to1, b_1to1, err_b_1to1], df_poststack:
-            info used in test functions
-        '''
+        read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY"])
+        write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER"])
 
         # read in
         df_poststack = pd.read_csv(read_in_filename)
-
-        ####### BETWEEN HERE...
 
         # to generate a net Balmer line, make a rescaling of Hgamma
         # based on Hdelta
@@ -417,8 +415,8 @@ class GenerateAddlEwErrors():
 
     def run_step(self, attribs = None):
 
-        read_in_filename = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER"]
-        write_out_filename = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"]
+        read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER"])
+        write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"])
         groupby_parent = True
 
         #df_poststack = error_scatter_ew(df_poststack)
@@ -529,9 +527,9 @@ class StackSpectra():
 
     def run_step(self, attribs = None):
 
-        read_in_filename = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"]
-        write_out_filename = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY"]
-        input_list = attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["LIST_SPEC_PHASE"]
+        read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"])
+        write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY"])
+        input_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["LIST_SPEC_PHASE"])
 
         # read in EW data
         df_prestack = pd.read_csv(read_in_filename)

@@ -327,7 +327,7 @@ def write_bckgrnd_input(name_list, indir, normdir):
 # -------------
 # Main Function
 # -------------
-class create_spec_realizations_main():
+class CreateSpecRealizationsMain():
 
     '''
     INPUTS:
@@ -350,13 +350,6 @@ class create_spec_realizations_main():
 
         self.name = module_name
 
-        ## shift the below to the config file
-        self.noise_level = noise_level
-        self.spec_file_type = spec_file_type
-        self.num = num
-
-        #module_name="module4", num = 1, noise_level=0.0, spec_file_type="ascii.no_header"
-
     def run_step(self, attribs = None):
 
         input_spec_list_dir = attribs["data_dirs"]["DIR_SRC"]
@@ -365,12 +358,15 @@ class create_spec_realizations_main():
         unnorm_noise_churned_spectra_dir = attribs["data_dirs"]["DIR_REZNS_SPEC"]
         bkgrnd_output_dir = attribs["data_dirs"]["DIR_REZNS_SPEC_NORM"]
         final_dir = attribs["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"]
+        noise_level = float(attribs["reduc_params"]["NOISE_LEVEL"])
+        spec_file_type = str(attribs["reduc_params"]["FILE_TYPE"])
+        number_specs = int(attribs["reduc_params"]["NUM_SPECS"])
         verb = False
 
         logging.info("--------------------------")
-        logging.info("Making "+str(self.num)+" realizations of each input spectrum")
+        logging.info("Making "+str(number_specs)+" realizations of each input spectrum")
 
-        if (self.num > 1) and (self.noise_level == "None"):
+        if (number_specs > 1) and (noise_level == "None"):
             logging.warning("Realizing multiple spectra but noise level is zero")
             input("Hit [Enter] to continue")
 
@@ -470,9 +466,9 @@ class create_spec_realizations_main():
             print(i)
             name_list.extend(generate_realizations(spec_name=unnorm_empirical_spectra_dir+"/"+list_arr[i],
                                                    outdir=outdir,
-                                                   spec_file_format=self.spec_file_type,
-                                                   num=self.num,
-                                                   noise_level=self.noise_level))
+                                                   spec_file_format=spec_file_type,
+                                                   num=number_specs,
+                                                   noise_level=noise_level))
 
         # next we need to normalize the spectra; begin by creating input list of
         # spectrum realizations written in the previous step

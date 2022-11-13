@@ -4,26 +4,26 @@ import high_level_reduction_accordion as pipeline
 test_gen = pipeline.GenerateCalib() ## ## need to let this set config file being read in (currently in __init__)
 
 # print configuration params to log file
-step = pipeline.configInit(module_name="module1")
+step = pipeline.ConfigInit(module_name="module1")
 
 # add step to procedure
 test_gen.add_step(step)
 
 # make all the directories
-step = pipeline.makeDirs(module_name="module2")
+step = pipeline.MakeDirs(module_name="module2")
 
 # add step to procedure
 test_gen.add_step(step)
 '''
 # compile the C spectral normalization script
-step = pipeline.compile_normalization.compileBkgrnd(module_name="module3")
+step = pipeline.compile_normalization.CompileBkgrnd(module_name="module3")
 
 # add step to procedure
 test_gen.add_step(step)
 
 
 # take list of unnormalized empirical spectra, normalize them, and write out
-step = pipeline.create_spec_realizations.create_spec_realizations_main(module_name="module4", num = 1, noise_level=0.0, spec_file_type="ascii.no_header")
+step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(module_name="module4", num = 1, noise_level=0.0, spec_file_type="ascii.no_header")
 
 # add step to procedure
 test_gen.add_step(step)

@@ -18,6 +18,9 @@ from . import *
 
 
 class CornerPlot():
+    '''
+    Reads in MCMC output and writes out a corner plot
+    '''
 
     def __init__(self, module_name):
 
@@ -26,11 +29,8 @@ class CornerPlot():
     def run_step(self, attribs = None):
 
         model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
-        mcmc_text_output_file_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"]
-        corner_plot_putput_file_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_CORNER"]
-        '''
-        Reads in MCMC output and writes out a corner plot
-        '''
+        mcmc_text_output_file_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"])
+        corner_plot_putput_file_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_CORNER"])
 
         if (model == "abcd"):
 
@@ -319,6 +319,13 @@ def chi_sqd_fcn(Bal_pass,
 
 
 class WriteSolnToFits():
+    '''
+    Takes the full reduction solution and writes it to a FITS file with
+    1) The MCMC posteriors in tabular form
+    2) Meta-data in FITS header
+
+    test_flag: if True, then terminal prompts are suppressed to enable continuous integration
+    '''
 
     def __init__(self, module_name):
 
@@ -327,17 +334,10 @@ class WriteSolnToFits():
     def run_step(self, attribs = None):
 
         model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
-        mcmc_text_output_file_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"]
-        teff_data_retrieve_file_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["TREND_TEFF_VS_BALMER"]
-        soln_write_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["CALIB_SOLN"]
+        mcmc_text_output_file_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"])
+        teff_data_retrieve_file_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["TREND_TEFF_VS_BALMER"])
+        soln_write_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["CALIB_SOLN"])
         test_flag=False
-        '''
-        Takes the full reduction solution and writes it to a FITS file with
-        1) The MCMC posteriors in tabular form
-        2) Meta-data in FITS header
-
-        test_flag: if True, then terminal prompts are suppressed to enable continuous integration
-        '''
 
         # initialize FITS header and append keys
         hdr = fits.Header()
@@ -433,6 +433,11 @@ class WriteSolnToFits():
 class RunEmcee():
     '''
     Run the emcee MCMC to obtain coefficients a, b, c, d (+ f, g, h, k)
+
+    model: list of coefficients to use as the model
+        'abcd':     corresponds to Layden '94
+        'abcdfghk': corresponds to K = a + b*H + c*F + d*H*F + f*(H^2) + g*(F^2) + h*(H^2)*F + k*H*(F^2)
+    post_burn_in_links: chain links following burn-in
     '''
 
     def __init__(self, module_name):
@@ -440,19 +445,11 @@ class RunEmcee():
         self.name = module_name
 
     def run_step(self, attribs = None):
-        '''
-        INPUTS
-
-        model: list of coefficients to use as the model
-            'abcd':     corresponds to Layden '94
-            'abcdfghk': corresponds to K = a + b*H + c*F + d*H*F + f*(H^2) + g*(F^2) + h*(H^2)*F + k*H*(F^2)
-        post_burn_in_links: chain links following burn-in
-        '''
 
         model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
-        post_burn_in_links = 3e5
-        scraped_ews_good_only_file_name = attribs["data_dirs"]["DIR_EW_PRODS"] + attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"]
-        mcmc_text_output_file_name = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"]
+        post_burn_in_links = int(attribs["reduc_params"]["MCMC_POSTBURN"])
+        scraped_ews_good_only_file_name = str(attribs["data_dirs"]["DIR_EW_PRODS"] + attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"])
+        mcmc_text_output_file_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"])
 
         # read in EWs, Fe/Hs, phases, errors, etc.
         logging.info("--------------------------")

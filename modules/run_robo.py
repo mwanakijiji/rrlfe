@@ -102,9 +102,9 @@ class Robo():
         (EW data written to file)
         '''
 
-        normzed_spec_source_dir = attribs["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"]
-        write_dir = attribs["data_dirs"]["DIR_ROBO_OUTPUT"]
-        robo_dir = attribs["sys_dirs"]["DIR_ROBO"]
+        normzed_spec_source_dir = str(attribs["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"])
+        write_dir = str(attribs["data_dirs"]["DIR_ROBO_OUTPUT"])
+        robo_dir = str(attribs["sys_dirs"]["DIR_ROBO"])
 
         ## ## note that I have put in a specific string to look for
         ## ## in the file name here; this might be a weakness later on

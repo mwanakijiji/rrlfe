@@ -72,15 +72,14 @@ def get_setuptools_script_dir():
     return dist.install_scripts
 
 
-class makeDirs():
+class MakeDirs():
     '''
     Make directories for housing files/info if they don't already exist
     '''
 
-    def __init__(self, module_name, objective=None):
+    def __init__(self, module_name):
 
         self.name = module_name
-        self.objective = "apply_calib"
 
     def run_step(self, attribs = None):
 
@@ -89,7 +88,6 @@ class makeDirs():
         # make directories for
         # 1. reduction of spectra to find a, b, c, d (objective = "find_calib"), or
         # 2. to apply the solution (objective = "apply_calib"; default)
-
 
         # loop over all directory paths we will need
         for vals in attribs["data_dirs"]:
@@ -133,7 +131,7 @@ def get_hash():
     return sha
 '''
 
-class configInit():
+class ConfigInit():
     '''
     Print parameters from the config file to log
     '''
@@ -141,7 +139,6 @@ class configInit():
     def __init__(self, module_name):
 
         self.name = module_name
-        #self.objective = "apply_calib"
 
     def run_step(self, attribs = None):
 
@@ -149,8 +146,6 @@ class configInit():
 
         logging.info("rrlfe git hash: " + sha)
         print(attribs.sections)
-
-        logging.info("Pipeline purpose: find or apply a solution? ")# + objective)
 
         for each_section in attribs.sections():
             logging.info("----")

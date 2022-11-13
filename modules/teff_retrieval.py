@@ -16,29 +16,6 @@ import csv
 import git
 from . import *
 
-'''
-def junkAccordionFcn_22():
-
-    print("hello 3")
-    print(self.name)
-'''
-
-class junkAccordionFcn_zap():
-
-    def __init__(self, module_name):
-
-        self.name = module_name
-
-    def run_step(self):
-        print("hello 33")
-
-
-class junkAccordionFcn_2():
-
-    def __init__(self):
-        pass
-
-    print("hello 2")
 
 def line_fit_temp_range(x_data_pass, y_data_pass, t_min, t_max):
     '''
@@ -103,12 +80,12 @@ class TempVsBalmer():
 
     def run_step(self, attribs = None):
 
-        df_poststack_file_name_read = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_METADATA"]
-        df_poststack_file_name_write = attribs["data_dirs"]["DIR_EW_PRODS"] + attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"]
-        plot_write = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["PLOT_TEFF_VS_BALMER"]
-        teff_data_write = attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["TREND_TEFF_VS_BALMER"]
+        df_poststack_file_name_read = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_METADATA"])
+        df_poststack_file_name_write = str(attribs["data_dirs"]["DIR_EW_PRODS"] + attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"])
+        plot_write = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["PLOT_TEFF_VS_BALMER"])
+        teff_data_write = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["TREND_TEFF_VS_BALMER"])
         plot = True
-        test_flag=False
+        test_flag = False
 
         # the min and max Teff of spectra that the linear fit will be made to
         t_min = int(attribs["teff_linear"]["MIN_TEFF"])

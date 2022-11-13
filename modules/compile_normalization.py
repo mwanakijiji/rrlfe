@@ -21,7 +21,7 @@ def func(arg1, arg2):
     """
     return True
 
-class compileBkgrnd():
+class CompileBkgrnd():
     '''
     Make directories for housing files/info if they don't already exist
     '''
