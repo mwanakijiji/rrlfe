@@ -346,18 +346,18 @@ class CreateSpecRealizationsMain():
     (text files written)
     '''
 
-    def __init__(self, module_name, num, noise_level, spec_file_type):
+    def __init__(self, module_name):
 
         self.name = module_name
 
     def run_step(self, attribs = None):
 
-        input_spec_list_dir = attribs["data_dirs"]["DIR_SRC"]
-        input_list = attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["LIST_SPEC_PHASE"]
-        unnorm_empirical_spectra_dir = attribs["data_dirs"]["DIR_RAW_SPEC_DATA"]
-        unnorm_noise_churned_spectra_dir = attribs["data_dirs"]["DIR_REZNS_SPEC"]
-        bkgrnd_output_dir = attribs["data_dirs"]["DIR_REZNS_SPEC_NORM"]
-        final_dir = attribs["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"]
+        input_spec_list_dir = str(attribs["data_dirs"]["DIR_SRC"])
+        input_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["INPUT_LIST_SPEC"])
+        unnorm_empirical_spectra_dir = str(attribs["data_dirs"]["DIR_RAW_SPEC_DATA"])
+        unnorm_noise_churned_spectra_dir = str(attribs["data_dirs"]["DIR_REZNS_SPEC"])
+        bkgrnd_output_dir = str(attribs["data_dirs"]["DIR_REZNS_SPEC_NORM"])
+        final_dir = str(attribs["data_dirs"]["DIR_REZNS_SPEC_NORM_FINAL"])
         noise_level = float(attribs["reduc_params"]["NOISE_LEVEL"])
         spec_file_type = str(attribs["reduc_params"]["FILE_TYPE"])
         number_specs = int(attribs["reduc_params"]["NUM_SPECS"])

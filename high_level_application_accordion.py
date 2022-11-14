@@ -16,10 +16,10 @@ from modules import (compile_normalization,
                       run_robo,
                       scrape_ew_and_errew,
                       teff_retrieval,
-                      run_emcee)
+                      find_feh)
 
 
-class GenerateCalib():
+class ApplyCalib():
     '''
     This actually runs the reduction that generates a calibration
     '''
@@ -28,14 +28,11 @@ class GenerateCalib():
         # dictionary to contain pipeline steps
         self._dict_steps = collections.OrderedDict()
 
-        # define the calibration model
-        self.model_choice = model_choice
-
         # read in choice of configuration data file for reduction;
         # set contents as attributes for sections to follow
         config_choice = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
         # config for reduction to find a, b, c, d
-        config_choice.read(os.path.join(os.path.dirname(__file__), 'conf', 'config_gen.ini')) ## ## THIS HAS TO BE MANUALLY SET BY USER HERE; NEED TO CHANGE THIS
+        config_choice.read(os.path.join(os.path.dirname(__file__), 'conf', 'config_apply.ini')) ## ## THIS HAS TO BE MANUALLY SET BY USER HERE; NEED TO CHANGE THIS
 
         self._attribs = config_choice
 

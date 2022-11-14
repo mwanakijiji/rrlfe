@@ -74,7 +74,7 @@ class Scraper():
 
         subdir=str(attribs["data_dirs"]["DIR_ROBO_OUTPUT"])
         file_scraped_info=str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_ALL_DATA"])
-        orig_spec_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["LIST_SPEC_PHASE"])
+        orig_spec_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["INPUT_LIST_SPEC"])
         verbose=False
 
         # directory containing the *.fits.robolines
@@ -209,7 +209,7 @@ class AddSyntheticMetaData():
 
     def run_step(self, attribs = None):
 
-        input_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["LIST_SPEC_PHASE"])
+        input_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["INPUT_LIST_SPEC"])
         read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"])
         write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_METADATA"])
 
@@ -529,7 +529,7 @@ class StackSpectra():
 
         read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"])
         write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY"])
-        input_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["LIST_SPEC_PHASE"])
+        input_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["INPUT_LIST_SPEC"])
 
         # read in EW data
         df_prestack = pd.read_csv(read_in_filename)
