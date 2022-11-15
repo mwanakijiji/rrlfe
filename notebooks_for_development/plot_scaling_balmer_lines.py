@@ -24,23 +24,27 @@ df = pd.read_csv(file_name)
 
 plt.clf()
 plt.figure(figsize=(10,7))
-plt.scatter(df["EW_Hdelta"], np.add(df["EW_Heps"],10), s=12, label="W"+r"$\epsilon$+10")
-plt.scatter(df["EW_Hdelta"], np.add(df["EW_Hbeta"],5), s=12, label="W"+r"$\beta$+5")
-plt.scatter(df["EW_Hdelta"], df["EW_Hgamma"], s=12, label="W"+r"$\gamma$")
+plt.scatter(df["EW_Hdelta"], np.add(df["EW_Heps"],10), s=12, label="H"+r"$\epsilon$")
+plt.scatter(df["EW_Hdelta"], np.add(df["EW_Hbeta"],5), s=12, label="H"+r"$\beta$")
+plt.scatter(df["EW_Hdelta"], df["EW_Hgamma"], s=12, label="H"+r"$\gamma$")
 # note by plotting error bar points, color scheme conveniently repeats colors in order
-plt.errorbar([5], [2], markersize=7, fmt="", mfc='white', capsize=3,
+plt.errorbar([5], [2], markersize=7, fmt="", mfc='white', capsize=3, elinewidth=3, capthick=3,
             xerr=np.median(df["err_EW_Hdelta_from_robo"]),
             yerr=np.median(df["err_EW_Heps_from_robo"]))
-plt.errorbar([7], [3], markersize=7, fmt="", mfc='white', capsize=3,
+plt.errorbar([7], [3], markersize=7, fmt="", mfc='white', capsize=3, elinewidth=3, capthick=3,
             xerr=np.median(df["err_EW_Hdelta_from_robo"]),
             yerr=np.median(df["err_EW_Hbeta_from_robo"]))
-plt.errorbar([9], [4], markersize=7, fmt="", mfc='white', capsize=3,
+plt.errorbar([9], [4], markersize=7, fmt="", mfc='white', capsize=3, elinewidth=3, capthick=3,
             xerr=np.median(df["err_EW_Hdelta_from_robo"]),
             yerr=np.median(df["err_EW_Hgamma_from_robo"]))
 plt.xlim([1.2,15.0])
-plt.xlabel(r"$W_{\delta}$"+" "+"($\AA$)", fontsize=35)
-plt.ylabel("$W$"+" "+"($\AA$)", fontsize=35)
-plt.legend(fontsize=25)
+plt.xlabel(r"$EW_{\delta}$"+" "+"($\AA$)", fontsize=35)
+plt.ylabel("$EW$"+" "+"($\AA$)", fontsize=35)
+lgnd = plt.legend(loc="lower right", scatterpoints=1, fontsize=25)
+lgnd.legendHandles[0]._sizes = [100]
+lgnd.legendHandles[1]._sizes = [100]
+lgnd.legendHandles[2]._sizes = [100]
+#plt.legend(fontsize=25)
 plt.xticks(fontsize=25)
 plt.yticks(fontsize=25)
 plt.ylim([0,26])
