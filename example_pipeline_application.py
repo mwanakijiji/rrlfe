@@ -34,7 +34,6 @@ step = pipeline.run_robo.Robo(module_name="module5")
 # add step to procedure
 test_gen.add_step(step)
 
-'''
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(module_name="module6")
 
@@ -71,6 +70,13 @@ step = pipeline.find_feh.PickleFehRetrieval(module_name="module11")
 
 # add step to procedure
 test_gen.add_step(step)
+'''
+# retrieve pickle files and compare values (only for case of synthetic values with injected and retrieved Fe/H)
+step = pipeline.find_feh.CompareFehSynthetic(module_name="module12")
+
+# add step to procedure
+test_gen.add_step(step)
+
 '''
 # take meta-data from file names of synthetic spectra and add to table
 step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(module_name="module11")
