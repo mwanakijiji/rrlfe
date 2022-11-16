@@ -2,7 +2,6 @@
 
 # Created from parent 2022 Aug. 20 by E.S.
 
-
 # #### In the following, we plot fits in KH space and write out data including the BIC to select
 # #### the best model among variations that consider up to third-degree terms involving H (Balmer
 # #### EW) and F (Fe/H), viz.
@@ -101,8 +100,8 @@ sns.set_style('ticks')
 g = sns.relplot(
     data=df_choice,
     x="EW_Balmer", y="EW_CaIIK",
-    hue="[Fe/H]", size="$\phi$", edgecolor="k",
-    palette=cmap, sizes=(10,160), alpha=0.8, zorder=2
+    color="white", size="[Fe/H]", edgecolor="k",
+    palette=cmap, sizes=(30,160), alpha=0.8, zorder=5
 )
 
 
@@ -110,6 +109,7 @@ g = sns.relplot(
 # and later this will be plotted
 idx_vx_her_only = df_choice["orig_spec_file_name"].str.contains("VX_Her")
 df_vx_her_only = df_choice[idx_vx_her_only].sort_values(by="phase").reset_index(drop=True)
+
 idx_tv_lyn_only = df_choice["orig_spec_file_name"].str.contains("TV_Lyn")
 df_tv_lyn_only = df_choice[idx_tv_lyn_only].sort_values(by="phase").reset_index(drop=True)
 
@@ -118,6 +118,12 @@ df_av_peg_only = df_choice[idx_av_peg_only].sort_values(by="phase").reset_index(
 
 idx_ar_per_only = df_choice["orig_spec_file_name"].str.contains("AR_Per")
 df_ar_per_only = df_choice[idx_ar_per_only].sort_values(by="phase").reset_index(drop=True)
+
+idx_x_ari_only = df_choice["orig_spec_file_name"].str.contains("X_Ari")
+df_x_ari_only = df_choice[idx_x_ari_only].sort_values(by="phase").reset_index(drop=True)
+
+idx_v445_only = df_choice["orig_spec_file_name"].str.contains("445")
+df_v445_only = df_choice[idx_v445_only].sort_values(by="phase").reset_index(drop=True)
 
 
 # plot points to show median error bars
@@ -128,7 +134,7 @@ bool_p02 = (np.logical_and(df_choice["feh_retrieved"] > -0.9,df_choice["feh_retr
 
 plt.errorbar(balmer_dummy[4],[12],
                 xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_p02]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_p02]), ecolor="k") # [Fe/H] = +0.2
+                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_p02]), ecolor="k", elinewidth=2, capthick=2, capsize=6) # [Fe/H] = +0.2
 plt.text(balmer_dummy[4]+0.2,12+0.5,"-0.9 < [Fe/H] < -0.1")
 '''
 bool_p00 = (df_choice["feh_retrieved"] == 0.0)
@@ -144,7 +150,7 @@ plt.errorbar(balmer_dummy[2],contour_4_points[2],
 bool_m10 = (np.logical_and(df_choice["feh_retrieved"] > -1.7,df_choice["feh_retrieved"] < -0.9))
 plt.errorbar(balmer_dummy[5],[10],
                 xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m10]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m10]), ecolor="k") # [Fe/H] = -1.0
+                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m10]), ecolor="k", elinewidth=2, capthick=2, capsize=6) # [Fe/H] = -1.0
 plt.text(balmer_dummy[5]+0.2,10+0.5,"-1.7 < [Fe/H] < -0.9")
 '''
 bool_m15 = (df_choice["feh_retrieved"] == -1.5)
@@ -160,7 +166,7 @@ plt.errorbar(balmer_dummy[5],contour_4_points[5],
 bool_m25 = (np.logical_and(df_choice["feh_retrieved"] > -2.5,df_choice["feh_retrieved"] < -1.7))
 plt.errorbar(balmer_dummy[6],[8],
                 xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m25]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m25]), ecolor="k")  # [Fe/H] = -2.5
+                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m25]), ecolor="k", elinewidth=2, capthick=2, capsize=6)  # [Fe/H] = -2.5
 plt.text(balmer_dummy[6]+0.2,8+0.5,"-2.5 < [Fe/H] < -1.7")
 
 # plot isometallicity contours
@@ -168,14 +174,80 @@ success_rate_x = 14.5
 lim_abcissa = 1 # for staggering the ends of the lines
 y_offset = -0.2 # ibid
 feh_nonred = np.array([-3.0,-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.2])
-#single_star_cycle = sns.lineplot(df_vx_her_only["EW_Balmer"], df_vx_her_only["EW_CaIIK"])
 
-single_star_cycle_tv_lyn = sns.lineplot(df_tv_lyn_only["EW_Balmer"], df_tv_lyn_only["EW_CaIIK"], sort=False, zorder=0, lw=5)
-single_star_cycle_vx_her = sns.lineplot(df_vx_her_only["EW_Balmer"], df_vx_her_only["EW_CaIIK"], sort=False, zorder=0, lw=5)
-#single_star_cycle_av_peg = sns.lineplot(df_av_peg_only["EW_Balmer"], df_av_peg_only["EW_CaIIK"], sort=False, zorder=0, lw=7)
-single_star_cycle_ar_per = sns.lineplot(df_ar_per_only["EW_Balmer"], df_ar_per_only["EW_CaIIK"], sort=False, zorder=0, lw=5)
-#plt.text(isometal_balmer_abcissa[0]-0.65,retrieved_K_isometal_pos0pt2[0]+2,"[Fe/H]")
-#plt.text(success_rate_x+0.25,retrieved_K_isometal_pos0pt2[-1]+1.5,"S/F", fontsize=16)
+# define arrows: AR Per
+xstarts = df_ar_per_only["EW_Balmer"].values
+ystarts = df_ar_per_only["EW_CaIIK"].values
+del_x_arrow = np.subtract(xstarts,np.roll(xstarts,1))
+del_y_arrow = np.subtract(ystarts,np.roll(ystarts,1))
+#add arrows to plot
+t = plt.annotate("AR Per", xy=(2.5,8.5), xytext=(2.5,8.5), zorder=3,color="olive", weight="bold")
+t.set_bbox(dict(facecolor='white', alpha=0.75, edgecolor='white'))
+for i in range(1,len(df_ar_per_only["EW_Balmer"])):
+    prop = dict(arrowstyle="-|>,head_width=0.3,head_length=0.7",linewidth=4,shrinkA=-10,shrinkB=10,color="olive")
+    plt.annotate("", xy=(xstarts[i],ystarts[i]), xytext=(xstarts[i-1],ystarts[i-1]), arrowprops=prop)
+
+# define arrows: TV Lyn
+xstarts = df_tv_lyn_only["EW_Balmer"].values
+ystarts = df_tv_lyn_only["EW_CaIIK"].values
+del_x_arrow = np.subtract(xstarts,np.roll(xstarts,1))
+del_y_arrow = np.subtract(ystarts,np.roll(ystarts,1))
+#add arrows to plot
+t = plt.annotate("TV Lyn", xy=(12.25,2.75), xytext=(12.25,2.75), zorder=3,color="firebrick", weight="bold")
+t.set_bbox(dict(facecolor='white', alpha=0.75, edgecolor='white'))
+for i in range(1,len(df_tv_lyn_only["EW_Balmer"])):
+    prop = dict(arrowstyle="-|>,head_width=0.3,head_length=0.7",linewidth=4,shrinkA=-10,shrinkB=10,color="firebrick")
+    plt.annotate("", xy=(xstarts[i],ystarts[i]), xytext=(xstarts[i-1],ystarts[i-1]), arrowprops=prop, zorder=0)
+
+# define arrows: X Ari
+xstarts = df_x_ari_only["EW_Balmer"].values
+ystarts = df_x_ari_only["EW_CaIIK"].values
+del_x_arrow = np.subtract(xstarts,np.roll(xstarts,1))
+del_y_arrow = np.subtract(ystarts,np.roll(ystarts,1))
+#add arrows to plot
+t = plt.annotate("X Ari", xy=(3,2.75), xytext=(3,2.75), zorder=3,color="orangered", weight="bold")
+t.set_bbox(dict(facecolor='white', alpha=0.75, edgecolor='white'))
+for i in range(1,len(df_x_ari_only["EW_Balmer"])):
+    prop = dict(arrowstyle="-|>,head_width=0.3,head_length=0.7",linewidth=4,shrinkA=-10,shrinkB=10,color="orangered")
+    plt.annotate("", xy=(xstarts[i],ystarts[i]), xytext=(xstarts[i-1],ystarts[i-1]), arrowprops=prop, zorder=0)
+
+# define arrows: AR Per
+xstarts = df_v445_only["EW_Balmer"].values
+ystarts = df_v445_only["EW_CaIIK"].values
+del_x_arrow = np.subtract(xstarts,np.roll(xstarts,1))
+del_y_arrow = np.subtract(ystarts,np.roll(ystarts,1))
+#add arrows to plot
+t = plt.annotate("V445 Oph", xy=(6,11), xytext=(6,11), zorder=3,color="cadetblue", weight="bold")
+t.set_bbox(dict(facecolor='white', alpha=0.75, edgecolor='white'))
+for i in range(1,len(df_v445_only["EW_Balmer"])):
+    prop = dict(arrowstyle="-|>,head_width=0.3,head_length=0.7",linewidth=4,shrinkA=-10,shrinkB=10,color="cadetblue")
+    plt.annotate("", xy=(xstarts[i],ystarts[i]), xytext=(xstarts[i-1],ystarts[i-1]), arrowprops=prop, zorder=0)
+
+# define arrows: AV Peg
+xstarts = df_av_peg_only["EW_Balmer"].values
+ystarts = df_av_peg_only["EW_CaIIK"].values
+del_x_arrow = np.subtract(xstarts,np.roll(xstarts,1))
+del_y_arrow = np.subtract(ystarts,np.roll(ystarts,1))
+#add arrows to plot
+t = plt.annotate("AV Peg", xy=(8,7.75), xytext=(8,7.75), zorder=3,color="green", weight="bold")
+t.set_bbox(dict(facecolor='white', alpha=0.75, edgecolor='white'))
+for i in range(1,len(df_av_peg_only["EW_Balmer"])):
+    prop = dict(arrowstyle="-|>,head_width=0.3,head_length=0.7",linewidth=4,shrinkA=-10,shrinkB=10,color="green")
+    plt.annotate("", xy=(xstarts[i],ystarts[i]), xytext=(xstarts[i-1],ystarts[i-1]), arrowprops=prop, zorder=0)
+
+# define arrows: VX Her
+xstarts = df_vx_her_only["EW_Balmer"].values
+ystarts = df_vx_her_only["EW_CaIIK"].values
+del_x_arrow = np.subtract(xstarts,np.roll(xstarts,1))
+del_y_arrow = np.subtract(ystarts,np.roll(ystarts,1))
+#add arrows to plot
+t = plt.annotate("VX Her", xy=(13.5,1.5), xytext=(13.5,1.5), zorder=3,color="mediumpurple", weight="bold")
+t.set_bbox(dict(facecolor='white', alpha=0.75, edgecolor='white'))
+for i in range(1,len(df_vx_her_only["EW_Balmer"])):
+    prop = dict(arrowstyle="-|>,head_width=0.3,head_length=0.7",linewidth=4,shrinkA=-10,shrinkB=10,color="mediumpurple")
+    plt.annotate("", xy=(xstarts[i],ystarts[i]), xytext=(xstarts[i-1],ystarts[i-1]), arrowprops=prop, zorder=0)
+
+## ## end
 p02 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_pos0pt2, color="k", alpha=0.5, zorder=0)
 plt.text(isometal_balmer_abcissa[19]-0.6,14,"+0.2")
 #plt.text(success_rate_x,retrieved_K_isometal_pos0pt2[-1]+y_offset,"19/8",fontsize=14) # successes/failures in fit
@@ -198,16 +270,14 @@ m25 = sns.lineplot(x=isometal_balmer_abcissa, y=retrieved_K_isometal_neg2pt5, co
 plt.text(isometal_balmer_abcissa[0]-0.6,retrieved_K_isometal_neg2pt5[0],"-2.5")
 #plt.text(success_rate_x,retrieved_K_isometal_neg2pt5[-1]+y_offset,"27/0",fontsize=14) # successes/failures in fit
 
-plt.xlim([1,16])
-
-#plt.legend(loc="upper right", bbox_to_anchor=(1, 1), ncol=3)
-plt.legend(bbox_to_anchor=(1, 1))
+plt.legend().set_visible(False)
 
 g.fig.set_size_inches(28,8)
 
-g.set_ylabels(r"$W_{K}$"+" ($\AA$)", fontsize=22)
-g.set_xlabels(r"$W_{B}$"+" ($\AA$)", fontsize=22)
+g.set_ylabels(r"$EW_{K}$"+" ($\AA$)", fontsize=22)
+g.set_xlabels(r"$EW_{B}$"+" ($\AA$)", fontsize=22)
 g.set(ylim=(0, 14))
+g.set(xlim=(1, 15.5))
 
 g.savefig(file_name_write, bbox_inches='tight')
 print("Wrote", file_name_write)

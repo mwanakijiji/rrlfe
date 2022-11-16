@@ -31,7 +31,7 @@ coeff_array= np.array([26.458560990753856,-2.902133161010684,13.111956399236913,
 
 # read in the data points to be overplotted
 stem = "/Users/bandari/Documents/git.repos/rrlfe/"
-data_points_read = stem + "rrlfe_io_20220811_job_594776/rrlfe_io/ew_products/all_data_input_mcmc.csv"
+data_points_read = stem + "rrlfe_io_20220811_job_594776_abcdfghk/rrlfe_io/ew_products/all_data_input_mcmc.csv"
 df_choice = pd.read_csv(data_points_read)
 
 # read in full list of spectra reduced (so that we can pinpoint the ones that failed the fitting process)
@@ -41,7 +41,7 @@ df_start = pd.read_csv(data_start)
 # read in ALL EW data (good and bad), to plot and/or troubleshoot the failed fits
 '''
 # not sure if useful
-good_bad = stem + "rrlfe_io_20220811_job_594776/rrlfe_io/ew_products/all_ew_info.csv"
+good_bad = stem + "rrlfe_io_20220811_job_594776_abcdfghk/rrlfe_io/ew_products/all_ew_info.csv"
 df_goodbad = pd.read_csv(good_bad)
 '''
 
@@ -105,7 +105,7 @@ sns.set_style('ticks')
 g = sns.relplot(
     data=df_choice,
     x="EW_Balmer", y="EW_CaIIK",
-    hue="[Fe/H]", size="log(g)", edgecolor="k", legend="full",
+    size="[Fe/H]", edgecolor="k",
     palette=cmap, sizes=(30,160), alpha=0.8, zorder=2
 )
 #import ipdb; ipdb.set_trace()
@@ -117,7 +117,7 @@ bool_p02 = (df_choice["feh"] == 0.2)
 #import ipdb; ipdb.set_trace()
 plt.errorbar(balmer_dummy[0],[20],
                 xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_p02]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_p02]), ecolor="k") # [Fe/H] = +0.2
+                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_p02]), ecolor="k", elinewidth=2, capthick=2, capsize=6)  # [Fe/H] = +0.2
 plt.text(balmer_dummy[0]+0.1,20+0.5,"[Fe/H] = +0.2")
 '''
 bool_p00 = (df_choice["feh"] == 0.0)
@@ -133,7 +133,7 @@ plt.errorbar(balmer_dummy[2],contour_4_points[2],
 bool_m10 = (df_choice["feh"] == -1.0)
 plt.errorbar(balmer_dummy[3],[15],
                 xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m10]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m10]), ecolor="k") # [Fe/H] = -1.0
+                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m10]), ecolor="k", elinewidth=2, capthick=2, capsize=6) # [Fe/H] = -1.0
 plt.text(balmer_dummy[3]+0.1,15+0.5,"-1.0")
 '''
 bool_m15 = (df_choice["feh"] == -1.5)
@@ -149,7 +149,7 @@ plt.errorbar(balmer_dummy[5],contour_4_points[5],
 bool_m25 = (df_choice["feh"] == -2.5)
 plt.errorbar(balmer_dummy[6],[10],
                 xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m25]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m25]), ecolor="k")  # [Fe/H] = -2.5
+                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m25]), ecolor="k", elinewidth=2, capthick=2, capsize=6)  # [Fe/H] = -2.5
 plt.text(balmer_dummy[6]+0.1,10+0.5,"-2.5")
 
 # plot isometallicity contours
@@ -182,12 +182,12 @@ plt.text(isometal_balmer_abcissa[0]-0.6,retrieved_K_isometal_neg2pt5[0],"-2.5")
 plt.text(success_rate_x,retrieved_K_isometal_neg2pt5[-1]+y_offset,"27/0",fontsize=14) # successes/failures in fit
 
 plt.xlim([1,16])
-plt.legend(loc="upper right", ncol=3)
+plt.legend(loc="upper right", ncol=3, title="[Fe/H]")
 
 g.fig.set_size_inches(28,8)
 
-g.set_ylabels(r"$W_{K}$"+" ($\AA$)", fontsize=22)
-g.set_xlabels(r"$W_{B}$"+" ($\AA$)", fontsize=22)
+g.set_ylabels(r"$EW_{K}$"+" ($\AA$)", fontsize=22)
+g.set_xlabels(r"$EW_{B}$"+" ($\AA$)", fontsize=22)
 g.set(ylim=(0, 25))
 
 g.savefig(file_name_write, bbox_inches='tight')
