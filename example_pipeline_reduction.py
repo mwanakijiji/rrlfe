@@ -14,17 +14,16 @@ step = pipeline.MakeDirs(module_name="module2")
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # compile the C spectral normalization script
 step = pipeline.compile_normalization.CompileBkgrnd(module_name="module3")
 
 # add step to procedure
 test_gen.add_step(step)
 
-
 # take list of unnormalized empirical spectra, normalize them, and write out
-step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(module_name="module4", num = 1, noise_level=0.0, spec_file_type="ascii.no_header")
-
+step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(module_name="module4")
+'''
 # add step to procedure
 test_gen.add_step(step)
 
@@ -83,7 +82,7 @@ step = pipeline.run_emcee.RunEmcee(module_name="module13")
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 step = pipeline.run_emcee.WriteSolnToFits(module_name="module14")
 
 # add step to procedure
@@ -93,6 +92,6 @@ step = pipeline.run_emcee.CornerPlot(module_name="module15")
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 
 test_gen.run()

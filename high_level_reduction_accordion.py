@@ -28,9 +28,6 @@ class GenerateCalib():
         # dictionary to contain pipeline steps
         self._dict_steps = collections.OrderedDict()
 
-        # define the calibration model
-        self.model_choice = model_choice
-
         # read in choice of configuration data file for reduction;
         # set contents as attributes for sections to follow
         config_choice = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file

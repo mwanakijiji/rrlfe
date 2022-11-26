@@ -349,10 +349,12 @@ class CreateSpecRealizationsMain():
     def __init__(self, module_name):
 
         self.name = module_name
+        self.input_spec_list_dir = str(attribs["data_dirs"]["DIR_SRC"])
 
     def run_step(self, attribs = None):
 
-        input_spec_list_dir = str(attribs["data_dirs"]["DIR_SRC"])
+        #input_spec_list_dir = str(attribs["data_dirs"]["DIR_SRC"])
+        print("input_spec", self.input_spec_list_dir)
         input_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["INPUT_LIST_SPEC"])
         unnorm_empirical_spectra_dir = str(attribs["data_dirs"]["DIR_RAW_SPEC_DATA"])
         unnorm_noise_churned_spectra_dir = str(attribs["data_dirs"]["DIR_REZNS_SPEC"])
