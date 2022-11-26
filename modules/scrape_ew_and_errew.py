@@ -59,9 +59,16 @@ class Scraper():
     Scrape all the equivalent width info from the Robospect *robolines files
     '''
 
-    def __init__(self, module_name):
+    def __init__(self,
+        module_name,
+        robo_output_read,
+        file_scraped_write,
+        input_spec_list_read):
 
         self.name = module_name
+        self.robo_output_read = robo_output_read
+        self.file_scraped_info = file_scraped_write
+        self.input_spec_list_read = input_spec_list_read
 
     def run_step(self, attribs = None):
 
@@ -72,16 +79,14 @@ class Scraper():
         orig_spec_list: the file containing the original file names of the spectra
         '''
 
-        subdir=str(attribs["data_dirs"]["DIR_ROBO_OUTPUT"])
-        file_scraped_info=str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_ALL_DATA"])
-        orig_spec_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["INPUT_LIST_SPEC"])
         verbose=False
 
         # directory containing the *.fits.robolines
         # files with the EW info
         stem = '.' ## ##
         # subdirectory containing the *.c.dat files
-        subdir = subdir ## ##
+        subdir = self.robo_output_read ## ##
+        orig_spec_list = self.input_spec_list_read
 
         # get list of filenames without the path
         ## ## note the string being sought here is specific to RW's synthetic spectra; this is a weakness here and needs to be fixed later!
@@ -94,7 +99,7 @@ class Scraper():
         orig_spec_list = input_list["orig_spec_file_name"]
 
         # EW info will get scraped into this
-        write_out_filename = file_scraped_info
+        write_out_filename = self.file_scraped_info
 
         # return tables of EW data?
         verbose = verbose
