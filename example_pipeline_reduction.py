@@ -78,7 +78,10 @@ step = pipeline.scrape_ew_and_errew.StackSpectra(
 test_gen.add_step(step)
 
 # make a net Balmer line from the H-delta and H-gamma lines
-step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(module_name="module9")
+step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
+    module_name="module9",
+    file_restacked_read="./rrlfe_io_red/ew_products/restacked_ew_info_good_only.csv",
+    file_ew_net_balmer_write="./rrlfe_io_red/ew_products/restacked_ew_info_good_only_w_net_balmer.csv")
 
 # add step to procedure
 test_gen.add_step(step)

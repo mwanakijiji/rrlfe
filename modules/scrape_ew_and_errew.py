@@ -354,14 +354,19 @@ class GenerateNetBalmer():
         info used in test functions
     '''
 
-    def __init__(self, module_name):
+    def __init__(self,
+                module_name,
+                file_restacked_read,
+                file_ew_net_balmer_write):
 
         self.name = module_name
+        self.file_restacked_read = file_restacked_read
+        self.file_ew_net_balmer_write = file_ew_net_balmer_write
 
     def run_step(self, attribs = None):
 
-        read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY"])
-        write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER"])
+        read_in_filename = self.file_restacked_read
+        write_out_filename = self.file_ew_net_balmer_write
 
         # read in
         df_poststack = pd.read_csv(read_in_filename)
