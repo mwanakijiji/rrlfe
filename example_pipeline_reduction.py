@@ -68,17 +68,21 @@ step = pipeline.scrape_ew_and_errew.QualityCheck(
 test_gen.add_step(step)
 
 # transpose/stack all the data, where each row corresponds to a spectrum
-step = pipeline.scrape_ew_and_errew.StackSpectra(module_name="module8")
+step = pipeline.scrape_ew_and_errew.StackSpectra(
+    module_name="module8",
+    file_ew_data_read="./rrlfe_io_red/ew_products/ew_info_good_only.csv",
+    file_restacked_write="./rrlfe_io_red/ew_products/restacked_ew_info_good_only.csv",
+    input_spec_list_read="./src/junk_test_synthetic_spectra.list")
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # make a net Balmer line from the H-delta and H-gamma lines
 step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(module_name="module9")
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # add errors from noise-churning (obsolete)
 step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(module_name="module10")
 

@@ -531,15 +531,22 @@ class StackSpectra():
     input_list: list of original file names
     '''
 
-    def __init__(self, module_name):
+    def __init__(self,
+                module_name,
+                file_ew_data_read,
+                file_restacked_write,
+                input_spec_list_read):
 
         self.name = module_name
+        self.file_ew_data_read = file_ew_data_read
+        self.file_restacked_write = file_restacked_write
+        self.input_list_read = input_spec_list_read
 
     def run_step(self, attribs = None):
 
-        read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"])
-        write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY"])
-        input_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["INPUT_LIST_SPEC"])
+        read_in_filename = self.file_ew_data_read
+        write_out_filename = self.file_restacked_write
+        input_list = self.input_list_read
 
         # read in EW data
         df_prestack = pd.read_csv(read_in_filename)
