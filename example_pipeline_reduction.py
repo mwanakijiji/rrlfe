@@ -36,7 +36,7 @@ step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+''' # skipping, because it takes too much time
 # run_robospect on normalized synthetic spectra
 step = pipeline.run_robo.Robo(
     module_name="module5",
@@ -57,9 +57,12 @@ step = pipeline.scrape_ew_and_errew.Scraper(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
-step = pipeline.scrape_ew_and_errew.QualityCheck(module_name="module7")
+step = pipeline.scrape_ew_and_errew.QualityCheck(
+    module_name="module7",
+    file_scraped_all_read="./rrlfe_io_red/ew_products/all_ew_info.csv",
+    file_scraped_good_write="./rrlfe_io_red/ew_products/ew_info_good_only.csv")
 
 # add step to procedure
 test_gen.add_step(step)
@@ -69,7 +72,7 @@ step = pipeline.scrape_ew_and_errew.StackSpectra(module_name="module8")
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # make a net Balmer line from the H-delta and H-gamma lines
 step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(module_name="module9")
 

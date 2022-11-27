@@ -246,14 +246,19 @@ class QualityCheck():
     write_out_filename: file name of the table with spectra with any bad line fits removed
     '''
 
-    def __init__(self, module_name):
+    def __init__(self,
+                module_name,
+                file_scraped_all_read,
+                file_scraped_good_write):
 
         self.name = module_name
+        self.file_scraped_all_read = file_scraped_all_read
+        self.file_scraped_good_write = file_scraped_good_write
 
     def run_step(self, attribs = None):
 
-        read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_ALL_DATA"])
-        write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["SCRAPED_EW_DATA_GOOD_ONLY"])
+        read_in_filename = self.file_scraped_all_read
+        write_out_filename = self.file_scraped_good_write
 
         # read in data
         logging.info("Reading in for quality check: " + str(read_in_filename))
