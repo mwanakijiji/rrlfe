@@ -74,18 +74,36 @@ class TempVsBalmer():
     err_b:  error in y-intercept
     '''
 
-    def __init__(self, module_name):
+    def __init__(self,
+                module_name,
+                file_ew_poststack_read,
+                file_ew_tefffit_write,
+                plot_tefffit_write,
+                data_tefffit_write,
+                plot=True,
+                test_flag = False):
 
         self.name = module_name
+        self.file_ew_poststack_read = file_ew_poststack_read
+        self.file_ew_tefffit_write = file_ew_tefffit_write
+        self.plot_tefffit_write = plot_tefffit_write
+        self.data_tefffit_write = data_tefffit_write
+        self.plot = plot
+        self.test_flag = test_flag
 
     def run_step(self, attribs = None):
 
-        df_poststack_file_name_read = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_METADATA"])
-        df_poststack_file_name_write = str(attribs["data_dirs"]["DIR_EW_PRODS"] + attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"])
-        plot_write = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["PLOT_TEFF_VS_BALMER"])
-        teff_data_write = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["TREND_TEFF_VS_BALMER"])
-        plot = True
-        test_flag = False
+        df_poststack_file_name_read = self.file_ew_poststack_read
+        #df_poststack_file_name_read = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_METADATA"])
+        df_poststack_file_name_write = self.file_ew_tefffit_write
+        #df_poststack_file_name_write = str(attribs["data_dirs"]["DIR_EW_PRODS"] + attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"])
+        plot_write = self.plot_tefffit_write
+        #plot_write = self.plot_write
+        #plot_write = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["PLOT_TEFF_VS_BALMER"])
+        teff_data_write = self.data_tefffit_write
+        #teff_data_write = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["TREND_TEFF_VS_BALMER"])
+        plot = self.plot
+        test_flag = self.test_flag
 
         # the min and max Teff of spectra that the linear fit will be made to
         t_min = int(attribs["teff_linear"]["MIN_TEFF"])

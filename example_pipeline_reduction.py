@@ -85,21 +85,33 @@ step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # add errors from noise-churning (obsolete)
-step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(module_name="module10")
+step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
+    module_name="module10",
+    ew_data_restacked_read="./rrlfe_io_red/ew_products/restacked_ew_info_good_only_w_net_balmer.csv",
+    ew_data_w_net_balmer_read="./rrlfe_io_red/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv")
 
 # add step to procedure
 test_gen.add_step(step)
 
 # take meta-data from file names of synthetic spectra and add to table
-step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(module_name="module11")
+step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(
+    module_name="module11",
+    input_spec_list_read="./src/junk_test_synthetic_spectra.list",
+    ew_data_w_net_balmer_read="./rrlfe_io_red/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
+    file_w_meta_data_write="./rrlfe_io_red/ew_products/restacked_ew_w_metadata.csv")
 
 # add step to procedure
 test_gen.add_step(step)
 
 # scrape_ew_from_robo and calculate EWs + err_EW
-step = pipeline.teff_retrieval.TempVsBalmer(module_name="module12")
+step = pipeline.teff_retrieval.TempVsBalmer(
+    module_name="module12",
+    file_ew_poststack_read="./rrlfe_io_red/ew_products/restacked_ew_w_metadata.csv",
+    file_ew_tefffit_write="./rrlfe_io_red/ew_products/all_data_input_mcmc.csv",
+    plot_tefffit_write="./rrlfe_io_red/bin/teff_vs_balmer.png",
+    data_tefffit_write="./rrlfe_io_red/bin/teff_vs_balmer_trend.txt")
 
 # add step to procedure
 test_gen.add_step(step)
@@ -107,20 +119,29 @@ test_gen.add_step(step)
 # run_emcee
 # coeff defs: K = a + bH + cF + dHF + f(H^2) + g(F^2) + h(H^2)F + kH(F^2) + m(H^3) + n(F^3)
 # where K is CaII K EW; H is Balmer EW; F is [Fe/H]
-step = pipeline.run_emcee.RunEmcee(module_name="module13")
+step = pipeline.run_emcee.RunEmcee(
+    module_name="module13",
+    file_name_scraped_ews_good_only_read="./rrlfe_io_red/ew_products/all_data_input_mcmc.csv",
+    file_name_write_mcmc_text_write="./rrlfe_io_red/bin/mcmc_output.csv")
 
 # add step to procedure
 test_gen.add_step(step)
 
-step = pipeline.run_emcee.WriteSolnToFits(module_name="module14")
+step = pipeline.run_emcee.WriteSolnToFits(
+    module_name="module14",
+    file_name_mcmc_posterior_read="./rrlfe_io_red/bin/mcmc_output.csv",
+    file_name_teff_data_read="./rrlfe_io_red/bin/teff_vs_balmer_trend.txt",
+    soln_write_name="./rrlfe_io_red/bin/calib_solution.fits")
 
 # add step to procedure
 test_gen.add_step(step)
 
-step = pipeline.run_emcee.CornerPlot(module_name="module15")
+step = pipeline.run_emcee.CornerPlot(
+    module_name="module15",
+    file_name_mcmc_posterior_read="./rrlfe_io_red/bin/mcmc_output.csv",
+    plot_corner_write="./rrlfe_io_red/bin/mcmc_corner.png")
 
 # add step to procedure
 test_gen.add_step(step)
-'''
 
 test_gen.run()

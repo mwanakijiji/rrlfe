@@ -22,15 +22,21 @@ class CornerPlot():
     Reads in MCMC output and writes out a corner plot
     '''
 
-    def __init__(self, module_name):
+    def __init__(self,
+                module_name,
+                file_name_mcmc_posterior_read,
+                plot_corner_write):
 
         self.name = module_name
+        self.file_name_mcmc_posterior_read = file_name_mcmc_posterior_read
+        self.plot_corner_write = plot_corner_write
 
     def run_step(self, attribs = None):
 
+        mcmc_text_output_file_name = self.file_name_mcmc_posterior_read
+        corner_plot_putput_file_name = self.plot_corner_write
+
         model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
-        mcmc_text_output_file_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"])
-        corner_plot_putput_file_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_CORNER"])
 
         if (model == "abcd"):
 
@@ -327,16 +333,25 @@ class WriteSolnToFits():
     test_flag: if True, then terminal prompts are suppressed to enable continuous integration
     '''
 
-    def __init__(self, module_name):
+    def __init__(self,
+                module_name,
+                file_name_mcmc_posterior_read,
+                file_name_teff_data_read,
+                soln_write_name,
+                test_flag=False):
 
         self.name = module_name
+        self.file_name_mcmc_posterior_read = file_name_mcmc_posterior_read
+        self.file_name_teff_data_read = file_name_teff_data_read
+        self.soln_write_name = soln_write_name
+        self.test_flag = test_flag
 
     def run_step(self, attribs = None):
 
         model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
-        mcmc_text_output_file_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"])
-        teff_data_retrieve_file_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["TREND_TEFF_VS_BALMER"])
-        soln_write_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["CALIB_SOLN"])
+        mcmc_text_output_file_name = self.file_name_mcmc_posterior_read
+        teff_data_retrieve_file_name = self.file_name_teff_data_read
+        soln_write_name = self.soln_write_name
         test_flag=False
 
         # initialize FITS header and append keys
@@ -440,16 +455,22 @@ class RunEmcee():
     post_burn_in_links: chain links following burn-in
     '''
 
-    def __init__(self, module_name):
+    def __init__(self,
+                module_name,
+                file_name_scraped_ews_good_only_read,
+                file_name_write_mcmc_text_output):
 
         self.name = module_name
+        self.file_name_scraped_ews_good_only_read = file_name_scraped_ews_good_only_read
+        self.file_name_write_mcmc_text_output = file_name_write_mcmc_text_output
 
     def run_step(self, attribs = None):
 
+        scraped_ews_good_only_file_name = self.file_name_scraped_ews_good_only_read
+        mcmc_text_output_file_name = self.file_name_write_mcmc_text_write
+
         model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
         post_burn_in_links = int(attribs["reduc_params"]["MCMC_POSTBURN"])
-        scraped_ews_good_only_file_name = str(attribs["data_dirs"]["DIR_EW_PRODS"] + attribs["file_names"]["RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"])
-        mcmc_text_output_file_name = str(attribs["data_dirs"]["DIR_BIN"] + attribs["file_names"]["MCMC_OUTPUT"])
 
         # read in EWs, Fe/Hs, phases, errors, etc.
         logging.info("--------------------------")

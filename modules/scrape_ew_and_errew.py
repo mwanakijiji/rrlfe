@@ -208,15 +208,22 @@ class AddSyntheticMetaData():
     write_out_filename: file name with everything together to write out
     '''
 
-    def __init__(self, module_name):
+    def __init__(self,
+                module_name,
+                input_spec_list_read,
+                ew_data_w_net_balmer_read,
+                file_w_meta_data_write):
 
         self.name = module_name
+        self.input_spec_list_read = input_spec_list_read
+        self.ew_data_w_net_balmer_read = ew_data_w_net_balmer_read
+        self.file_w_meta_data_write = file_w_meta_data_write
 
     def run_step(self, attribs = None):
 
-        input_list = str(attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["INPUT_LIST_SPEC"])
-        read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"])
-        write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_METADATA"])
+        input_list = self.input_spec_list_read
+        read_in_filename = self.ew_data_w_net_balmer_read
+        write_out_filename = self.file_w_meta_data_write
 
         # read in metadata
         logging.info("Reading in meta-data from file " + str(input_list))
@@ -424,15 +431,22 @@ class GenerateAddlEwErrors():
         across all churnings and that will give Fe/H error
     '''
 
-    def __init__(self, module_name):
+    def __init__(self,
+                module_name,
+                ew_data_restacked_read,
+                ew_data_w_net_balmer_read,
+                groupby_parent=True):
 
         self.name = module_name
+        self.ew_data_restacked_read = ew_data_restacked_read
+        self.ew_data_w_net_balmer_read = ew_data_w_net_balmer_read
+        self.groupby_parent = groupby_parent
 
     def run_step(self, attribs = None):
 
-        read_in_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER"])
-        write_out_filename = str(attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"])
-        groupby_parent = True
+        read_in_filename = self.ew_data_restacked_read
+        write_out_filename = self.ew_data_w_net_balmer_read
+        groupby_parent = self.groupby_parent
 
         #df_poststack = error_scatter_ew(df_poststack)
         df_postbalmer = pd.read_csv(read_in_filename)
