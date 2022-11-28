@@ -61,14 +61,14 @@ class Scraper():
 
     def __init__(self,
         module_name,
+        input_spec_list_read,
         robo_output_read,
-        file_scraped_write,
-        input_spec_list_read):
+        file_scraped_write):
 
         self.name = module_name
+        self.input_spec_list_read = input_spec_list_read
         self.robo_output_read = robo_output_read
         self.file_scraped_info = file_scraped_write
-        self.input_spec_list_read = input_spec_list_read
 
     def run_step(self, attribs = None):
 
@@ -552,14 +552,14 @@ class StackSpectra():
 
     def __init__(self,
                 module_name,
+                input_spec_list_read,
                 file_ew_data_read,
-                file_restacked_write,
-                input_spec_list_read):
+                file_restacked_write):
 
         self.name = module_name
+        self.input_list_read = input_spec_list_read
         self.file_ew_data_read = file_ew_data_read
         self.file_restacked_write = file_restacked_write
-        self.input_list_read = input_spec_list_read
 
     def run_step(self, attribs = None):
 

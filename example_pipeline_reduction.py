@@ -48,17 +48,16 @@ step = pipeline.run_robo.Robo(
     robo_dir_read="../robospect.py/",
     normzed_spec_dir_read=stem_abs+"rrlfe_io_red/realizations_output/norm/final/",
     robo_output_write=stem_abs+"rrlfe_io_red/robospect_output/smo_files/")
-
+'''
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
+    input_spec_list_read=stem_abs+"src/junk_test_synthetic_spectra.list",
     robo_output_read=stem_abs+"rrlfe_io_red/robospect_output/smo_files/",
-    file_scraped_write=stem_abs+"rrlfe_io_red/ew_products/all_ew_info.csv",
-    input_spec_list_read=stem_abs+"src/junk_test_synthetic_spectra.list"
-    )
+    file_scraped_write=stem_abs+"rrlfe_io_red/ew_products/all_ew_info.csv")
 
 # add step to procedure
 test_gen.add_step(step)
@@ -75,9 +74,9 @@ test_gen.add_step(step)
 # transpose/stack all the data, where each row corresponds to a spectrum
 step = pipeline.scrape_ew_and_errew.StackSpectra(
     module_name="module8",
+    input_spec_list_read=stem_abs+"src/junk_test_synthetic_spectra.list",
     file_ew_data_read=stem_abs+"rrlfe_io_red/ew_products/ew_info_good_only.csv",
-    file_restacked_write=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_info_good_only.csv",
-    input_spec_list_read=stem_abs+"src/junk_test_synthetic_spectra.list")
+    file_restacked_write=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_info_good_only.csv")
 
 # add step to procedure
 test_gen.add_step(step)

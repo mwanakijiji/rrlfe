@@ -107,6 +107,9 @@ class Robo():
         (EW data written to file)
         '''
 
+        # check if write directories exist and are empty
+        make_dir(self.robo_output_write)
+
         ## ## note that I have put in a specific string to look for
         ## ## in the file name here; this might be a weakness later on
 

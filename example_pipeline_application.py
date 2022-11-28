@@ -55,10 +55,9 @@ test_gen.add_step(step)
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
+    input_spec_list_read=stem_abs+"src/junk_test_synthetic_spectra.list",
     robo_output_read=stem_abs+"rrlfe_io_apply/robospect_output/smo_files/",
-    file_scraped_write=stem_abs+"rrlfe_io_apply/ew_products/all_ew_info.csv",
-    input_spec_list_read=stem_abs+"src/junk_test_synthetic_spectra.list"
-    )
+    file_scraped_write=stem_abs+"rrlfe_io_apply/ew_products/all_ew_info.csv")
 
 # add step to procedure
 test_gen.add_step(step)
