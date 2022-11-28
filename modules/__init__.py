@@ -72,9 +72,9 @@ def get_setuptools_script_dir():
     return dist.install_scripts
 
 
-class MakeDirs():
+class MakeDirsConfig():
     '''
-    Make directories for housing files/info if they don't already exist
+    Make directories listed in the config file for housing files/info if they don't already exist
     '''
 
     def __init__(self, module_name):
@@ -119,6 +119,42 @@ class MakeDirs():
                     print("(N.b. You will be prompted again when the directory is written to.)")
                     input()
                     logging.info("------------------------------")
+
+def make_dir(abs_path_name):
+    '''
+    Make directory listed in the argument if it doesn't already exist
+    (similar to class MakeDirsConfig, but for single given pathnames)
+
+    INPUTS:
+    abs_path_name: the absolute path [string]
+    '''
+
+    logging.info("Directory exists: " + abs_path_name)
+
+    # if directory does not exist, create it
+    if not os.path.exists(abs_path_name):
+        original_umask = os.umask(0) # original system permission
+        os.makedirs(abs_path_name, 0o777)
+        #os.mkdir(abs_path_name)
+        logging.info("Made directory " + abs_path_name)
+        os.umask(original_umask) # revert to previous permission status
+
+    # if it does exist, check if it is not already empty;
+    # if it is non-empty, prompt user (as long as prompt_user
+    # flag has been set further above)
+    # (this needs to be refined, since some directories are not supposed to be empty)
+    if prompt_user and os.path.exists(abs_path_name):
+        with os.scandir(abs_path_name) as list_of_entries1:
+            counter1 = 0
+            for entry1 in list_of_entries1:
+                if entry1.is_file():
+                    counter1 += 1
+        if (counter1 != 0):
+            logging.info("------------------------------")
+            logging.info(abs_path_name)
+            print("The above is a non-empty directory. Do you want to proceed? [Yes]")
+            input()
+            logging.info("------------------------------")
 
 '''
 def get_hash():

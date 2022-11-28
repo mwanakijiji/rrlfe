@@ -373,6 +373,10 @@ class CreateSpecRealizationsMain():
 
         input_list = self.input_spec_list_read
 
+        # check if write directories exist and are empty
+        make_dir(self.bkgrnd_output_dir_write)
+        make_dir(self.final_spec_dir_write)
+
         logging.info("--------------------------")
         logging.info("Making "+str(self.number_specs)+" realizations of each input spectrum")
 
@@ -418,56 +422,6 @@ class CreateSpecRealizationsMain():
         # if there are files missing from the directory, just remove those from the input list
         list_arr = files_present
 
-        # Check to make sure outdir (to receive realizations of spectra) exists
-        outdir = self.unnorm_noise_churned_spectra_dir_read
-        if not os.path.isdir(outdir):
-            os.mkdir(outdir)
-        else:
-            # Check to see if there are any files in the output directories (if not,
-            # there is data from a previous run that will inadvertently be used later)
-            # read the entries
-
-            #import ipdb; ipdb.set_trace()
-
-            with os.scandir(outdir) as list_of_entries1:
-                counter1 = 0
-                for entry1 in list_of_entries1:
-                    if entry1.is_file():
-                        counter1 += 1
-            if (counter1 != 0):
-                logging.info("------------------------------")
-                logging.info("Directory to write realizations not empty!!")
-                logging.info(outdir)
-                logging.info("------------------------------")
-                if prompt_user:
-                    input("Do what you want with those files, then hit [Enter]")
-
-            with os.scandir(self.bkgrnd_output_dir_write) as list_of_entries2:
-                counter2 = 0
-                for entry2 in list_of_entries2:
-                    if entry2.is_file():
-                        counter2 += 1
-            if (counter2 != 0):
-                logging.info("------------------------------")
-                logging.info("Directory to write raw normalization output not empty!!")
-                logging.info(self.bkgrnd_output_dir_write)
-                logging.info("------------------------------")
-                if prompt_user:
-                    input("Do what you want with those files, then hit [Enter]")
-
-            with os.scandir(self.final_spec_dir_write) as list_of_entries3:
-                counter3 = 0
-                for entry3 in list_of_entries3:
-                    if entry3.is_file():
-                        counter3 += 1
-            if (counter3 != 0):
-                logging.info("------------------------------")
-                logging.info("Directory to write final normalization output not empty!!")
-                logging.info(self.final_spec_dir_write)
-                logging.info("------------------------------")
-                if prompt_user:
-                    input("Do what you want with those files, then hit [Enter]")
-
         # create noise-churned realizations for each spectrum
         name_list = list() # initialize
         #import ipdb; ipdb.set_trace()
@@ -475,14 +429,14 @@ class CreateSpecRealizationsMain():
             #import ipdb; ipdb.set_trace()
             print(i)
             name_list.extend(generate_realizations(spec_name=self.unnorm_spectra_dir_read+"/"+list_arr[i],
-                                                   outdir=outdir,
+                                                   outdir=self.unnorm_noise_churned_spectra_dir_read,
                                                    spec_file_format=self.spec_file_type,
                                                    num=self.number_specs,
                                                    noise_level=self.noise_level))
 
         # next we need to normalize the spectra; begin by creating input list of
         # spectrum realizations written in the previous step
-        bkg_input_file = write_bckgrnd_input(name_list, outdir, self.bkgrnd_output_dir_write)
+        bkg_input_file = write_bckgrnd_input(name_list, self.unnorm_noise_churned_spectra_dir_read, self.bkgrnd_output_dir_write)
         logging.info("-------------------------------------------")
         logging.info('The file containing the list of spectra which will be fed ' + \
                     'into the normalization routine is ' + bkg_input_file)
@@ -501,7 +455,7 @@ class CreateSpecRealizationsMain():
 
         logging.info("-------------------------------------------")
         logging.info("Wrote realizations of original spectra to directory")
-        logging.info(outdir)
+        logging.info(self.unnorm_noise_churned_spectra_dir_read)
         logging.info("-------------------------------------------")
         logging.info("Wrote raw normalization output to directory")
         logging.info(self.bkgrnd_output_dir_write)
