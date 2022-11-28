@@ -1,7 +1,7 @@
 import high_level_application_accordion as pipeline
 
 # absolute stem of repo; needed to make dirs if they don't exist
-stem_abs = "/Users/bandari/Documents/git.repos/rrlfe"
+stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
 
 # instantiate object that will contain the series of reduction steps
 test_gen = pipeline.ApplyCalib() ## ## need to let this set config file being read in (currently in __init__)
@@ -39,8 +39,7 @@ step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
 
 # add step to procedure
 test_gen.add_step(step)
-
-
+'''
 # run_robospect on normalized synthetic spectra
 step = pipeline.run_robo.Robo(
     module_name="module5",
@@ -51,7 +50,6 @@ step = pipeline.run_robo.Robo(
 # add step to procedure
 test_gen.add_step(step)
 '''
-
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
@@ -103,11 +101,11 @@ test_gen.add_step(step)
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+"rrlfe_io_apply/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
-    file_calib_read="calib_solution_20220623_1.fits",
+    file_calib_read=stem_abs+"src/calib_solution_20220623_1.fits",
     dir_retrievals_write=stem_abs+"rrlfe_io_apply/bin/pickled_info/",
     file_retrievals_write=stem_abs+"rrlfe_io_apply/bin/retrieved_vals.csv")
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 test_gen.run()
