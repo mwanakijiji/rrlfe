@@ -57,7 +57,7 @@ def feh_abcdfghk_vector(coeff_a,coeff_b,coeff_c,coeff_d,coeff_f,coeff_g,coeff_h,
     return F_pos, F_neg
 
 
-class PickleFehRetrieval():
+class FehRetrieval():
         '''
         Find a Fe/H value for a combination of coefficients
         from the MCMC chain, and sample from the Balmer and
@@ -71,18 +71,32 @@ class PickleFehRetrieval():
         final_table: dataframe equivalent of the written csv file, for unit testing
         '''
 
-        def __init__(self, module_name):
+        def __init__(self,
+                    module_name,
+                    file_good_ew_read,
+                    file_calib_read,
+                    dir_retrievals_write,
+                    file_retrievals_write):
 
             self.name = module_name
+            self.file_good_ew_read = file_good_ew_read
+            self.file_calib_read = file_calib_read
+            self.dir_retrievals_write = dir_retrievals_write
+            self.file_retrievals_write = file_retrievals_write
+
 
         def run_step(self, attribs = None):
 
-            calib_read_file = attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["CALIB_SOLN"]
+            #calib_read_file = attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["CALIB_SOLN"]
+            calib_read_file = self.file_calib_read
             calib_file = calib_read_file ## ## vestigial?
             mcmc_chain = Table.read(calib_file, hdu=1)
-            write_pickle_dir = attribs["data_dirs"]["DIR_PICKLE"]
-            good_ew_info_file = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"]
-            write_out_filename = attribs["data_dirs"]["DIR_BIN"]+attribs["file_names"]["RETRIEVED_VALS"]
+            #write_pickle_dir = attribs["data_dirs"]["DIR_PICKLE"]
+            write_pickle_dir = self.dir_retrievals_write
+            #good_ew_info_file = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"]
+            good_ew_info_file = self.file_good_ew_read
+            #write_out_filename = attribs["data_dirs"]["DIR_BIN"]+attribs["file_names"]["RETRIEVED_VALS"]
+            write_out_filename = self.file_retrievals_write
             ew_file = good_ew_info_file
             ew_data = pd.read_csv(ew_file).copy(deep=True)
             hdul = fits.open(calib_file)

@@ -458,11 +458,11 @@ class RunEmcee():
     def __init__(self,
                 module_name,
                 file_name_scraped_ews_good_only_read,
-                file_name_write_mcmc_text_output):
+                file_name_write_mcmc_text_write):
 
         self.name = module_name
         self.file_name_scraped_ews_good_only_read = file_name_scraped_ews_good_only_read
-        self.file_name_write_mcmc_text_output = file_name_write_mcmc_text_output
+        self.file_name_write_mcmc_text_write = file_name_write_mcmc_text_write
 
     def run_step(self, attribs = None):
 
