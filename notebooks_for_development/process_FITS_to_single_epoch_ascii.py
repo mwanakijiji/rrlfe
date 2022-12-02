@@ -16,7 +16,7 @@ import glob
 import os
 
 stem = "/Users/bandari/Documents/git.repos/rrlfe/src/sdss_original_single_epoch_fits/"
-stem_notebooks = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/"
+stem_notebooks = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/sdss_processing/01_separated_and_interpolated/"
 
 file_list = glob.glob(stem + "*fits")
 
@@ -112,7 +112,7 @@ for i in range(0,len(file_list)):
         df_red_write.to_csv(file_name_red_this, index=False)
         print("Wrote",file_name_red_this)
 
-        # plotting 
+        # plotting
         '''
         plt.clf()
         fig = plt.figure(figsize=(15,5))
