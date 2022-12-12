@@ -11,8 +11,7 @@ Order of operations:
 
 1.) Based on number of single-epoch spectra
     - If 1 spectrum only, ignore for now
-    - If 2 spectra only, do a sigma-clipping and identify anomalies *upward* (with a window)
-    - If >=3 spectra, find median spectrum and identify outliers (with a window)
+    - If >=2 spectra, find median spectrum and identify outliers
 2.) TBD
 '''
 
@@ -158,6 +157,8 @@ def discard_if_in_line(this_spectrum):
 # loop over each parent FITS file
 for t in range(0,len(parent_list)):
 
+    print("Parent FITS file "+str(t)+" of "+str(len(parent_list)))
+
     matching_all = list(filter(lambda x: parent_list[t] in x, file_list))
     matching_red = list(filter(lambda x: "color_red" in x, matching_all))
     matching_blue = list(filter(lambda x: "color_blue" in x, matching_all))
@@ -256,36 +257,33 @@ for t in range(0,len(parent_list)):
                     spec_cleaned.to_csv(file_name_cleaned_write, columns=["wavel","flux","noise"], index=False)
                     print("Wrote",file_name_cleaned_write)
 
+                # plot spectra from every Nth parent
+                N = 10
+                if (t%N)==0:
+                    fig = plt.figure(figsize=(24,10))
+                    plt.plot(flagged_empirical["wavel"],
+                             np.multiply(100,flagged_empirical["flux_flag_1"]),color="gray",alpha=0.5,label="flag")
+                    #.axvline(x=0, ymin=0, ymax=1
 
-                #plt.plot(wavel_initial,mean_flux_array,linestyle="--",color="k")
-                #plt.show()
-                #plt.clf()
-
-                ## ## CONTINUE HERE; MAKE SURE FLAGS ARE GOOD FOR EACH CHILD SPECTRUM
-                #plt.clf()
-                fig = plt.figure(figsize=(24,10))
-                plt.plot(flagged_empirical["wavel"],
-                         np.multiply(100,flagged_empirical["flux_flag_1"]),color="gray",alpha=0.5,label="flag")
-                #.axvline(x=0, ymin=0, ymax=1
-
-                # plot mean flux
-                plt.plot(df_mean["wavel"],np.add(df_mean["avg_flux"],0.2),label="mean")
-                # plot median flux
-                plt.plot(df_mean["wavel"],np.add(df_median["median_flux"],0.2),label="median")
-                # plot empirical flux
-                plt.plot(flagged_empirical["wavel"],flagged_empirical["flux"],label="empirical", zorder=9)
-                plt.plot(spec_cleaned["wavel"],spec_cleaned["flux"],label="cleaned", zorder=10)
-                # plot flux minus mean flux
-                plt.plot(flagged_empirical["wavel"],flagged_empirical["diff"],label="diff")
-                #plt.plot(df_single_p["wavel"].where(test["flux_flag_1"] == True),
-                #             df_single_p["flux"].where(test["flux_flag_1"] == True),
-                #         label="flagged",color="k",linewidth=4)
-                plt.plot([3900,9000],[limit1,limit1],linestyle="--")
-                plt.plot([3900,9000],[limit2,limit2],linestyle="--")
-                plt.title(str(os.path.basename(matching[p]))+ " match number" + str(p))
-                plt.legend(loc="lower right")
-                file_name_write = stem_write+"plots/plot_" + str(os.path.basename(matching[p])) + ".png"
-                plt.savefig(file_name_write, facecolor="white", edgecolor='white')
-                print("Wrote", file_name_write)
-                plt.clf()
-                #plt.show()
+                    # plot mean flux
+                    plt.plot(df_mean["wavel"],np.add(df_mean["avg_flux"],0.2),label="mean")
+                    # plot median flux
+                    plt.plot(df_mean["wavel"],np.add(df_median["median_flux"],0.2),label="median")
+                    # plot empirical flux
+                    plt.plot(flagged_empirical["wavel"],flagged_empirical["flux"],label="empirical", zorder=9)
+                    plt.plot(spec_cleaned["wavel"],spec_cleaned["flux"],label="cleaned", zorder=10)
+                    # plot flux minus mean flux
+                    plt.plot(flagged_empirical["wavel"],flagged_empirical["diff"],label="diff")
+                    #plt.plot(df_single_p["wavel"].where(test["flux_flag_1"] == True),
+                    #             df_single_p["flux"].where(test["flux_flag_1"] == True),
+                    #         label="flagged",color="k",linewidth=4)
+                    plt.plot([3900,9000],[limit1,limit1],linestyle="--")
+                    plt.plot([3900,9000],[limit2,limit2],linestyle="--")
+                    plt.title(str(os.path.basename(matching[p]))+ " match number" + str(p))
+                    plt.legend(loc="lower right")
+                    file_name_write = stem_write+"plots/plot_" + str(os.path.basename(matching[p])) + ".png"
+                    plt.savefig(file_name_write, facecolor="white", edgecolor='white')
+                    print("Wrote", file_name_write)
+                    plt.clf()
+                    plt.close()
+                    #plt.show()
