@@ -253,6 +253,9 @@ for t in range(0,len(parent_list)):
                 elif not test_line_contam:
                     # if not contaminated, write out a csv of the masked spectrum
                     spec_cleaned = flagged_empirical.where(flagged_empirical["flux_flag_1"] == False)
+                    # remove rows where prior condition is not true (if this is not done,
+                    # pipeline will choke on blank rows later)
+                    spec_cleaned = spec_cleaned.dropna()
                     file_name_cleaned_write = stem_write + os.path.basename(matching[p])
                     spec_cleaned.to_csv(file_name_cleaned_write, columns=["wavel","flux","noise"], index=False)
                     print("Wrote",file_name_cleaned_write)
