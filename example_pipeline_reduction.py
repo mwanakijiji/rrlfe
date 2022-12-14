@@ -29,15 +29,21 @@ test_gen.add_step(step)
 # take list of unnormalized empirical spectra, normalize them, and write out
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
-    input_spec_list_read=stem_abs+"src/junk_test_synthetic_spectra.list",
-    unnorm_spectra_dir_read=stem_abs+"src/model_spectra/rrmods_all/original_ascii_files/",
+    input_spec_list_read=stem_abs+"src/sdss_test_20221213.list",
+    unnorm_spectra_dir_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated/",
     unnorm_noise_churned_spectra_dir_read=stem_abs+"src/realizations_output/",
-    bkgrnd_output_dir_write=stem_abs+"rrlfe_io_red/realizations_output/norm/",
-    final_spec_dir_write=stem_abs+"rrlfe_io_red/realizations_output/norm/final/",
+    bkgrnd_output_dir_write=stem_abs+"rrlfe_io_20221213_sdss_test/realizations_output/norm/",
+    final_spec_dir_write=stem_abs+"rrlfe_io_20221213_sdss_test/realizations_output/norm/final/",
     noise_level=0.0,
     spec_file_type="ascii.no_header",
     number_specs=1,
     verb=False)
+
+# handy arguments
+# input_spec_list_read=stem_abs+"src/junk_test_synthetic_spectra.list",
+# unnorm_spectra_dir_read=stem_abs+"src/model_spectra/rrmods_all/original_ascii_files/",
+# bkgrnd_output_dir_write=stem_abs+"rrlfe_io/realizations_output/norm/",
+# final_spec_dir_write=stem_abs+"rrlfe_io/realizations_output/norm/final/",
 
 # add step to procedure
 test_gen.add_step(step)
@@ -48,10 +54,12 @@ step = pipeline.run_robo.Robo(
     robo_dir_read="../robospect.py/",
     normzed_spec_dir_read=stem_abs+"rrlfe_io_red/realizations_output/norm/final/",
     robo_output_write=stem_abs+"rrlfe_io_red/robospect_output/smo_files/")
-'''
+
 # add step to procedure
 test_gen.add_step(step)
+'''
 
+'''
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
@@ -120,7 +128,7 @@ step = pipeline.teff_retrieval.TempVsBalmer(
 # add step to procedure
 test_gen.add_step(step)
 
-'''# skipping, because it takes too much time
+# skipping, because it takes too much time
 # run_emcee
 # coeff defs: K = a + bH + cF + dHF + f(H^2) + g(F^2) + h(H^2)F + kH(F^2) + m(H^3) + n(F^3)
 # where K is CaII K EW; H is Balmer EW; F is [Fe/H]
@@ -131,7 +139,7 @@ step = pipeline.run_emcee.RunEmcee(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 
 step = pipeline.run_emcee.WriteSolnToFits(
     module_name="module14",
@@ -149,5 +157,5 @@ step = pipeline.run_emcee.CornerPlot(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 test_gen.run()
