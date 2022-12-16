@@ -1,8 +1,3 @@
-.. rrlfe documentation master file, created by
-   sphinx-quickstart on Fri Dec 16 08:19:59 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Documentation for rrlfe
 =================================
 
@@ -32,6 +27,9 @@ The BibTeX entry is::
     }
 
 Logo art by Anna McElhannon
+
+.. automodule:: modules.compile_normalization
+    :members:
 
 .. toctree::
     :hidden:
