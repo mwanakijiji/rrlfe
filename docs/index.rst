@@ -19,9 +19,9 @@ If you do use this calibration or software, please cite the paper `[TBD] (2023)`
 
 The BibTeX entry is::
 
-    @misc{rrl_metallicity,
+    @misc{rrlfe,
       author = {{Spalding}, E., R. Wilhelm, N. de Lee, and K. Carrell},
-      title = {RR Lyrae Metallicity},
+      title = {rrlfe},
       keywords = {Software},
       howpublished = {Astrophysics Source Code Library},
       year = 2023,
