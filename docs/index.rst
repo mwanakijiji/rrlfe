@@ -31,6 +31,8 @@ The BibTeX entry is::
       adsnote = {Provided by the SAO/NASA Astrophysics Data System}
     }
 
+Logo art by Anna McElhannon
+
 .. toctree::
     :hidden:
     :glob:

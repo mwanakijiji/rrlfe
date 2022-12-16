@@ -4,7 +4,7 @@ You can install it with
 
 .. code-block:: python
 
-  pip install rrlyrae_metallicity
+  pip install rrlfe
 
 Docker and Singularity are options too.
 
@@ -16,9 +16,9 @@ Change to the robospect.py/tmp/ directory and copy the file ll to it:
 
 .. code-block:: python
 
-  cp ../../rrlyrae_metallicity/ll .
+  cp ../../rrlfe/ll .
 
 This file tells Robospect which absorption lines
 to look for.
 
-Users can file issues `here <https://github.com/mwanakijiji/rrlyrae_metallicity/issues>'
+Users can file issues `here <https://github.com/mwanakijiji/rrlfe/issues>`_.
