@@ -28,7 +28,22 @@ The BibTeX entry is::
 
 Logo art by Anna McElhannon
 
+.. automodule:: modules.create_spec_realizations
+    :members:
+
 .. automodule:: modules.compile_normalization
+    :members:
+
+.. automodule:: modules.run_robo
+    :members:
+
+.. automodule:: modules.scrape_ew_and_errew
+    :members:
+
+.. automodule:: modules.teff_retrieval
+    :members:
+
+.. automodule:: modules.run_emcee
     :members:
 
 .. toctree::
