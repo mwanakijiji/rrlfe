@@ -9,16 +9,16 @@ This software is for
 #. Applying a calibration
 
 See paper [...] for details about how the calibration was made, and for further scientific information.
-If you do use this calibration or software, please cite the paper `[Authors] (2020)`.
+If you do use this calibration or software, please cite the paper `[Authors] (2023)`.
 
 The BibTeX entry is::
 
     @misc{rrl_metallicity,
-      author = {{Spalding}, E., R. Wilhelm, N. de Lee, and others},
+      author = {{Spalding}, E., R. Wilhelm, N. de Lee, and K. Carrell},
       title = {RR Lyrae Metallicity},
       keywords = {Software},
       howpublished = {Astrophysics Source Code Library},
-      year = 2020,
+      year = 2023,
       archivePrefix = "ascl",
       eprint = {xxx.xxx},
       adsurl = {https://ui.adsabs.harvard.edu/abs/xxxxxxx},
