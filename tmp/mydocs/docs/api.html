@@ -1,0 +1,705 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>API &#8212; rrlfe  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-modules.create_spec_realizations">
+<span id="api"></span><h1>API<a class="headerlink" href="#module-modules.create_spec_realizations" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="modules.create_spec_realizations.CreateSpecRealizationsMain">
+<em class="property">class </em><code class="sig-prename descclassname">modules.create_spec_realizations.</code><code class="sig-name descname">CreateSpecRealizationsMain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">input_spec_list_read</span></em>, <em class="sig-param"><span class="n">unnorm_spectra_dir_read</span></em>, <em class="sig-param"><span class="n">unnorm_noise_churned_spectra_dir_read</span></em>, <em class="sig-param"><span class="n">bkgrnd_output_dir_write</span></em>, <em class="sig-param"><span class="n">final_spec_dir_write</span></em>, <em class="sig-param"><span class="n">noise_level</span></em>, <em class="sig-param"><span class="n">spec_file_type</span></em>, <em class="sig-param"><span class="n">number_specs</span></em>, <em class="sig-param"><span class="n">verb</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.create_spec_realizations.CreateSpecRealizationsMain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate multiple realizations of the same empirical spectrum based on a noise level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num</strong> (<em>int</em>) – number of spectrum realizations to make, per empirical spectrum</p></li>
+<li><p><strong>spec_file_type</strong> (<em>str</em>) – file format of input spectra [“fits”/”ascii.no_header”]</p></li>
+<li><p><strong>input_spec_list_dir</strong> (<em>str</em>) – directory containing list of empirical spectra (## OBSOLETE? ##)</p></li>
+<li><p><strong>input_list</strong> (<em>list</em>) – file listing spectra we want to normalize</p></li>
+<li><p><strong>unnorm_spectra_dir</strong> (<em>str</em>) – directory of empirical spectra (or, if they are actually
+synthetic spectra, these are the original synthetic spectra which we will generate
+multiple realizations of)</p></li>
+<li><p><strong>unnorm_noise_churned_spectra_dir</strong> (<em>str</em>) – directory to contain noise-churned spectrum realizations</p></li>
+<li><p><strong>bkgrnd_output_dir</strong> (<em>str</em>) – directory to contain output of bkgrnd (spectra and fit continuua)</p></li>
+<li><p><strong>final_dir</strong> (<em>str</em>) – directory to contain normalized spectrum realizations</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[text files of spectra written to disk]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.create_spec_realizations.calc_noise">
+<code class="sig-prename descclassname">modules.create_spec_realizations.</code><code class="sig-name descname">calc_noise</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">noise_level</span></em>, <em class="sig-param"><span class="n">spectrum_df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.create_spec_realizations.calc_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate noise spectrum</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>noise_level</strong> (<em>str/float</em>) – <p>define noise level</p>
+<p>”file”: from file</p>
+<p>”None”: no noise</p>
+<p>(float): level of relative noise to use</p>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Numpy array of noise spectrum</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.create_spec_realizations.create_norm_spec">
+<code class="sig-prename descclassname">modules.create_spec_realizations.</code><code class="sig-name descname">create_norm_spec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name_list</span></em>, <em class="sig-param"><span class="n">normdir</span></em>, <em class="sig-param"><span class="n">finaldir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.create_spec_realizations.create_norm_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create final normalized spectra, using the output from the bkgrnd routine (which
+puts out wavelength, flux, and continuum flux, but not the actual normalized flux)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name_list</strong> (<em>list</em>) – list of realization file names (no path info); should have 3 cols</p></li>
+<li><p><strong>normdir</strong> (<em>str</em>) – directory where files in name_list are located</p></li>
+<li><p><strong>finaldir</strong> (<em>str</em>) – final directory for files which have completed the full
+normalization process; these will have 3 cols too</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of final file names</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.create_spec_realizations.generate_realizations">
+<code class="sig-prename descclassname">modules.create_spec_realizations.</code><code class="sig-name descname">generate_realizations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spec_name</span></em>, <em class="sig-param"><span class="n">outdir</span></em>, <em class="sig-param"><span class="n">spec_file_format</span></em>, <em class="sig-param"><span class="n">num</span></em>, <em class="sig-param"><span class="n">noise_level</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.create_spec_realizations.generate_realizations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates a number of realizations of a given spectrum using Gaussian error bars</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spec_name</strong> (<em>str</em>) – the spectrum filename</p></li>
+<li><p><strong>outdir</strong> (<em>str</em>) – the working directory</p></li>
+<li><p><strong>spec_file_format</strong> (<em>str</em>) – the format of the input spectra [“fits”, “ascii.no_header”]</p></li>
+<li><p><strong>num</strong> (<em>int</em>) – number of realizations to generate</p></li>
+<li><p><strong>noise</strong> (<em>str/float</em>) – ‘None’: add no noise; ‘file’: take Gaussian samples of error with spread based on the error column in file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of filenames for the realization spectra.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.create_spec_realizations.read_bkgrnd_spec">
+<code class="sig-prename descclassname">modules.create_spec_realizations.</code><code class="sig-name descname">read_bkgrnd_spec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spec_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.create_spec_realizations.read_bkgrnd_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in ascii spectra created by bckgrnd and returns numpy arrays of wavelength, flux, bckgrnd_flux</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>spec_name</strong> (<em>str</em>) – <p>The spectrum filename. If ascii file, should have 3 columns:</p>
+<p>[0]: wavelength [angstr]</p>
+<p>[1]: flux</p>
+<p>[2]: background flux</p>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>wavelength, flux, background flux</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy table with three columns</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.create_spec_realizations.read_list">
+<code class="sig-prename descclassname">modules.create_spec_realizations.</code><code class="sig-name descname">read_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.create_spec_realizations.read_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in list of spectrum names and returns a table of filenamse</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_list</strong> (<em>str</em>) – <p>file name of a csv file with columns</p>
+<p>[0]: filename</p>
+<p>[1]: subtype (RRab, RRc)</p>
+<p>[2]: phase (0. to 1., -9999 for NaN)</p>
+<p>[3]: metallicity (if producing the calibration)</p>
+<p>[4]: error in metallicity (if producing the calibration)</p>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array of filenames</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.create_spec_realizations.read_spec">
+<code class="sig-prename descclassname">modules.create_spec_realizations.</code><code class="sig-name descname">read_spec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spec_name</span></em>, <em class="sig-param"><span class="n">format</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.create_spec_realizations.read_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in ascii empirical spectrum and return
+wavelength, flux, and error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spec_name</strong> (<em>str</em>) – <p>The spectrum filename. If ascii file (no headers), should have
+3 columns</p>
+<p>[0]: wavelength</p>
+<p>[1] flux</p>
+<p>[2] error</p>
+</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – “fits” or “ascii.no_header”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A numpy Table with three columns: wavelength, flux, error
+hdr: FITS header of the input spectrum</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>spec_tab</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.create_spec_realizations.write_bckgrnd_input">
+<code class="sig-prename descclassname">modules.create_spec_realizations.</code><code class="sig-name descname">write_bckgrnd_input</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name_list</span></em>, <em class="sig-param"><span class="n">indir</span></em>, <em class="sig-param"><span class="n">normdir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.create_spec_realizations.write_bckgrnd_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create input file for the bckgrnd program</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name_list</strong> (<em>list</em>) – List of Realization file names (no path info)</p></li>
+<li><p><strong>indir</strong> (<em>str</em>) – The working directory with files to be fed into bkgrnd routine</p></li>
+<li><p><strong>normdir</strong> (<em>str</em>) – The output directory for normalized files</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>background input filename string; the filename itself (which</dt><dd><p>has been written to disk) lists the input and output directories, and a
+list of the FITS files which are the spectrum realizations in the input
+directory</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-modules.compile_normalization"></span><dl class="py class">
+<dt id="modules.compile_normalization.CompileBkgrnd">
+<em class="property">class </em><code class="sig-prename descclassname">modules.compile_normalization.</code><code class="sig-name descname">CompileBkgrnd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.compile_normalization.CompileBkgrnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile background routine for spectrum normalization</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>‘True’ if compile was successful</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-modules.run_robo"></span><dl class="py class">
+<dt id="modules.run_robo.Robo">
+<em class="property">class </em><code class="sig-prename descclassname">modules.run_robo.</code><code class="sig-name descname">Robo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">robo_dir_read</span></em>, <em class="sig-param"><span class="n">normzed_spec_dir_read</span></em>, <em class="sig-param"><span class="n">robo_output_write</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.run_robo.Robo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the Robospect EW measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<em>str</em>) – name of module</p></li>
+<li><p><strong>robo_dir_read</strong> (<em>str</em>) – directory Robospect reads spectra from</p></li>
+<li><p><strong>normzed_spec_dir_read</strong> (<em>str</em>) – directory of normalized spectra</p></li>
+<li><p><strong>robo_output_write</strong> (<em>str</em>) – directory Robospect writes EW info to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[EW data written to file]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="modules.run_robo.RunRobo">
+<em class="property">class </em><code class="sig-prename descclassname">modules.run_robo.</code><code class="sig-name descname">RunRobo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">write_dir</span></em>, <em class="sig-param"><span class="n">robo_dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.run_robo.RunRobo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables multiprocessing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>write_dir</strong> (<em>str</em>) – directory to write to</p></li>
+<li><p><strong>robo_dir</strong> (<em>str</em>) – directory in which robospect.py lives</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-modules.scrape_ew_and_errew"></span><p>Scrape Robospect output and do some processing of the results</p>
+<dl class="py class">
+<dt id="modules.scrape_ew_and_errew.AddSyntheticMetaData">
+<em class="property">class </em><code class="sig-prename descclassname">modules.scrape_ew_and_errew.</code><code class="sig-name descname">AddSyntheticMetaData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">input_spec_list_read</span></em>, <em class="sig-param"><span class="n">ew_data_w_net_balmer_read</span></em>, <em class="sig-param"><span class="n">file_w_meta_data_write</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.scrape_ew_and_errew.AddSyntheticMetaData" title="Permalink to this definition">¶</a></dt>
+<dd><p>For the generation of a calibration, this reads in a file with spectrum file
+names and other info like Fe/H, and adds everything to the table with EWs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<em>str</em>) – arbitrary module name</p></li>
+<li><p><strong>input_spec_list_read</strong> (<em>str</em>) – file name of list containing original spectrum names and meta-data</p></li>
+<li><p><strong>ew_data_w_net_balmer_read</strong> (<em>str</em>) – file name of table containing EW data including Balmer lines and their errors</p></li>
+<li><p><strong>file_w_meta_data_write</strong> (<em>str</em>) – file name with everything together to write out</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[csv written to disk; dataframe is returned for testing only]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="modules.scrape_ew_and_errew.GenerateAddlEwErrors">
+<em class="property">class </em><code class="sig-prename descclassname">modules.scrape_ew_and_errew.</code><code class="sig-name descname">GenerateAddlEwErrors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">ew_data_restacked_read</span></em>, <em class="sig-param"><span class="n">ew_data_w_net_balmer_read</span></em>, <em class="sig-param"><span class="n">groupby_parent</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.scrape_ew_and_errew.GenerateAddlEwErrors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates errors in EW using the method of finding the stdev of EWs across
+a set of spectra that are realizations of the same single, original spectrum.
+This is an alternative to the errors produced directly by Robospect.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<em>str</em>) – arbitrary module name</p></li>
+<li><p><strong>ew_data_restacked_read</strong> (<em>str</em>) – file name of restacked EW data to read</p></li>
+<li><p><strong>ew_data_w_net_balmer_read</strong> (<em>str</em>) – file name of restacked EW data to read</p></li>
+<li><p><strong>groupby_parent</strong> (<em>bool</em>) – if True, collapse noise-churned spectra into 1 after calculating the EW errors;
+else write out a giant table containing data for all noise-churned spectra,
+which is useful if calibration is being applied, and Fe/H will be retrieved
+across all churnings and that will give Fe/H error</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="modules.scrape_ew_and_errew.GenerateNetBalmer">
+<em class="property">class </em><code class="sig-prename descclassname">modules.scrape_ew_and_errew.</code><code class="sig-name descname">GenerateNetBalmer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">file_restacked_read</span></em>, <em class="sig-param"><span class="n">file_ew_net_balmer_write</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.scrape_ew_and_errew.GenerateNetBalmer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes stacked spectra data and adds a column representing a net Balmer line,
+and populates another column for the error (based on propagation of the Robo
+errors of constituent lines, and then some error propagation)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<em>str</em>) – arbitrary module name</p></li>
+<li><p><strong>read_in_filename</strong> – name of the file with stacked EW data from Robospect, and
+only including ‘good’ data</p></li>
+<li><p><strong>write_out_filename</strong> – name of the file to be written out; identical to the file read in,
+except that additional columns contain info on a net Balmer line</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[m, err_m, b, err_b], [m_1to1, err_m_1to1, b_1to1, err_b_1to1], df_poststack</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[writes out csv with net Balmer line EWs, and the following for testing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="modules.scrape_ew_and_errew.QualityCheck">
+<em class="property">class </em><code class="sig-prename descclassname">modules.scrape_ew_and_errew.</code><code class="sig-name descname">QualityCheck</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">file_scraped_all_read</span></em>, <em class="sig-param"><span class="n">file_scraped_good_write</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.scrape_ew_and_errew.QualityCheck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in all the scraped EW data in raw form, removes spectra that have fits
+which are bad based on multiple criteria, and writes out another data_table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<em>str</em>) – arbitrary module name</p></li>
+<li><p><strong>file_scraped_all_read</strong> – file name of the table with ALL scraped data from Robospect</p></li>
+<li><p><strong>file_scraped_good_write</strong> – file name of the table with spectra with any bad line fits removed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[csv written to disk; dataframe is returned for testing only]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="modules.scrape_ew_and_errew.Scraper">
+<em class="property">class </em><code class="sig-prename descclassname">modules.scrape_ew_and_errew.</code><code class="sig-name descname">Scraper</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">input_spec_list_read</span></em>, <em class="sig-param"><span class="n">robo_output_read</span></em>, <em class="sig-param"><span class="n">file_scraped_write</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.scrape_ew_and_errew.Scraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scrape all the equivalent width info from the Robospect robolines files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<em>str</em>) – arbitrary module name</p></li>
+<li><p><strong>input_spec_list_read</strong> (<em>list</em>) – file names of spectra to read in</p></li>
+<li><p><strong>robo_output_read</strong> (<em>str</em>) – directory containing Robospect output</p></li>
+<li><p><strong>file_scraped_write</strong> (<em>str</em>) – file name of csv containing the scraped data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[csv written to disk; dataframe is returned for testing only]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="modules.scrape_ew_and_errew.StackSpectra">
+<em class="property">class </em><code class="sig-prename descclassname">modules.scrape_ew_and_errew.</code><code class="sig-name descname">StackSpectra</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">input_spec_list_read</span></em>, <em class="sig-param"><span class="n">file_ew_data_read</span></em>, <em class="sig-param"><span class="n">file_restacked_write</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.scrape_ew_and_errew.StackSpectra" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes output of quality_check() and transposes and stacks data so that the data has <em>rows</em> of spectra and <em>cols</em> of absorption lines</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<em>str</em>) – arbitrary module name</p></li>
+<li><p><strong>input_spec_list_read</strong> (<em>str</em>) – list of spectrum file names to read</p></li>
+<li><p><strong>file_ew_data_read</strong> (<em>str</em>) – file name of file with EW data</p></li>
+<li><p><strong>file_restacked_write</strong> (<em>str</em>) – file name of restacked data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[writes out csv with stacked data, and returns it for testing only]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.scrape_ew_and_errew.line_order_check">
+<code class="sig-prename descclassname">modules.scrape_ew_and_errew.</code><code class="sig-name descname">line_order_check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line_centers</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.scrape_ew_and_errew.line_order_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sanity check: are the lines listed in order?
+N.b. This checks the wavelengths using the given line list
+values (and not the fitted centers)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>line_centers</strong> (<em>array</em>) – array of measured line centers</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>int of number of apparent bad line centers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-modules.teff_retrieval"></span><dl class="py class">
+<dt id="modules.teff_retrieval.TempVsBalmer">
+<em class="property">class </em><code class="sig-prename descclassname">modules.teff_retrieval.</code><code class="sig-name descname">TempVsBalmer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">file_ew_poststack_read</span></em>, <em class="sig-param"><span class="n">file_ew_tefffit_write</span></em>, <em class="sig-param"><span class="n">plot_tefffit_write</span></em>, <em class="sig-param"><span class="n">data_tefffit_write</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">test_flag</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.teff_retrieval.TempVsBalmer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds a linear Teff vs. Balmer EW relation. This is an ancillary step before
+running the MCMC further downstream in the pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_ew_poststack_read</strong> (<em>str</em>) – name of file that contains all the data from the upstream
+pipeline and will be read in for the fit; it should contain columns with ‘teff’
+and ‘EW_Balmer’, with which a simple linear fit is made</p></li>
+<li><p><strong>df_poststack_file_name_write</strong> (<em>str</em>) – name of file to write; this file is the same as
+the one read in, except that now it also includes the best-fit values of the Teff</p></li>
+<li><p><strong>teff_data_write</strong> (<em>str</em>) – file name of txt file containing info on the lienar trend</p></li>
+<li><p><strong>plot_tefffit_write</strong> (<em>str</em>) – file name of Teff vs Balmer plot to write</p></li>
+<li><p><strong>data_tefffit_write</strong> (<em>str</em>) – name of file to write Teff data to</p></li>
+<li><p><strong>plot</strong> (<em>bool</em>) – flag whether to write plot or not</p></li>
+<li><p><strong>test_flag</strong> (<em>bool</em>) – if testing, suppress prompts in terminal</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>slope
+err_m (float):  error in slope
+b (float):      y-intercept
+err_b (float):  error in y-intercept</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>m (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.teff_retrieval.line_fit_temp_range">
+<code class="sig-prename descclassname">modules.teff_retrieval.</code><code class="sig-name descname">line_fit_temp_range</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x_data_pass</span></em>, <em class="sig-param"><span class="n">y_data_pass</span></em>, <em class="sig-param"><span class="n">t_min</span></em>, <em class="sig-param"><span class="n">t_max</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.teff_retrieval.line_fit_temp_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find line of best fit</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_data_pass</strong> (<em>array</em>) – abcissa</p></li>
+<li><p><strong>y_data_pass</strong> (<em>array</em>) – ordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>slope
+err_m (float):  error in slope
+b (float):      y-intercept
+err_b (float):  error in y-intercept</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>m (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-modules.run_emcee"></span><p>This is an emcee wrapper for fitting the Layden ‘94 metallicity
+calibration to equivalent widths of RR Lyrae spectra</p>
+<dl class="py class">
+<dt id="modules.run_emcee.CornerPlot">
+<em class="property">class </em><code class="sig-prename descclassname">modules.run_emcee.</code><code class="sig-name descname">CornerPlot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">file_name_mcmc_posterior_read</span></em>, <em class="sig-param"><span class="n">plot_corner_write</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.run_emcee.CornerPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper to read in MCMC output and writes out a corner plot</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<em>str</em>) – module name</p></li>
+<li><p><strong>file_name_mcmc_posterior_read</strong> (<em>str</em>) – file name of MCMC posterior</p></li>
+<li><p><strong>plot_corner_write</strong> (<em>str</em>) – file name of PNG to write</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[writes PNG to disk]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.run_emcee.K_residual">
+<code class="sig-prename descclassname">modules.run_emcee.</code><code class="sig-name descname">K_residual</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coeffs_pass</span></em>, <em class="sig-param"><span class="n">Bal_pass</span></em>, <em class="sig-param"><span class="n">F_pass</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.run_emcee.K_residual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Residual function to minimize for the Levenberg-Marquardt fit</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coeffs_pass</strong> (<em>array</em>) – array of coefficients</p></li>
+<li><p><strong>Bal_pass</strong> (<em>array</em>) – Balmer EWs</p></li>
+<li><p><strong>F_pass</strong> (<em>array</em>) – [Fe/H]</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – measured CaIIK EW</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>residual</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="modules.run_emcee.RunEmcee">
+<em class="property">class </em><code class="sig-prename descclassname">modules.run_emcee.</code><code class="sig-name descname">RunEmcee</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">file_name_scraped_ews_good_only_read</span></em>, <em class="sig-param"><span class="n">file_name_write_mcmc_text_write</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.run_emcee.RunEmcee" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the emcee MCMC to obtain coefficients a, b, c, d (+ f, g, h, k)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<em>str</em>) – module name</p></li>
+<li><p><strong>file_name_scraped_ews_good_only_read</strong> (<em>str</em>) – file name of scraped EW data, containing only the ‘good’ data</p></li>
+<li><p><strong>file_name_write_mcmc_text_write</strong> (<em>str</em>) – file name of MCMC posteriors to write as csv</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[posteriors writte to disk]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="modules.run_emcee.WriteSolnToFits">
+<em class="property">class </em><code class="sig-prename descclassname">modules.run_emcee.</code><code class="sig-name descname">WriteSolnToFits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em>, <em class="sig-param"><span class="n">file_name_mcmc_posterior_read</span></em>, <em class="sig-param"><span class="n">file_name_teff_data_read</span></em>, <em class="sig-param"><span class="n">soln_write_name</span></em>, <em class="sig-param"><span class="n">test_flag</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.run_emcee.WriteSolnToFits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes the full reduction solution and writes it to a FITS file with</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<em>str</em>) – module name</p></li>
+<li><p><strong>file_name_mcmc_posterior_read</strong> (<em>str</em>) – file name of MCMC posterior to write back out as FITS file</p></li>
+<li><p><strong>file_name_teff_data_read</strong> (<em>str</em>) – file name of Teff data</p></li>
+<li><p><strong>soln_write_name</strong> (<em>str</em>) – file name of FITS file to write</p></li>
+<li><p><strong>test_flag</strong> (<em>bool</em>) – if True, then terminal prompts are suppressed to enable continuous integration</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[FITS file written to disk with The MCMC posteriors in tabular form, and meta-data in header]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.run_emcee.chi_sqd_fcn">
+<code class="sig-prename descclassname">modules.run_emcee.</code><code class="sig-name descname">chi_sqd_fcn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Bal_pass</span></em>, <em class="sig-param"><span class="n">Feh_pass</span></em>, <em class="sig-param"><span class="n">Caiik_pass</span></em>, <em class="sig-param"><span class="n">sig_Bal_pass</span></em>, <em class="sig-param"><span class="n">sig_Feh_pass</span></em>, <em class="sig-param"><span class="n">sig_Caiik_pass</span></em>, <em class="sig-param"><span class="n">coeffs_pass</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.run_emcee.chi_sqd_fcn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Chi-squared</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Bal_pass</strong> (<em>float</em>) – Balmer EW (angstroms)</p></li>
+<li><p><strong>Feh_pass</strong> (<em>float</em>) – [Fe/H]</p></li>
+<li><p><strong>Caiik_pass</strong> (<em>float</em>) – CaIIK EW (angstroms)</p></li>
+<li><p><strong>err_Bal_pass</strong> (<em>float</em>) – error in Balmer EW (angstroms)</p></li>
+<li><p><strong>err_Feh_pass</strong> (<em>float</em>) – error in [Fe/H]</p></li>
+<li><p><strong>err_Caiik_pass</strong> (<em>float</em>) – error in CaIIK EW (angstroms)</p></li>
+<li><p><strong>coeffs_pass</strong> (<em>array</em>) – array of coefficients</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>chi^2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.run_emcee.function_K">
+<code class="sig-prename descclassname">modules.run_emcee.</code><code class="sig-name descname">function_K</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coeffs_pass</span></em>, <em class="sig-param"><span class="n">Bal_pass</span></em>, <em class="sig-param"><span class="n">F_pass</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.run_emcee.function_K" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function which gives CaIIK EW as function of Balmer, [Fe/H]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coeffs_pass</strong> (<em>array</em>) – array of coefficients</p></li>
+<li><p><strong>Bal_pass</strong> (<em>array</em>) – Balmer EWs</p></li>
+<li><p><strong>F_pass</strong> (<em>array</em>) – [Fe/H]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>CaIIK EW</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.run_emcee.lnprior">
+<code class="sig-prename descclassname">modules.run_emcee.</code><code class="sig-name descname">lnprior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theta</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.run_emcee.lnprior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prior (top-hat priors only)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>array</em>) – array of parameter values</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>0 or -inf</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.run_emcee.lnprob">
+<code class="sig-prename descclassname">modules.run_emcee.</code><code class="sig-name descname">lnprob</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">walker_pos_array</span></em>, <em class="sig-param"><span class="n">Teff_pass</span></em>, <em class="sig-param"><span class="n">measured_H_pass</span></em>, <em class="sig-param"><span class="n">measured_F_pass</span></em>, <em class="sig-param"><span class="n">measured_K_pass</span></em>, <em class="sig-param"><span class="n">err_measured_H_pass</span></em>, <em class="sig-param"><span class="n">err_measured_F_pass</span></em>, <em class="sig-param"><span class="n">err_measured_K_pass</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.run_emcee.lnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Nat log of probability density</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>walker_pos_array</strong> (<em>array</em>) – array of coefficients (regardless of model)</p></li>
+<li><p><strong>Teff_pass</strong> (<em>float</em>) – Teff (a vestigial MCMC constant; this is NOT astrophysical Teff)</p></li>
+<li><p><strong>measured_H_pass</strong> (<em>float</em>) – Balmer EW</p></li>
+<li><p><strong>measured_F_pass</strong> (<em>float</em>) – [Fe/H]</p></li>
+<li><p><strong>measured_K_pass</strong> (<em>float</em>) – CaIIK EW</p></li>
+<li><p><strong>err_measured_H_pass</strong> (<em>float</em>) – error in Balmer EW</p></li>
+<li><p><strong>err_measured_F_pass</strong> (<em>float</em>) – error in [Fe/H]</p></li>
+<li><p><strong>err_measured_K_pass</strong> (<em>float</em>) – error in CaIIK EW</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ln(prior*like)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="modules.run_emcee.sigma_Km_sqd">
+<code class="sig-prename descclassname">modules.run_emcee.</code><code class="sig-name descname">sigma_Km_sqd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coeffs_pass</span></em>, <em class="sig-param"><span class="n">Bal_pass</span></em>, <em class="sig-param"><span class="n">err_Bal_pass</span></em>, <em class="sig-param"><span class="n">Feh_pass</span></em>, <em class="sig-param"><span class="n">err_Feh_pass</span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.run_emcee.sigma_Km_sqd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Definition of model CaIIK error squared (this is general, regardless of number of coeffs)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coeffs_pass</strong> (<em>array</em>) – array of coefficients</p></li>
+<li><p><strong>Bal_pass</strong> (<em>array</em>) – Balmer EWs</p></li>
+<li><p><strong>err_Bal_pass</strong> (<em>array</em>) – error in Balmer EWs</p></li>
+<li><p><strong>F_pass</strong> (<em>array</em>) – [Fe/H]</p></li>
+<li><p><strong>err_Feh_pass</strong> (<em>array</em>) – error in [Fe/H]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/anna_logo.jpeg" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">rrlfe</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=mwanakijiji&repo=rrlfe&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Eckhart Spalding, Ron Wilhelm, Nathan De Lee, Kenneth Carrell.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/docs/api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
