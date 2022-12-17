@@ -1,7 +1,3 @@
-'''
-Calls Robospect to find EWs of the normalized, noise-churned spectra
-'''
-
 import os
 import glob
 import multiprocessing
@@ -10,30 +6,28 @@ from . import *
 
 
 class RunRobo:
-    '''
-    Class to enable multiprocessing
-    '''
+    """
+    Enables multiprocessing
+
+    Parameters:
+        write_dir (str): directory to write to
+        robo_dir (str): directory in which robospect.py lives
+    """
 
     def __init__(self, write_dir, robo_dir):
-
-        '''
-        This just configures IO
-        '''
 
         self.norm_spec_deposit_dir = write_dir
         self.robo_dir = robo_dir
 
     def __call__(self, file_name):
 
-        '''
-        INPUTS:
-        file_name: the absolute file name of one file to run Robospect on
-        normzed_spec_source_dir: directory containing the normalized spectra
-        robo_dir: directory of the robospect.py repo
+        """
+        Parameters:
+            file_name: the absolute file name of one file to run Robospect on
 
-        OUTPUTS:
-        (writes files to disk)
-        '''
+        Returns:
+            (writes files to disk)
+        """
 
         # for applying to synthetic spectra
         logging.info("Running Robospect on "+ file_name + " \n")
@@ -79,6 +73,18 @@ class RunRobo:
 
 
 class Robo():
+    """
+    Runs the Robospect EW measurement
+
+    Parameters:
+        module_name (str): name of module
+        robo_dir_read (str): directory Robospect reads spectra from
+        normzed_spec_dir_read (str): directory of normalized spectra
+        robo_output_write (str): directory Robospect writes EW info to
+
+    Returns:
+        [EW data written to file]
+    """
 
     def __init__(self,
         module_name,
@@ -92,20 +98,6 @@ class Robo():
         self.robo_output_write = robo_output_write
 
     def run_step(self, attribs = None):
-
-        '''
-        Accumulate list of filenames of normalized synthetic spectra, then
-        measure EWs
-
-        INPUTS:
-        normzed_spec_source_dir: source directory of normalized spectra which
-            Robospect will be run on
-        write_dir: directory to which Robospect output will be written to
-        robo_dir: directory of the robospect.py repo
-
-        OUTPUTS:
-        (EW data written to file)
-        '''
 
         # check if write directories exist and are empty
         make_dir(self.robo_output_write)

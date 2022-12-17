@@ -11,9 +11,9 @@ from astroquery.simbad import Simbad
 from . import *
 
 class LitFehRaw():
-    '''
+    """
     Read in Fe/H values from the literature, before making any transformations
-    '''
+    """
 
     def __init__(self):
         # map the raw data to object
@@ -84,37 +84,26 @@ class LitFehRaw():
         self.df_govea_feh = pd.read_csv(source_dir + "govea_2014_abundances.dat")
 
 
-
-def map_names(df_pass):
-    # find common ASAS names
-
-    import ipdb; ipdb.set_trace()
-
-    # treat each lit source individually to get single Fe/H and error
-
-    # loop over rows, parse as necessary
-    for row_num in range(0,len(df_pass)):
-        name_initial = df_pass["name"]
-
-
 def matchmaker(basis_table_pass, input_table_pass):
-    '''
+    """
     Find what stars are common to two input tables, return arrays of FeHs, fit best-fit line
 
-    INPUTS:
-    input_table: table I'm interested in checking for overlapping stars
-        (pandas dataframe with col ["name_match"]: star name; col ["feh_single"]: Fe/H)
-    basis_table: table with the names for which I am looking for repeats in the other table
-        (pandas dataframe with col ["name_match"]: star name; col ["feh_single"]: Fe/H)
+    Parameters:
+        input_table (pandas DataFrame): table I'm interested in checking for overlapping stars; cols \n
+            "name_match": star name \n
+            "feh_single": Fe/H
+        basis_table (pandas DataFrame): table with the names for which I am looking for repeats in the other table \n
+            "name_match": star name \n
+            "feh_single": Fe/H
 
-    OUTPUTS:
-    pandas dataframe with
-    1. overlapping star names
-    2. FeHs from the input_table
-    3. FeHs from the basis_table
-    4. residuals in FeH: FeH_input - FeH_basis
-    5. string indicating the high-res dataset being matched
-    '''
+    Returns:
+        pandas dataframe with \n
+        1. overlapping star names \n
+        2. FeHs from the input_table \n
+        3. FeHs from the basis_table \n
+        4. residuals in FeH: FeH_input - FeH_basis \n
+        5. string indicating the high-res dataset being matched
+    """
 
     basis_table = basis_table_pass.copy(deep=True)
     input_table = input_table_pass.copy(deep=True)
@@ -129,15 +118,15 @@ def matchmaker(basis_table_pass, input_table_pass):
 
 
 def find_offsets(match_pass):
-    '''
+    """
     Finds the offsets that need to be added in to overlap datasets as per Crestani+ 2017 Fig. 6
 
-    INPUTS:
-    match_pass: the dataframe holding matched Fe/Hs
+    Parameters:
+        match_pass (pandas DataFrame): dataframe containing matched Fe/Hs
 
-    OUTPUTS:
-    y_offset_2_lit: the constant offset that needs to be added back in
-    '''
+    Returns:
+        the constant offset that needs to be added back in
+    """
 
     # find offset between (lit vs. Layden) residuals and Chadid+ 2017 at Fe/H=-1.25 (see their Fig. 6)
     chadid_y_125 = -0.10583621694962 # from Chadid line at Fe/H=-1.25

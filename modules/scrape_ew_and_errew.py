@@ -17,11 +17,17 @@ import matplotlib.pylab as pl
 from . import *
 
 def line_order_check(line_centers):
-    '''
+    """
     Sanity check: are the lines listed in order?
     N.b. This checks the wavelengths using the given line list
     values (and not the fitted centers)
-    '''
+
+    Parameters:
+        line_centers (array): array of measured line centers
+
+    Returns:
+        int of number of apparent bad line centers
+    """
 
     logging.info('Verifying line centers...')
     logging.info(line_centers[0])
@@ -55,9 +61,18 @@ def line_order_check(line_centers):
 
 
 class Scraper():
-    '''
-    Scrape all the equivalent width info from the Robospect *robolines files
-    '''
+    """
+    Scrape all the equivalent width info from the Robospect robolines files
+
+    Parameters:
+        module_name (str): arbitrary module name
+        input_spec_list_read (list): file names of spectra to read in
+        robo_output_read (str): directory containing Robospect output
+        file_scraped_write (str): file name of csv containing the scraped data
+
+    Returns:
+        [csv written to disk; dataframe is returned for testing only]
+    """
 
     def __init__(self,
         module_name,
@@ -71,13 +86,6 @@ class Scraper():
         self.file_scraped_info = file_scraped_write
 
     def run_step(self, attribs = None):
-
-        '''
-        INPUTS:
-        subdir:
-        file_scraped_info:
-        orig_spec_list: the file containing the original file names of the spectra
-        '''
 
         verbose=False
 
@@ -198,15 +206,19 @@ class Scraper():
 
 
 class AddSyntheticMetaData():
-    '''
+    """
     For the generation of a calibration, this reads in a file with spectrum file
     names and other info like Fe/H, and adds everything to the table with EWs
 
-    INPUTS:
-    input_list: file name of list containing original spectrum names and meta-data
-    read_in_filename: file name of table containing EW data including Balmer lines and their errors
-    write_out_filename: file name with everything together to write out
-    '''
+    Parameters:
+        module_name (str): arbitrary module name
+        input_spec_list_read (str): file name of list containing original spectrum names and meta-data
+        ew_data_w_net_balmer_read (str): file name of table containing EW data including Balmer lines and their errors
+        file_w_meta_data_write (str): file name with everything together to write out
+
+    Returns:
+        [csv written to disk; dataframe is returned for testing only]
+    """
 
     def __init__(self,
                 module_name,
@@ -244,14 +256,18 @@ class AddSyntheticMetaData():
 
 
 class QualityCheck():
-    '''
-    This reads in all the scraped EW data in raw form, removes spectra that have fits
+    """
+    Reads in all the scraped EW data in raw form, removes spectra that have fits
     which are bad based on multiple criteria, and writes out another data_table
 
-    INPUTS:
-    read_in_filename: file name of the table with ALL scraped data from Robospect
-    write_out_filename: file name of the table with spectra with any bad line fits removed
-    '''
+    Parameters:
+        module_name (str): arbitrary module name
+        file_scraped_all_read: file name of the table with ALL scraped data from Robospect
+        file_scraped_good_write: file name of the table with spectra with any bad line fits removed
+
+    Returns:
+        [csv written to disk; dataframe is returned for testing only]
+    """
 
     def __init__(self,
                 module_name,
@@ -344,22 +360,22 @@ class QualityCheck():
 
 
 class GenerateNetBalmer():
-    '''
+    """
     Takes stacked spectra data and adds a column representing a net Balmer line,
     and populates another column for the error (based on propagation of the Robo
     errors of constituent lines, and then some error propagation)
 
-    INPUTS:
-    read_in_filename: name of the file with stacked EW data from Robospect, and
-        only including 'good' data
-    write_out_filename: name of the file to be written out; identical to the file read in,
-        except that additional columns contain info on a net Balmer line
+    Parameters:
+        module_name (str): arbitrary module name
+        read_in_filename: name of the file with stacked EW data from Robospect, and
+            only including 'good' data
+        write_out_filename: name of the file to be written out; identical to the file read in,
+            except that additional columns contain info on a net Balmer line
 
-    OUTPUTS:
-    (writes out csv with net Balmer line EWs)
-    [m, err_m, b, err_b], [m_1to1, err_m_1to1, b_1to1, err_b_1to1], df_poststack:
-        info used in test functions
-    '''
+    Returns:
+        [writes out csv with net Balmer line EWs, and the following for testing: \n
+        [m, err_m, b, err_b], [m_1to1, err_m_1to1, b_1to1, err_b_1to1], df_poststack
+    """
 
     def __init__(self,
                 module_name,
@@ -420,16 +436,20 @@ class GenerateNetBalmer():
 
 
 class GenerateAddlEwErrors():
-    '''
+    """
     Calculates errors in EW using the method of finding the stdev of EWs across
     a set of spectra that are realizations of the same single, original spectrum.
     This is an alternative to the errors produced directly by Robospect.
 
-    groupby_parent: collapse noise-churned spectra into 1 after calculating the EW errors;
-        else write out a giant table containing data for all noise-churned spectra,
-        which is useful if calibration is being applied, and Fe/H will be retrieved
-        across all churnings and that will give Fe/H error
-    '''
+    Parameters:
+        module_name (str): arbitrary module name
+        ew_data_restacked_read (str): file name of restacked EW data to read
+        ew_data_w_net_balmer_read (str): file name of restacked EW data to read
+        groupby_parent (bool): if True, collapse noise-churned spectra into 1 after calculating the EW errors;
+            else write out a giant table containing data for all noise-churned spectra,
+            which is useful if calibration is being applied, and Fe/H will be retrieved
+            across all churnings and that will give Fe/H error
+    """
 
     def __init__(self,
                 module_name,
@@ -541,14 +561,18 @@ class GenerateAddlEwErrors():
 
 
 class StackSpectra():
-    '''
+    """
     Takes output of quality_check() and transposes and stacks data so that the data has *rows* of spectra and *cols* of absorption lines
 
-    INPUTS:
-    read_in_filename: file name of scraped Robospect data, after removing bad spectra
-    write_out_filename: name of file to contain re-stacked data
-    input_list: list of original file names
-    '''
+    Parameters:
+        module_name (str): arbitrary module name
+        input_spec_list_read (str): list of spectrum file names to read
+        file_ew_data_read (str): file name of file with EW data
+        file_restacked_write (str): file name of restacked data
+
+    Returns:
+        [writes out csv with stacked data, and returns it for testing only]
+    """
 
     def __init__(self,
                 module_name,

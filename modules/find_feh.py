@@ -11,10 +11,19 @@ from astropy.io import fits
 from . import *
 
 def feh_layden_vector(coeff_a,coeff_b,coeff_c,coeff_d,H,K):
-    '''
+    """
     Finds Fe/H given equivalent widths (in angstroms), from
     K = a + b*H + c*[Fe/H] + d*H*[Fe/H]  (Layden 1994 Eqn. 7)
-    '''
+
+    Parameters:
+        coeff_a (float): coefficient a
+        coeff_b (float): coefficient b
+        coeff_c (float): coefficient c
+        coeff_d (float): coefficient d
+
+    Returns:
+        [Fe/H] value
+    """
 
     feh = np.divide(np.subtract(K,np.subtract(coeff_a,np.multiply(coeff_b,H))),
                     np.add(coeff_c,np.multiply(coeff_d,H)))
@@ -22,13 +31,23 @@ def feh_layden_vector(coeff_a,coeff_b,coeff_c,coeff_d,H,K):
     return feh
 
 def feh_abcdfghk_vector(coeff_a,coeff_b,coeff_c,coeff_d,coeff_f,coeff_g,coeff_h,coeff_k,H,K):
-    '''
+    """
     Finds Fe/H given equivalent widths (in angstroms), from
     K = a + b*H + c*[Fe/H] + d*H*[Fe/H] + f*(H^2) + g*([Fe/H]^2) + h*(H^2)*[Fe/H] + k*H*([Fe/H]^2)
-    '''
 
+    Parameters:
+        coeff_a (float): coefficient a
+        coeff_b (float): coefficient b
+        coeff_c (float): coefficient c
+        coeff_d (float): coefficient d
+        coeff_f (float): coefficient f
+        coeff_g (float): coefficient g
+        coeff_h(float): coefficient h
+        coeff_k (float): coefficient j
+    Returns:
+        [Fe/H] value
+    """
 
-    #import ipdb; ipdb.set_trace()
     A_cap = np.add(coeff_g,np.multiply(coeff_k,H))
     B_cap = np.add(coeff_c,np.add(np.multiply(coeff_d,H),np.multiply(coeff_h,np.power(H,2))))
     C_cap = np.add(coeff_a,np.add(np.multiply(coeff_b,H),np.subtract(np.multiply(coeff_f,np.power(H,2)),K)))
@@ -58,18 +77,18 @@ def feh_abcdfghk_vector(coeff_a,coeff_b,coeff_c,coeff_d,coeff_f,coeff_g,coeff_h,
 
 
 class FehRetrieval():
-        '''
+        """
         Find a Fe/H value for a combination of coefficients
         from the MCMC chain, and sample from the Balmer and
         CaIIK EWs, given their errors
 
-        INPUTS:
-        write_out_filename: the file name of everything, incl. retrieved Teff and Fe/H
+        Parameters:
+            write_out_filename (str): the file name of everything, incl. retrieved Teff and Fe/H
 
-        OUTPUTS:
-        (csv is written to disk)
-        final_table: dataframe equivalent of the written csv file, for unit testing
-        '''
+        Returns:
+            final_table (DataFrame): dataframe equivalent of the written csv file, for unit testing
+            [csv is also written to disk]
+        """
 
         def __init__(self,
                     module_name,

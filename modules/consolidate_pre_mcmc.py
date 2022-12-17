@@ -15,20 +15,20 @@ def graft_feh(pickle_source_dir=config_choice["data_dirs"]["DIR_PICKLE"],
               stars_and_offsets_info_file=config_choice["file_names"]["RRAB_RRAB_OFFSETS"],
               hk_source_dir=config_choice["data_dirs"]["DIR_SRC"],
               synthetic=False):
-    '''
+    """
     Read in the EW and phase data, and attach Fe/H values
 
-    INPUTS:
-    pickle_source_dir: source directory of pickled mapped Fe/H data
-    stars_and_offsets_info_file: file name of star subtypes and their offsets
-    hk_source_dir: source directory for HK info
-    synthetic:
-        =False: the Fe/H will be derived from the basis
-        =True: the Fe/H will be extracted from the file name
+    Parameters:
+        pickle_source_dir (str): source directory of pickled mapped Fe/H data
+        stars_and_offsets_info_file (str): file name of star subtypes and their offsets
+        hk_source_dir (str): source directory for HK info
+        synthetic (bool):
+            =False: the Fe/H will be derived from the basis
+            =True: the Fe/H will be extracted from the file name
 
-    OUTPUTS:
-    (written pickle file of EW and Fe/H values for each star)
-    '''
+    Returns:
+        [text file of EW and Fe/H values for each star written to disk]
+    """
 
     ## ## TACK PHASES ONTO LIST OF EWS FROM SPECTRA
     ## ## NEED TO GET RID OF THE 'FAKE' AT SOME POINT
@@ -179,16 +179,19 @@ def graft_feh(pickle_source_dir=config_choice["data_dirs"]["DIR_PICKLE"],
 
 def winnow(pickle_source_dir=config_choice["data_dirs"]["DIR_PICKLE"],
                          hk_winnowed_write_dir=config_choice["data_dirs"]["DIR_BIN"]):
-    '''
-    This removes the program star spectra based on criteria such as
-    1. phase (0 to 1)
+    """
+    Removes the program star spectra based on criteria such as \n
+    1. phase (0 to 1) \n
     2. star subtype (ab, c)
 
-    INPUTS:
-    pickle_source_dir: directory containing
-    hk_winnowed_write_dir: directory to which csv info on H, K is written
-    remove_rrl_subtype: RR Lyrae subtype to remove from analysis ("ab", "c", or none)
-    '''
+    Parameters:
+        pickle_source_dir (str): directory containing
+        hk_winnowed_write_dir (str): directory to which csv info on H, K is written
+        remove_rrl_subtype (str): RR Lyrae subtype to remove from analysis ("ab", "c", or none)
+
+    Returns:
+        [csv written to disk]
+    """
 
     # read in phase boundaries
     min_good, max_good = phase_regions()

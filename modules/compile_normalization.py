@@ -1,30 +1,14 @@
-'''
-Compile spectral normalization script
-'''
-
 from subprocess import Popen, PIPE#, check_call, CalledProcessError
 import shutil
 from . import * # read in config file, basic functions (logging)
 
-def func(arg1, arg2):
-    """Summary line.
-
-    Extended description of function.
-
-    Args:
-        arg1 (int): Description of arg1
-        arg2 (str): Description of arg2
+class CompileBkgrnd():
+    """
+    Compile background routine for spectrum normalization
 
     Returns:
-        bool: Description of return value
-
+        bool: 'True' if compile was successful
     """
-    return True
-
-class CompileBkgrnd():
-    '''
-    Make directories for housing files/info if they don't already exist
-    '''
 
     def __init__(self, module_name):
 

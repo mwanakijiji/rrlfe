@@ -1,17 +1,4 @@
 #!/usr/bin/python
-'''
-This module takes a list of spectra and generates normalized realizations using Gaussian Error.
-
-This module takes a list of spectra. First it generates 100 realizations of the spectra using the error bar to move the points around
-simulating Gaussian noise. Then it runs Ken Carrell's bkgrnd routine to determine the normalization and finally creates the normalized spectra.
-
-@package create_spec_realizations
-@author deleenm
-@version \e \$Revision$
-@date \e \$Date$
-
-Usage: create_spec_realizations.py
-'''
 
 # -----------------------------
 # Standard library dependencies
@@ -47,18 +34,18 @@ from . import *
 def create_norm_spec(name_list,
                      normdir,
                      finaldir):
-    '''
+    """
     Create final normalized spectra, using the output from the bkgrnd routine (which
     puts out wavelength, flux, and continuum flux, but not the actual normalized flux)
 
-    Arguments:
-        name_list: List of Realization file names (no path info); should have 3 cols
-        normdir: Directory where files in name_list are located
-        finaldir: The final directory for files which have completed the full
+    Parameters:
+        name_list (list): list of realization file names (no path info); should have 3 cols
+        normdir (str): directory where files in name_list are located
+        finaldir (str): final directory for files which have completed the full
             normalization process; these will have 3 cols too
     Returns:
-       A list of final file names
-    '''
+       list of final file names
+    """
 
     logging.info("Creating normalized spectra")
 
@@ -93,6 +80,18 @@ def create_norm_spec(name_list,
     return(new_name_list)
 
 def calc_noise(noise_level, spectrum_df):
+    """
+    Generate noise spectrum
+
+    Parameters:
+        noise_level (str/float): define noise level \n
+            "file": from file \n
+            "None": no noise \n
+            (float): level of relative noise to use
+
+    Returns:
+        Numpy array of noise spectrum
+    """
 
     if (noise_level == "file"):
         # add Gaussian error to the empirical flux, taking sigma to be the
@@ -115,16 +114,16 @@ def calc_noise(noise_level, spectrum_df):
 
 def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level):
     '''
-    Calculates a Number of Realizations of a given spectrum using Gaussian Errorbars
+    Calculates a number of realizations of a given spectrum using Gaussian error bars
 
-    Arguments:
-        spec_name: The spectrum filename
-        outdir: The working directory
-        spec_file_format: The format of the input spectra ["fits", "ascii.no_header"]
-        num: Number of realizations to generate
-        noise: 'None': add no noise; 'file': take Gaussian samples of error with spread based on the error column in file
+    Parameters:
+        spec_name (str): the spectrum filename
+        outdir (str): the working directory
+        spec_file_format (str): the format of the input spectra ["fits", "ascii.no_header"]
+        num (int): number of realizations to generate
+        noise (str/float): 'None': add no noise; 'file': take Gaussian samples of error with spread based on the error column in file
     Returns:
-       A list of filenames for the realization spectra.
+       list of filenames for the realization spectra.
     '''
 
     logging.info("Generating spectrum realizations of " + spec_name)
@@ -171,17 +170,7 @@ def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level)
 
         #import ipdb; ipdb.set_trace()
 
-        ### write out new realization of file, in two formats:
-        '''
-        ## ## obsolete?
-        df_realization = Table([spec_tab["wavelength"], new_flux],
-                                names=("wavelength","new_flux"))
-        # set column names and write
-        c1=fits.Column(name="wavelength", format='D', array=spec_tab["wavelength"])
-        c2=fits.Column(name="new_flux", format='D', array=new_flux)
-        t = fits.BinTableHDU.from_columns([c1, c2], header=hdr)
-        '''
-        ## second format: ascii, so bkgrnd can read it in
+        # write out new realization of file in ascii, so bkgrnd can read it in
         logging.info("Writing out ascii realization file " + new_name_ascii + \
             " with noise level stdev " + str(np.std(noise_to_add)))
         for j in range(len(new_flux)):
@@ -191,14 +180,17 @@ def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level)
     return(new_basename_list)
 
 def read_bkgrnd_spec(spec_name):
-    '''
+    """
     Reads in ascii spectra created by bckgrnd and returns numpy arrays of wavelength, flux, bckgrnd_flux
 
     Arguments:
-        spec_name: The spectrum filename. If Ascii file should have 3 columns: wavelength, flux, bckgrnd_flux
+        spec_name (str): The spectrum filename. If ascii file, should have 3 columns: \n
+            [0]: wavelength [angstr] \n
+            [1]: flux \n
+            [2]: background flux \n
     Returns:
-       spec_tab: A numpy Table with three columns: wavelength, flux, background flux
-    '''
+       numpy table with three columns: wavelength, flux, background flux
+    """
 
     logging.info("Reading ascii spectrum realization and background in " + spec_name)
 
@@ -208,40 +200,20 @@ def read_bkgrnd_spec(spec_name):
     return(spec_tab)
 
 
-#####
-
-'''
-    ## note Feb. 9 2021: change to read in FITS files, but output same
-    if (format == "fits"):
-        # read in table info
-        spec_tab = Table.read(spec_name, format='fits')
-        # read in header info
-        hdul = fits.open(spec_name)
-        hdr = hdul[0].header
-    elif (format == "ascii.no_header"):
-        # this option is antiquated; we want to preserve FITS header info
-        spec_tab = Table.read(spec_name, format='ascii.no_header',
-                          names=['wavelength', 'flux', 'error'])
-        hdr = np.nan
-
-    return(spec_tab, hdr)
-'''
-#####
-
 def read_list(input_list):
-    '''
-    Reads in list of spectrum names and returns a table of filenamse
+    """
+    Read in list of spectrum names and returns a table of filenamse
 
     Arguments:
-        input_list: a csv file with columns
-            [0]: filename
-            [1]: subtype (RRab, RRc)
-            [2]: phase (0. to 1., -9999 for NaN)
-            [3]: metallicity (if producing the calibration)
+        input_list (str): file name of a csv file with columns \n
+            [0]: filename \n
+            [1]: subtype (RRab, RRc) \n
+            [2]: phase (0. to 1., -9999 for NaN) \n
+            [3]: metallicity (if producing the calibration) \n
             [4]: error in metallicity (if producing the calibration)
     Returns:
-       Numpy array of filenames
-    '''
+       numpy array of filenames
+    """
 
     logging.info("Reading in list of spectrum names " + input_list)
 
@@ -256,18 +228,21 @@ def read_list(input_list):
 
 
 def read_spec(spec_name, format):
-    '''
-    Reads in ascii empirical spectra and returns numpy arrays of
+    """
+    Read in ascii empirical spectrum and return
     wavelength, flux, and error.
 
-    Arguments:
-        spec_name: The spectrum filename. If Ascii file should have
-           3 columns (wavelength, flux, error no headers)
-        format: "fits" or "ascii.no_header"
+    Parameters:
+        spec_name (str): The spectrum filename. If ascii file (no headers), should have
+           3 columns \n
+           [0]: wavelength \n
+           [1] flux \n
+           [2] error \n
+        format (str): "fits" or "ascii.no_header"
     Returns:
        spec_tab: A numpy Table with three columns: wavelength, flux, error
        hdr: FITS header of the input spectrum
-    '''
+    """
 
     logging.info("Reading spectrum " + spec_name)
 
@@ -290,19 +265,19 @@ def read_spec(spec_name, format):
 
 
 def write_bckgrnd_input(name_list, indir, normdir):
-    '''
+    """
     Create input file for the bckgrnd program
 
-    Arguments:
-        name_list: List of Realization file names (no path info)
-        indir: The working directory with files to be fed into bkgrnd routine
-        normdir: The output directory for normalized files
+    Parameters:
+        name_list (list): List of Realization file names (no path info)
+        indir (str): The working directory with files to be fed into bkgrnd routine
+        normdir (str): The output directory for normalized files
     Returns:
-       A string with the background input filename; the filename itself which
-       has been written out lists the input and output directories, and a
+      background input filename string; the filename itself (which
+       has been written to disk) lists the input and output directories, and a
        list of the FITS files which are the spectrum realizations in the input
        directory
-    '''
+    """
 
     logging.info("Creating input file list of spectrum realization filenames")
 
@@ -328,23 +303,25 @@ def write_bckgrnd_input(name_list, indir, normdir):
 # Main Function
 # -------------
 class CreateSpecRealizationsMain():
+    """
 
-    '''
-    INPUTS:
-    num: number of spectrum realizations to make, per empirical spectrum
-    spec_file_type: file format of input spectra ["fits"/"ascii.no_header"]
-    input_spec_list_dir: directory containing list of empirical spectra (## OBSOLETE? ##)
-    input_list: file listing spectra we want to normalize
-    unnorm_spectra_dir: directory of empirical spectra (or, if they are actually
-        synthetic spectra, these are the original synthetic spectra which we will generate
-        multiple realizations of)
-    unnorm_noise_churned_spectra_dir: directory to contain noise-churned spectrum realizations
-    bkgrnd_output_dir: directory to contain output of bkgrnd (spectra and fit continuua)
-    final_dir: directory to contain normalized spectrum realizations
+    Generate multiple realizations of the same empirical spectrum based on a noise level.
 
-    OUTPUTS:
-    (text files written)
-    '''
+    Parameters:
+        num (int): number of spectrum realizations to make, per empirical spectrum
+        spec_file_type (str): file format of input spectra ["fits"/"ascii.no_header"]
+        input_spec_list_dir (str): directory containing list of empirical spectra (## OBSOLETE? ##)
+        input_list (list): file listing spectra we want to normalize
+        unnorm_spectra_dir (str): directory of empirical spectra (or, if they are actually
+            synthetic spectra, these are the original synthetic spectra which we will generate
+            multiple realizations of)
+        unnorm_noise_churned_spectra_dir (str): directory to contain noise-churned spectrum realizations
+        bkgrnd_output_dir (str): directory to contain output of bkgrnd (spectra and fit continuua)
+        final_dir (str): directory to contain normalized spectrum realizations
+
+    Returns:
+        [text files of spectra written to disk]
+    """
 
     def __init__(self,
                 module_name,

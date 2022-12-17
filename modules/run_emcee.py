@@ -18,9 +18,17 @@ from . import *
 
 
 class CornerPlot():
-    '''
-    Reads in MCMC output and writes out a corner plot
-    '''
+    """
+    Wrapper to read in MCMC output and writes out a corner plot
+
+    Parameters:
+        module_name (str): module name
+        file_name_mcmc_posterior_read (str): file name of MCMC posterior
+        plot_corner_write (str): file name of PNG to write
+
+    Returns:
+        [writes PNG to disk]
+    """
 
     def __init__(self,
                 module_name,
@@ -141,23 +149,23 @@ def lnprob(walker_pos_array,
            err_measured_H_pass,
            err_measured_F_pass,
            err_measured_K_pass):
-    '''
+    """
     Nat log of probability density
 
-    INPUTS:
-    walker_pos_array: array of coefficients (regardless of model)
-    Teff_pass: Teff (a vestigial MCMC constant; this is NOT astrophysical Teff)
-    measured_H_pass: Balmer EW
-    measured_F_pass: [Fe/H]
-    measured_K_pass: CaIIK EW
-    err_measured_H_pass: error in Balmer EW
-    err_measured_F_pass: error in [Fe/H]
-    err_measured_K_pass: error in CaIIK EW
+    Parameters:
+        walker_pos_array (array): array of coefficients (regardless of model)
+        Teff_pass (float): Teff (a vestigial MCMC constant; this is NOT astrophysical Teff)
+        measured_H_pass (float): Balmer EW
+        measured_F_pass (float): [Fe/H]
+        measured_K_pass (float): CaIIK EW
+        err_measured_H_pass (float): error in Balmer EW
+        err_measured_F_pass (float): error in [Fe/H]
+        err_measured_K_pass (float): error in CaIIK EW
 
 
-    OUTPUTS:
-    ln(prior*like)
-    '''
+    Returns:
+        ln(prior*like)
+    """
 
     # walker_pos is the proposed walker position in N-D (likely 4-D) space
     # (i.e., these are the inputs to the model)
@@ -177,14 +185,15 @@ def lnprob(walker_pos_array,
 
 
 def lnprior(theta):
-    '''
-    Prior
+    """
+    Prior (top-hat priors only)
 
-    INPUTS:
-    theta: array of parameter values
+    Parameters:
+        theta (array): array of parameter values
 
-    OUTPUTS: 0 or -inf (top-hat priors only)
-    '''
+    Returns:
+        0 or -inf
+    """
 
     if (len(theta) == 4):
         # Layden '94 relation
@@ -204,17 +213,17 @@ def lnprior(theta):
 
 
 def function_K(coeffs_pass,Bal_pass,F_pass):
-    '''
+    """
     Function which gives CaIIK EW as function of Balmer, [Fe/H]
 
-    INPUTS:
-    coeffs_pass: array of coefficients
-    Bal_pass: Balmer EWs
-    F_pass: [Fe/H]
+    Parameters:
+        coeffs_pass (array): array of coefficients
+        Bal_pass (array): Balmer EWs
+        F_pass (array): [Fe/H]
 
-    OUTPUTS:
-    K_pass: CaIIK EW
-    '''
+    Returns:
+        CaIIK EW
+    """
 
     if (len(coeffs_pass) == 4):
         # Layden '94 relation
@@ -240,13 +249,33 @@ def function_K(coeffs_pass,Bal_pass,F_pass):
 
 
 def K_residual(coeffs_pass,Bal_pass,F_pass,y):
-    # residual function, which we want to minimize for the Levenberg-Marquardt fit
-    # ('y' here is the measured CaIIK EW)
+    """
+    Residual function to minimize for the Levenberg-Marquardt fit
+
+    Parameters:
+        coeffs_pass (array): array of coefficients
+        Bal_pass (array): Balmer EWs
+        F_pass (array): [Fe/H]
+        y (float): measured CaIIK EW
+
+    Returns:
+        residual
+    """
 
     return y - function_K(coeffs_pass,Bal_pass,F_pass)
 
 
 def sigma_Km_sqd(coeffs_pass,Bal_pass,err_Bal_pass,Feh_pass,err_Feh_pass):
+    """
+    Definition of model CaIIK error squared (this is general, regardless of number of coeffs)
+
+    Parameters:
+        coeffs_pass (array): array of coefficients
+        Bal_pass (array): Balmer EWs
+        err_Bal_pass (array): error in Balmer EWs
+        F_pass (array): [Fe/H]
+        err_Feh_pass (array): error in [Fe/H]
+    """
     # def of model CaIIK error squared (this is general, regardless of number of coeffs):
     # sigma_Km^2 = (del_K/del_H)^2 * sig_H^2 + (del_K/del_F)^2 * sig_F^2
 
@@ -280,21 +309,21 @@ def chi_sqd_fcn(Bal_pass,
                 sig_Feh_pass,
                 sig_Caiik_pass,
                 coeffs_pass):
-    '''
+    """
     Chi-squared
 
-    INPUTS:
-    Bal_pass: Balmer EW (angstroms)
-    Feh_pass: [Fe/H]
-    Caiik_pass: CaIIK EW (angstroms)
-    err_Bal_pass: error in Balmer EW (angstroms)
-    err_Feh_pass: error in [Fe/H]
-    err_Caiik_pass: error in CaIIK EW (angstroms)
-    coeffs_pass: array of coefficients
+    Parameters:
+        Bal_pass (float): Balmer EW (angstroms)
+        Feh_pass (float): [Fe/H]
+        Caiik_pass (float): CaIIK EW (angstroms)
+        err_Bal_pass (float): error in Balmer EW (angstroms)
+        err_Feh_pass (float): error in [Fe/H]
+        err_Caiik_pass (float): error in CaIIK EW (angstroms)
+        coeffs_pass (array): array of coefficients
 
-    OUTPUTS:
-    val: chi^2
-    '''
+    Returns:
+        chi^2
+    """
 
     # def. of chi-squared for collection of datapoints which each have
     # subscript i:
@@ -325,13 +354,19 @@ def chi_sqd_fcn(Bal_pass,
 
 
 class WriteSolnToFits():
-    '''
+    """
     Takes the full reduction solution and writes it to a FITS file with
-    1) The MCMC posteriors in tabular form
-    2) Meta-data in FITS header
 
-    test_flag: if True, then terminal prompts are suppressed to enable continuous integration
-    '''
+    Parameters:
+        module_name (str): module name
+        file_name_mcmc_posterior_read (str): file name of MCMC posterior to write back out as FITS file
+        file_name_teff_data_read (str): file name of Teff data
+        soln_write_name (str): file name of FITS file to write
+        test_flag (bool): if True, then terminal prompts are suppressed to enable continuous integration
+
+    Returns:
+        [FITS file written to disk with The MCMC posteriors in tabular form, and meta-data in header]
+    """
 
     def __init__(self,
                 module_name,
@@ -446,14 +481,17 @@ class WriteSolnToFits():
 
 
 class RunEmcee():
-    '''
+    """
     Run the emcee MCMC to obtain coefficients a, b, c, d (+ f, g, h, k)
 
-    model: list of coefficients to use as the model
-        'abcd':     corresponds to Layden '94
-        'abcdfghk': corresponds to K = a + b*H + c*F + d*H*F + f*(H^2) + g*(F^2) + h*(H^2)*F + k*H*(F^2)
-    post_burn_in_links: chain links following burn-in
-    '''
+    Parameters:
+        module_name (str): module name
+        file_name_scraped_ews_good_only_read (str): file name of scraped EW data, containing only the 'good' data
+        file_name_write_mcmc_text_write (str): file name of MCMC posteriors to write as csv
+
+    Returns:
+        [posteriors writte to disk]
+    """
 
     def __init__(self,
                 module_name,
