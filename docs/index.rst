@@ -17,7 +17,7 @@ The BibTeX entry is::
       adsnote = {Provided by the SAO/NASA Astrophysics Data System}
     }
 
-Logo art by Anna McElhannon
+Logo art by `Anna McElhannon <https://www.linkedin.com/in/annamcelhannon>`_
 
 .. toctree::
    :maxdepth: 1
