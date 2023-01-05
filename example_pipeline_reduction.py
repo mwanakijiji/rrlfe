@@ -30,10 +30,10 @@ test_gen.add_step(step)
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
     input_spec_list_read=stem_abs+"src/sdss_test_20221213.list",
-    unnorm_spectra_dir_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated/",
+    unnorm_spectra_dir_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated_3900_to_5299_angstr/",
     unnorm_noise_churned_spectra_dir_read=stem_abs+"src/realizations_output/",
-    bkgrnd_output_dir_write=stem_abs+"rrlfe_io_20221213_sdss_test/realizations_output/norm/",
-    final_spec_dir_write=stem_abs+"rrlfe_io_20221213_sdss_test/realizations_output/norm/final/",
+    bkgrnd_output_dir_write=stem_abs+"rrlfe_io_20221220_sdss_test_2/realizations_output/norm/",
+    final_spec_dir_write=stem_abs+"rrlfe_io_20221220_sdss_test_2/realizations_output/norm/final/",
     noise_level=0.0,
     spec_file_type="ascii.no_header",
     number_specs=1,
