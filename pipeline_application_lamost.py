@@ -42,7 +42,7 @@ step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # run_robospect on normalized synthetic spectra
 step = pipeline.run_robo.Robo(
     module_name="module5",
@@ -110,5 +110,5 @@ step = pipeline.find_feh.FehRetrieval(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 test_gen.run()
