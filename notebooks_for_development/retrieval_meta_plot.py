@@ -1,23 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
-
 # Makes a meta-plot of various Fe/H retrievals
 
 # Created 2023 Feb 5
 
-
-# In[1]:
-
-
 import matplotlib.pyplot as plt
 import pandas as pd
-
-
-# In[2]:
-
 
 # subplot arrangement
 
@@ -27,19 +16,11 @@ import pandas as pd
 # [1,1]: rrlfe vs. Whitten+
 # [2,0]: rrlfe vs. Li+
 
-
-# In[44]:
-
-
-df_sspp_single = pd.read_csv("TBD")
-df_sspp_coadded = pd.read_csv("TBD")
-df_sspp_liu_2020 = pd.read_csv("TBD")
-df_sspp_whitten = pd.read_csv("TBD")
-df_sspp_li_2022 = pd.read_csv("TBD")
-
-
-# In[45]:
-
+df_sspp_single = pd.read_csv("junk_single.csv")
+df_sspp_coadded = pd.read_csv("junk_coadded.csv")
+df_sspp_liu_2020 = pd.read_csv("junk_single.csv")
+df_sspp_whitten = pd.read_csv("junk_single.csv")
+df_sspp_li_2022 = pd.read_csv("junk_single.csv")
 
 fig, axes = plt.subplots(ncols=2, nrows=3, sharex=True, sharey=True, figsize=(10, 15))
 
@@ -55,17 +36,23 @@ ylim = [-4,1]
 
 char_size = 20
 
+
+
 # rrlfe vs. SSPP (single-epoch)
-axes[0,0].plot([-4, 1], [-4, 1], linestyle="--")
+hb = axes[0,0].hexbin(df_sspp_single["feh_sspp_single"],df_sspp_single["feh_rrlfe"], extent=(-4.,1.,-4.,1.))
+axes[0,0].plot([-4, 1], [-4, 1], linestyle="--", color="white", zorder=1, label="1-to-1")
 axes[0,0].set_xlim(xlim)
 axes[0,0].set_ylim(ylim)
 axes[0,0].set(adjustable='box', aspect='equal')
 axes[0,0].set_xlabel("SSPP (single-epoch)", fontsize = char_size)
 axes[0,0].set_ylabel("rrlfe", fontsize = char_size)
-
+#cb = fig.colorbar(hb, ax=ax)
+#cb.set_label('counts')
+#fig.legend()
 
 # rrlfe vs. SSPP (coadded)
-axes[0,1].plot([-4, 1], [-4, 1], linestyle="--")
+hb = axes[0,1].hexbin(df_sspp_coadded["feh_sspp_coadded"],df_sspp_coadded["feh_rrlfe"], extent=(-4.,1.,-4.,1.))
+axes[0,1].plot([-4, 1], [-4, 1], linestyle="--", color="white", zorder=1, label="1-to-1")
 axes[0,1].set_xlim(xlim)
 axes[0,1].set_ylim(ylim)
 axes[0,1].set_xlabel("SSPP (coadded)", fontsize = char_size)
@@ -103,13 +90,4 @@ axes[2,1].set(adjustable='box', aspect='equal')
 
 plt.subplots_adjust(wspace=0.0, hspace=0.2)
 
-#for ax in axes:
-#$    ax.plot([1, 2, 3], [1, 2, 3])
-#    ax.set(adjustable='box', aspect='equal')
-
-
-# In[ ]:
-
-
-
-
+plt.show()

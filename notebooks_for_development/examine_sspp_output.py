@@ -146,4 +146,21 @@ file_name_write_feh2 = "junk_all_hex_young_single_epoch.png"
 plt.savefig(file_name_write_feh2)
 print("Wrote",file_name_write_feh2)
 
-import ipdb; ipdb.set_trace()
+# write out data as csvs (rename cols for clarity)
+text_file_name = "junk_coadded.csv"
+df_merged.rename(
+    columns=({ "FEH_ADOP": "feh_sspp_coadded", "feh_retrieved": "feh_rrlfe"}), 
+    inplace=True,
+)
+header = ["feh_sspp_coadded", "feh_rrlfe"]
+df_merged.to_csv(text_file_name, columns = header, index=False)
+print("Wrote",text_file_name)
+
+text_file_name = "junk_single.csv"
+df_merged_single_epoch.rename(
+    columns=({ "FEH_ADOP": "feh_sspp_single", "feh_retrieved": "feh_rrlfe"}), 
+    inplace=True,
+)
+header = ["feh_sspp_single", "feh_rrlfe"]
+df_merged_single_epoch.to_csv(text_file_name, columns = header, index=False)
+print("Wrote",text_file_name)
