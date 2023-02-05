@@ -60,7 +60,6 @@ merged_df_whitten_and_our_feh = pd.merge(df_our_data, merged_df_whitten_feh, on=
 merged_df_whitten_and_our_feh = merged_df_whitten_and_our_feh[merged_df_whitten_and_our_feh["feh_retrieved"].notna()]
 
 # best-fit coefficients, where vals are sane (-4.0 to 1.0)
-import ipdb; ipdb.set_trace()
 idx_sane_whitten = np.logical_and(merged_df_whitten_and_our_feh["NET_FEH"] > -4.0, merged_df_whitten_and_our_feh["NET_FEH"]<1.0)
 idx_sane_rrlfe = np.logical_and(merged_df_whitten_and_our_feh["feh_retrieved"] > -4.0, merged_df_whitten_and_our_feh["feh_retrieved"]<1.0)
 idx_sane = np.logical_and(idx_sane_whitten,idx_sane_rrlfe)
@@ -68,15 +67,22 @@ coeffs_poly = np.polyfit(merged_df_whitten_and_our_feh["NET_FEH"].loc[idx_sane],
 print("Coeffs:")
 print(coeffs_poly)
 
+plot_file_name = "junk_whitten.png"
 plt.plot([-4.0,4.0],[-4.0,4.0], linestyle="--", color="gray", zorder=0)
 plt.scatter(merged_df_whitten_and_our_feh["NET_FEH"],merged_df_whitten_and_our_feh["feh_retrieved"],s=10,color="k")
 ax = plt.gca()
 ax.set_aspect('equal', adjustable='box')
 plt.ylabel("[Fe/H], rrlfe")
 plt.xlabel("[Fe/H], Whitten+")
-plt.show()
-'''
-plt.ylim([-3.0,1.0])
-plt.xlim([-4.0,0.0])
-plt.savefig("junk.pdf")
-'''
+plt.savefig(plot_file_name)
+print("Wrote",plot_file_name)
+
+# write out data as csvs (rename cols for clarity)
+text_file_name = "junk_whitten.csv"
+merged_df_whitten_and_our_feh.rename(
+    columns=({ "NET_FEH": "feh_whitten", "feh_retrieved": "feh_rrlfe"}), 
+    inplace=True,
+)
+header = ["feh_whitten", "feh_rrlfe"]
+merged_df_whitten_and_our_feh.to_csv(text_file_name, columns = header, index=False)
+print("Wrote",text_file_name)

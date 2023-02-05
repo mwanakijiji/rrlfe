@@ -116,6 +116,12 @@ plt.savefig("junk.png")
 
 print("Wrote " + file_name_placeholder)
 
+# write out data as csvs (rename cols for clarity)
+text_file_name = "junk_liu.csv"
+header = ["feh_liu", "feh_rrlfe"]
+merged_df_liu_rrlfe_good_all.to_csv(text_file_name, columns = header, index=False)
+print("Wrote",text_file_name)
+
 '''
 # check to see if data points along vertical lines represent multiple single-epoch spectra
 # answer: no! they're different stars
