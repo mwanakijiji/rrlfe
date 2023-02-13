@@ -16,7 +16,8 @@ from modules import (compile_normalization,
                       run_robo,
                       scrape_ew_and_errew,
                       teff_retrieval,
-                      run_emcee)
+                      run_emcee, 
+                      final_corrxn)
 
 
 class GenerateCalib():

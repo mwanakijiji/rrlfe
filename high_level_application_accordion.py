@@ -16,7 +16,8 @@ from modules import (compile_normalization,
                       run_robo,
                       scrape_ew_and_errew,
                       teff_retrieval,
-                      find_feh)
+                      find_feh, 
+                      final_corrxn)
 
 
 class ApplyCalib():
