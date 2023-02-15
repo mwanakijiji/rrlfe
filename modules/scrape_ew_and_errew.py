@@ -197,6 +197,7 @@ class Scraper():
         # note THIS TABLE INCLUDES ALL DATA, GOOD AND BAD
         #df_master_reset = df_master.reset_index(drop=True).copy()
         # this is effectively the same, but gets written out
+        make_dir(write_out_filename) # check if write directory exists and is empty
         df_master.reset_index(drop=True).to_csv(write_out_filename,index=False)
         logging.info("Table of ALL EW info written to " + str(write_out_filename))
         #if self.verbose:

@@ -34,7 +34,7 @@ logging.basicConfig(
 
 # number of cores to use
 #ncpu = multiprocessing.cpu_count()
-ncpu = 4
+ncpu = 3
 
 # prompt user if files will be overwritten? (turn to false if running on HPC)
 prompt_user = True
@@ -120,16 +120,17 @@ class MakeDirsConfig():
                     input()
                     logging.info("------------------------------")
 
-def make_dir(abs_path_name):
+def make_dir(abs_path_name_gen):
     '''
     Make directory listed in the argument if it doesn't already exist
     (similar to class MakeDirsConfig, but for single given pathnames)
 
     INPUTS:
-    abs_path_name: the absolute path [string]
+    abs_path_name_gen: the absolute path; could be file name or directory [string]
     '''
 
-    logging.info("Directory exists: " + abs_path_name)
+    # if it's a file name, get the parent directory
+    abs_path_name = os.path.dirname(abs_path_name_gen)
 
     # if directory does not exist, create it
     if not os.path.exists(abs_path_name):
@@ -138,6 +139,8 @@ def make_dir(abs_path_name):
         #os.mkdir(abs_path_name)
         logging.info("Made directory " + abs_path_name)
         os.umask(original_umask) # revert to previous permission status
+    else:
+        logging.info("Directory exists: " + abs_path_name)
 
     # if it does exist, check if it is not already empty;
     # if it is non-empty, prompt user (as long as prompt_user

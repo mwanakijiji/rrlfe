@@ -121,6 +121,10 @@ class FehRetrieval():
             hdul = fits.open(calib_file)
             soln_header = hdul[1].header
 
+            # if write directories do not exist, create them
+            make_dir(write_pickle_dir)
+            make_dir(write_out_filename)
+
             ## ## find/input EWs for a single spectrum here; use stand-in EWs for the moment
             # number of samples to take within the Gaussian errors around Balmer, CaIIK EWs
             #N_EW_samples = 1 # vestigial
