@@ -51,7 +51,7 @@ step = pipeline.run_robo.Robo(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
@@ -106,6 +106,18 @@ step = pipeline.find_feh.FehRetrieval(
     file_calib_read=stem_abs+"src/calib_solution_20220623_1.fits",
     dir_retrievals_write=stem_abs+"rrlfe_io_20221220_sdss_test/bin/pickled_info/",
     file_retrievals_write=stem_abs+"rrlfe_io_20221220_sdss_test/bin/retrieved_vals.csv")
+
+# add step to procedure
+test_gen.add_step(step)
+'''
+# apply the raw calibration to the McD star EW data, and find the correction based on them
+# this requires a separate application script to have run on the McD data; it's too complicated to build it in here; TBD later
+step = pipeline.final_corrxn.ApplyCorrxn(
+    module_name="module16",
+    file_name_basis_raw_retrieved_fehs=stem_abs+"rrlfe_io_20220803_01_mcd/bin/retrieved_vals_20220803.csv", # retrieved McD Fe/H values based on raw rrlfe calibration
+    soln_fits_name=stem_abs+"rrlfe_io_red/bin/junk_calib_solution.fits", # raw calibration which is applied, and to which corrxn is appended to
+    file_name_corrected_retrieved_fehs_write=stem_abs+"rrlfe_io_20221220_sdss_test/bin/junk_test_retrieved_vals.csv"
+)
 
 # add step to procedure
 test_gen.add_step(step)
