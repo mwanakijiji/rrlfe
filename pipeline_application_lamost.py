@@ -1,8 +1,8 @@
 import high_level_application_accordion as pipeline
 
 # absolute stem of repo; needed to make dirs if they don't exist
-#stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
-stem_abs = "/home/prunelle/rrlfe/"
+stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
+#stem_abs = "/home/prunelle/rrlfe/"
 
 # instantiate object that will contain the series of reduction steps
 test_gen = pipeline.ApplyCalib() ## ## need to let this set config file being read in (currently in __init__)
@@ -52,7 +52,7 @@ step = pipeline.run_robo.Robo(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
@@ -107,6 +107,17 @@ step = pipeline.find_feh.FehRetrieval(
     file_calib_read=stem_abs+"src/calib_solution_20220623_1.fits",
     dir_retrievals_write=stem_abs+"rrlfe_io_20230105_lamost_test/bin/pickled_info/",
     file_retrievals_write=stem_abs+"rrlfe_io_20230105_lamost_test/bin/retrieved_vals.csv")
+
+# add step to procedure
+test_gen.add_step(step)
+'''
+# apply final correction
+step = pipeline.final_corrxn.ApplyCorrxn(
+    module_name="module16",
+    file_name_basis_raw_retrieved_fehs=stem_abs+"rrlfe_io_20230105_lamost_test/bin/retrieved_vals.csv", # retrieved McD Fe/H values based on raw rrlfe calibration
+    soln_fits_name=stem_abs+"rrlfe_io_red/bin/junk_calib_solution.fits", # calibration file which includes correction info in the header
+    file_name_corrected_retrieved_fehs_write=stem_abs+"rrlfe_io_20230105_lamost_test/bin/retrieved_vals_corrected.csv" # mapped high-res literature Fe/H values for McD stars
+)
 
 # add step to procedure
 test_gen.add_step(step)
