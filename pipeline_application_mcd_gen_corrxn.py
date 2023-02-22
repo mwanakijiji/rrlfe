@@ -1,5 +1,6 @@
 # Applies a raw correction based on synthetic data to the McDonald dataset,
-# and then generates the offset correction
+# and then generates the offset correction given overlapping stars in high-res
+# spectroscopy literature
 
 import high_level_application_accordion as pipeline
 
