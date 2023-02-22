@@ -114,9 +114,9 @@ test_gen.add_step(step)
 # this requires a separate application script to have run on the McD data; it's too complicated to build it in here; TBD later
 step = pipeline.final_corrxn.ApplyCorrxn(
     module_name="module16",
-    file_name_basis_raw_retrieved_fehs=stem_abs+"rrlfe_io_20220803_01_mcd/bin/retrieved_vals_20220803.csv", # retrieved McD Fe/H values based on raw rrlfe calibration
+    file_name_basis_raw_retrieved_fehs=stem_abs+"rrlfe_io_20221220_sdss_test/bin/retrieved_vals.csv", # retrieved McD Fe/H values based on raw rrlfe calibration
     soln_fits_name=stem_abs+"rrlfe_io_red/bin/junk_calib_solution.fits", # raw calibration which is applied, and to which corrxn is appended to
-    file_name_corrected_retrieved_fehs_write=stem_abs+"rrlfe_io_20221220_sdss_test/bin/junk_test_retrieved_vals.csv"
+    file_name_corrected_retrieved_fehs_write=stem_abs+"rrlfe_io_20221220_sdss_test/bin/retrieved_vals_corrected.csv"
 )
 
 # add step to procedure

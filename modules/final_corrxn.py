@@ -88,8 +88,8 @@ class FindCorrxn:
         plt.show()
         '''
         
-        # returns resids to 1-to-1 line for testing only; the important part above is just to append values
-        # to a FITS file
+        # returns resids to 1-to-1 line for testing only; the important part above is just to append params
+        # of line of best fit to a FITS file
         return vals_rrlfe_r - resids
     
 
@@ -102,6 +102,8 @@ class ApplyCorrxn:
         file_name_basis_raw_retrieved_fehs (str): file name of raw retrieved Fe/Hs
         soln_fits_name (str): file name containing the raw calibration as a binary table,
             and the correction in the header
+        file_name_corrected_retrieved_fehs_write (str): file name of the Fe/Hs with col
+            of corrected Fe/Hs
         
     Returns:
         writes out table with corrected values
