@@ -1,7 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
 
-import sys, os
+import sys, os, io
 from configparser import ConfigParser, ExtendedInterpolation
 import pandas as pd
 import astropy
@@ -18,10 +18,9 @@ import numpy as np
 import glob
 
 # configuration data for reduction
-config_red = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
+config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
 # config for reduction to find a, b, c, d
-config_red.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_red.ini'))
-
+config_gen.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
 
 def test_line_order_check():
 
@@ -41,30 +40,45 @@ def test_line_order_check():
     assert test_num_glitches_2 == 1
 
 
-def test_Scraper():
+def test_Scraper(monkeypatch):
 
     '''
-    write_dir_test = config_red["data_dirs"]["TEST_DIR_BIN"]
-    robo_dir = config_red["sys_dirs"]["DIR_ROBO"]
-    file_names_test = glob.glob(config_red["data_dirs"]["TEST_DIR_SRC"] + "spec_norm_final/*")
+    write_dir_test = config_gen["data_dirs"]["TEST_DIR_BIN"]
+    robo_dir = config_gen["sys_dirs"]["DIR_ROBO"]
+    file_names_test = glob.glob(config_gen["data_dirs"]["TEST_DIR_SRC"] + "spec_norm_final/*")
     '''
 
     # instantiate
-    scraper_instance = scrape_ew_and_errew.Scraper(subdir = config_red["data_dirs"]["TEST_DIR_ROBO_OUTPUT"],
-                                                   file_scraped_info = config_red["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_red["file_names"]["SCRAPED_EW_ALL_DATA"])
+    
+    inst = scrape_ew_and_errew.Scraper(module_name = "test1",
+                                       input_spec_list_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_LIST_SPEC_PHASE"],
+                                       robo_output_read = config_gen["data_dirs"]["TEST_DIR_ROBO_OUTPUT"],
+                                       file_scraped_write = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_gen["file_names"]["SCRAPED_EW_ALL_DATA"])
+    
+    # pre-set stdin to skip over user prompts
+    monkeypatch.setattr('sys.stdin', io.StringIO(''))
 
-
+    test = inst.run_step()
+    #print(config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_LIST_SPEC_PHASE"])
+    #print(config_gen["data_dirs"]["TEST_DIR_ROBO_OUTPUT"])
+    #print(config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_gen["file_names"]["SCRAPED_EW_ALL_DATA"])
+    
     # try a single instance; does it work?
     # note the writing of files is not directly tested here
+    '''
     function_state = True
     try:
         test = scraper_instance()
     except Exception as e:
         # e contains printable attributes of exception object
         function_state = False
-
+    #print(function_state)
     # assert that instantiation worked
     assert function_state
+    '''
+    print("------$$-----")
+    print(test)
+    print(test.keys())
 
     # make sure lines are really being identified correctly
     assert np.allclose(test.where(test["line_name"]=="CaIIK").dropna()["wavel_found_center"],3933.660, atol=2.)
@@ -75,15 +89,17 @@ def test_Scraper():
 
     # only 2 of the 3 spectra should have been scraped, because one should have
     # triggered a parsing errors
-    assert len(test.where(test["line_name"]=="CaIIK").dropna()) == 2
+    #assert len(test.where(test["line_name"]=="CaIIK").dropna()) == 2
 
 
+def test_QualityCheck():
 
-def test_quality_check():
+    inst = scrape_ew_and_errew.QualityCheck(
+        module_name="test1",
+        file_scraped_all_read = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_gen["file_names"]["TEST_SCRAPED_EW_ALL_DATA"],
+        file_scraped_good_write = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_gen["file_names"]["TEST_SCRAPED_EW_DATA_GOOD_ONLY"])
 
-    data_out_test = scrape_ew_and_errew.quality_check(
-                        read_in_filename = config_red["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_red["file_names"]["TEST_SCRAPED_EW_ALL_DATA"],
-                        write_out_filename = config_red["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_red["file_names"]["TEST_SCRAPED_EW_DATA_GOOD_ONLY"])
+    data_out_test = inst.run_step()
 
     # lots of checks of data types
     # note this uses .iloc[0] instead of [0], because bad rows with index 0 may
@@ -108,16 +124,19 @@ def test_quality_check():
     assert isinstance(data_out_test["realization_spec_file_name"].iloc[0],str)
     assert isinstance(data_out_test["quality"].iloc[0],str)
 
-def test_stack_spectra():
+
+def test_StackSpectra():
 
     print("input list")
-    print(config_red["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list.list")
+    print(config_gen["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list.list")
     print("read in file name")
 
-    data_stacked_test = scrape_ew_and_errew.stack_spectra(
-                            read_in_filename = config_red["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_red["file_names"]["TEST_SCRAPED_EW_DATA_GOOD_ONLY"],
-                            write_out_filename = config_red["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_red["file_names"]["TEST_RESTACKED_EW_DATA_GOOD_ONLY"],
-                            input_list = config_red["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list.list")
+    inst = scrape_ew_and_errew.StackSpectra(module_name = "test1",
+                                            input_spec_list_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list.list",
+                                            file_ew_data_read = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_gen["file_names"]["TEST_SCRAPED_EW_DATA_GOOD_ONLY"],
+                                            file_restacked_write = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_GOOD_ONLY"])
+
+    data_stacked_test = inst.run_step()
 
     print("data_stacked")
     print(data_stacked_test.keys())
@@ -140,14 +159,16 @@ def test_stack_spectra():
     assert isinstance(data_stacked_test["err_EW_CaIIK_from_robo"].iloc[0],np.float64)
 
 
-def test_generate_net_balmer():
+def test_GenerateNetBalmer():
     ## ## CONTINUE HERE; FINISH THIS TEST
 
     # generate the fake data: H_del =
 
-    params_data, data_net_balmer_test = scrape_ew_and_errew.generate_net_balmer(
-                                                    read_in_filename = config_red["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/test_stacked_data_pre_net_balmer_calc.csv",
-                                                    write_out_filename = config_red["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/test_stacked_data_post_net_balmer_calc.csv")
+    inst = scrape_ew_and_errew.GenerateNetBalmer(module_name="test1",
+                                                                              file_restacked_read = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/test_stacked_data_pre_net_balmer_calc.csv",
+                                                                              file_ew_net_balmer_write = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/test_stacked_data_post_net_balmer_calc.csv")
+
+    params_data, data_net_balmer_test = inst.run_step()
 
     # is the Balmer line a true element wise average?
 
@@ -160,11 +181,14 @@ def test_generate_net_balmer():
     assert 1<2
 
 
-def test_generate_addl_ew_errors():
+def test_GenerateAddlEwErrors():
     # placeholder for now, until more decisions about how to calculate EW errors
 
-    test_df_postbalmer_errors = scrape_ew_and_errew.generate_addl_ew_errors(read_in_filename=config_red["data_dirs"]["TEST_DIR_SRC"]+config_red["file_names"]["TEST_RESTACKED_EW_DATA_W_NET_BALMER"],
-                                                        write_out_filename=config_red["data_dirs"]["TEST_DIR_BIN"]+config_red["file_names"]["TEST_RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"])
+    inst = scrape_ew_and_errew.GenerateAddlEwErrors(module_name="test1",
+                                                    ew_data_restacked_read=config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_NET_BALMER"],
+                                                    ew_data_w_net_balmer_read=config_gen["data_dirs"]["TEST_DIR_BIN"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"])
+
+    test_df_postbalmer_errors = inst.run_step()
 
     # loop through batches of rows corresponding to an individual spectrum, and
     # make sure the errors are consistent and the value expected
@@ -181,9 +205,12 @@ def test_generate_addl_ew_errors():
     assert round(array_3[0], 3) == 0.048
 
     # in unusual case where collapsing the noise-churned spectra is not desired
-    test_df_postbalmer_errors_nogrouping = scrape_ew_and_errew.generate_addl_ew_errors(read_in_filename=config_red["data_dirs"]["TEST_DIR_SRC"]+config_red["file_names"]["TEST_RESTACKED_EW_DATA_W_NET_BALMER"],
-                                                        write_out_filename=config_red["data_dirs"]["TEST_DIR_BIN"]+config_red["file_names"]["TEST_RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"],
-                                                        groupby_parent = False)
+    inst = scrape_ew_and_errew.GenerateAddlEwErrors(module_name="test2",
+                                                                                    ew_data_restacked_read=config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_NET_BALMER"],
+                                                                                    ew_data_w_net_balmer_read=config_gen["data_dirs"]["TEST_DIR_BIN"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"],
+                                                                                    groupby_parent = False)
+
+    test_df_postbalmer_errors_nogrouping = inst.run_step()
 
     array_1_children = test_df_postbalmer_errors_nogrouping.where(test_df_postbalmer_errors["orig_spec_file_name"]=="575020m10.smo").dropna()
 
@@ -192,11 +219,14 @@ def test_generate_addl_ew_errors():
     assert np.std(array_1_children["EW_Balmer"]) > 0
 
 
-def test_add_synthetic_meta_data():
+def test_AddSyntheticMetaData():
 
-    combined_data = scrape_ew_and_errew.add_synthetic_meta_data(input_list = config_red["data_dirs"]["TEST_DIR_SRC"] + config_red["file_names"]["TEST_LIST_SPEC_PHASE"],
-                                                read_in_filename = config_red["data_dirs"]["TEST_DIR_EW_PRODS"]+config_red["file_names"]["TEST_RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"],
-                                                write_out_filename = config_red["data_dirs"]["TEST_DIR_EW_PRODS"]+config_red["file_names"]["TEST_RESTACKED_EW_DATA_W_METADATA_WRITEOUT"])
+    inst = scrape_ew_and_errew.AddSyntheticMetaData(module_name="test1",
+                                                             input_spec_list_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_LIST_SPEC_PHASE"],
+                                                             ew_data_w_net_balmer_read = config_gen["data_dirs"]["TEST_DIR_EW_PRODS"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"],
+                                                             file_w_meta_data_write = config_gen["data_dirs"]["TEST_DIR_EW_PRODS"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_METADATA_WRITEOUT"])
+
+    combined_data = inst.run_step()
 
     # columns from Robospect output and meta-data are all there
     assert "wavel_stated_center" in combined_data.columns

@@ -156,7 +156,11 @@ def make_dir(abs_path_name_gen):
             logging.info("------------------------------")
             logging.info(abs_path_name)
             print("The above is a non-empty directory. Do you want to proceed? [Yes]")
-            input()
+            # handle EOFError in case this is being run in a unit test
+            try:
+                input()
+            except EOFError as e:
+                print('')
             logging.info("------------------------------")
 
 '''

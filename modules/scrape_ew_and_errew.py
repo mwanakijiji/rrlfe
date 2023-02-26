@@ -16,6 +16,30 @@ import matplotlib.pyplot as plt
 import matplotlib.pylab as pl
 from . import *
 
+class junk_Class():
+    """
+    Class for troubleshooting tests
+
+    Parameters:
+        module_name (str): arbitrary module name
+        var_1 (list): string
+
+    Returns:
+        [csv written to disk; dataframe is returned for testing only]
+    """
+
+    def __init__(self,
+        module_name,
+        var1):
+
+        self.name = module_name
+        self.var1 = var1
+
+    def run_step(self, attribs = None):
+
+        return 1
+
+
 def line_order_check(line_centers):
     """
     Sanity check: are the lines listed in order?
@@ -146,6 +170,7 @@ class Scraper():
                                         "[2","uncertaintyMu","uncertaintySigma","uncertaintyAmp",
                                         "[3","priorMu","priorSigma","priorAmp","EQW","uncertaintyEQW",
                                         "chiSqr","flags","blendGroup","line_name"])
+
             # remove dummy columns
             df = df.drop(columns=["[1","[2","[3"])
             # remove Robospect delimiter strings from columns and cast contents as floats
