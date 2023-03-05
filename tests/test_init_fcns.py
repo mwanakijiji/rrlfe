@@ -3,7 +3,8 @@ matplotlib.use('Agg')
 
 #from ../rrlyrae_metallicity.modules2 import *
 
-import sys, os
+import sys, os, io
+#from configparser import ConfigParser
 #myPath = os.path.dirname(os.path.abspath(__file__))
 #sys.path.insert(0, myPath)
 
@@ -20,16 +21,17 @@ from conf import *
 
 
 # check if the directory-making function works
-def test_make_dirs():
+def test_make_dirs(monkeypatch):
 
-    # call function to make directories
-    # (here we choose 'objective' to apply a calibration, though it could
-    # also be to find a new calibration)
-    make_dirs(objective = "find_calib")
+    # loop over directories in reduction config file, make directories,
+    # and check they do exist 
 
-    # do all the directories exist now?
-    for vals in config_red["data_dirs"]:
-        abs_path_name = str(config_red["data_dirs"][vals])
+    # pre-set stdin to skip over user prompts
+    monkeypatch.setattr('sys.stdin', io.StringIO(''))
+
+    for vals in config_gen["data_dirs"]:
+        abs_path_name = str(config_gen["data_dirs"][vals])
+        make_dir(abs_path_name)
         assert os.path.exists(abs_path_name)
 
 

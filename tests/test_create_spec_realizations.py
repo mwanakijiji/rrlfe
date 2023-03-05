@@ -18,9 +18,9 @@ from conf import *
 import numpy as np
 
 # configuration data for reduction
-config_red = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
+config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
 # config for reduction to find a, b, c, d
-config_red.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_red.ini'))
+config_gen.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
 
 '''
 # check if the directory-making function works
@@ -74,7 +74,7 @@ def test_calc_noise():
 def test_read_spec():
 
     # ascii format
-    spec_name_ascii = config_red["data_dirs"]["TEST_DIR_SRC"] + "raw_spec/575020m05.smo"
+    spec_name_ascii = config_gen["data_dirs"]["TEST_DIR_SRC"] + "raw_spec/575020m05.smo"
     test_spec_tab_ascii, test_hdr_ascii = create_spec_realizations.read_spec(spec_name=spec_name_ascii, format="ascii.no_header")
 
     # for ascii data, there should be 3 columns of floats, and NO header
@@ -88,8 +88,8 @@ def test_read_spec():
 def test_generate_realizations():
 
     # use some test spectra
-    abs_stem_src = config_red["data_dirs"]["TEST_DIR_SRC"] + "raw_spec/"
-    abs_stem_bin = config_red["data_dirs"]["TEST_DIR_BIN"]
+    abs_stem_src = config_gen["data_dirs"]["TEST_DIR_SRC"] + "raw_spec/"
+    abs_stem_bin = config_gen["data_dirs"]["TEST_DIR_BIN"]
 
     # set fractional noise level for these tests
     noise_choice = 0.01
@@ -185,12 +185,12 @@ def test_create_norm_spec():
                             ]
 
 
-    #test_input_name_list = config_red["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list.list"
+    #test_input_name_list = config_gen["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list.list"
     ## ## note TEST_BIN might be changed to TEST_DIR_REZNS_SPEC_NORM, if it can be changed across multiple functions
     test_new_name_list = create_spec_realizations.create_norm_spec(
                             name_list=test_input_name_list,
-                            normdir=config_red["data_dirs"]["TEST_DIR_REZNS_SPEC"],
-                            finaldir=config_red["data_dirs"]["TEST_DIR_REZNS_SPEC_NORM"])
+                            normdir=config_gen["data_dirs"]["TEST_DIR_REZNS_SPEC"],
+                            finaldir=config_gen["data_dirs"]["TEST_DIR_REZNS_SPEC_NORM"])
 
     # new file name list should have full path and same basename
     assert [i.split("/")[-1] for i in test_new_name_list] == test_input_name_list
@@ -198,7 +198,7 @@ def test_create_norm_spec():
 
 def test_read_list():
 
-    abs_stem_src = config_red["data_dirs"]["TEST_DIR_SRC"]
+    abs_stem_src = config_gen["data_dirs"]["TEST_DIR_SRC"]
 
     file_name_test = abs_stem_src + "test_input_file_list.list"
 
@@ -224,8 +224,8 @@ def test_write_bckgrnd_input():
        directory
     '''
 
-    indir_test = config_red["data_dirs"]["TEST_DIR_SRC"]
-    normdir_test = config_red["data_dirs"]["TEST_DIR_BIN"]
+    indir_test = config_gen["data_dirs"]["TEST_DIR_SRC"]
+    normdir_test = config_gen["data_dirs"]["TEST_DIR_BIN"]
     name_list_test = ["dummy_spec_001.dat","dummy_spec_002.dat","dummy_spec_003.dat"]
 
     bgrnd_input_filename_test = create_spec_realizations.write_bckgrnd_input(
@@ -242,7 +242,7 @@ def test_write_bckgrnd_input():
 def test_read_bkgrnd_spec():
     # can spectra written by background routine be written in as astropy tables?
 
-    abs_stem_src = config_red["data_dirs"]["TEST_DIR_SRC"]
+    abs_stem_src = config_gen["data_dirs"]["TEST_DIR_SRC"]
 
     # loop over a few files
     # (note they should have 3 columns: 1.) wavelength, 2.) flux, 3.) background flux)
