@@ -10,6 +10,7 @@ import logging
 from setuptools import Distribution
 from setuptools.command.install import install
 from datetime import datetime
+from configparser import ConfigParser, ExtendedInterpolation
 
 # get pipeline hash
 # warning: may throw error on cluster
@@ -38,6 +39,11 @@ ncpu = 3
 
 # prompt user if files will be overwritten? (turn to false if running on HPC)
 prompt_user = True
+
+# configuration data for reduction
+config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
+# config for reduction to find a, b, c, d
+config_gen.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
 
 # set some constants
 
@@ -206,7 +212,7 @@ def phase_regions():
     '''
 
     # obtain values as floats
-    value1 = config_red.getfloat("phase", "MIN_GOOD")
-    value2 = config_red.getfloat("phase", "MAX_GOOD")
+    value1 = config_gen.getfloat("phase", "MIN_GOOD")
+    value2 = config_gen.getfloat("phase", "MAX_GOOD")
 
     return value1, value2

@@ -44,13 +44,22 @@ class CornerPlot():
         mcmc_text_output_file_name = self.file_name_mcmc_posterior_read
         corner_plot_putput_file_name = self.plot_corner_write
 
-        model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
+        test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
+        print(test_samples)
+
+        if np.shape(test_samples)[1] == 5:
+            # 5 rows: 1 index and 4 chains
+            model = "abcd"
+        elif np.shape(test_samples)[1] == 9:
+            # 9 rows: 1 index and 8 chains
+            model = "abcdfghk"
 
         if (model == "abcd"):
 
             # corner plot (requires 'storechain=True' in enumerate above)
-            test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), names=["a", "b", "c", "d"])
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4), delim_whitespace=True, names=["a", "b", "c", "d"])
+
+            #print(samples)
             fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$"],
                                 quantiles=[0.16, 0.5, 0.84],
                                 title_fmt='.2f',
@@ -92,7 +101,7 @@ class CornerPlot():
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
             test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), names=["a", "b", "c", "d", "f", "g", "h", "k"])
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4,5,6,7,8), delim_whitespace=True, names=["a", "b", "c", "d", "f", "g", "h", "k"])
             fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$", "$f$", "$g$", "$h$", "$k$"],
                                 quantiles=[0.16, 0.5, 0.84],
                                 title_fmt='.2f',
@@ -373,21 +382,26 @@ class WriteSolnToFits():
                 file_name_mcmc_posterior_read,
                 file_name_teff_data_read,
                 soln_write_name,
+                model_type_override=None,
                 test_flag=False):
 
         self.name = module_name
         self.file_name_mcmc_posterior_read = file_name_mcmc_posterior_read
         self.file_name_teff_data_read = file_name_teff_data_read
         self.soln_write_name = soln_write_name
+        self.model_type_override = model_type_override 
         self.test_flag = test_flag
 
     def run_step(self, attribs = None):
+
+        print(attribs["calib_type"])
 
         model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
         mcmc_text_output_file_name = self.file_name_mcmc_posterior_read
         teff_data_retrieve_file_name = self.file_name_teff_data_read
         soln_write_name = self.soln_write_name
-        test_flag=False
+        model_type_override = self.model_type_override
+        test_flag=self.test_flag
 
         # initialize FITS header and append keys
         hdr = fits.Header()
@@ -401,7 +415,7 @@ class WriteSolnToFits():
         # set compound datatype
         dtype=np.rec.fromrecords([['string_key', 189.6752158]]).dtype
         # load data, skipping header and hash corresponding to that file
-        teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=1, usecols=(0,1), delimiter=':', dtype=dtype)
+        teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=2, usecols=(0,1), delimiter=':', dtype=dtype)
 
         dict_teff_data = {}
         for key, val in teff_data:
@@ -423,11 +437,15 @@ class WriteSolnToFits():
         hdr["HISTORY"] = "Start time " + timestring_human
         hdr["HISTORY"] = "Log file " + log_filename
 
+        # was there an override command when the class was called? if so, override the model type here
+        if model_type_override:
+            model = model_type_override
+
         # read in posterior in csv form
         if (model == "abcd"):
 
             # corner plot (requires 'storechain=True' in enumerate above)
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), names=["a", "b", "c", "d"])
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), delim_whitespace=True, names=["a", "b", "c", "d"])
             c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
             c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
             c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
@@ -438,7 +456,11 @@ class WriteSolnToFits():
         elif (model == "abcdfghk"):
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), names=["a", "b", "c", "d", "f", "g", "h", "k"])
+            print(model)
+            print(mcmc_text_output_file_name)
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), delim_whitespace=True, names=["a", "b", "c", "d", "f", "g", "h", "k"])
+            #print(samples)
+
             c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
             c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
             c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
@@ -453,7 +475,6 @@ class WriteSolnToFits():
         # write out as FITS table
         if not test_flag: # pragma: no cover
             if os.path.exists(soln_write_name):
-
                 input("A calibration solution file already exists! \nDo " +\
                         "what you want with that file and hit [ENTER] (will overwrite)")
 
