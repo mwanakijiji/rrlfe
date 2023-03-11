@@ -41,17 +41,19 @@ def test_write_soln_to_fits():
                                             file_name_mcmc_posterior_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_MCMC_OUTPUT_ABCD"],
                                             file_name_teff_data_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_READIN_TREND_TEFF_VS_BALMER"],
                                             soln_write_name = config_gen["data_dirs"]["TEST_DIR_BIN"] + config_gen["file_names"]["CALIB_SOLN"],
+                                            model_type_override = "abcd", 
                                             test_flag=True)
     
-    test_abcd = inst_abcd.run_step()
+    test_abcd = inst_abcd.run_step(attribs=config_gen)
 
     inst_abcdfghk = run_emcee.WriteSolnToFits(module_name="test2",
                                                 file_name_mcmc_posterior_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_MCMC_OUTPUT_ABCDFGHK"],
                                                 file_name_teff_data_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_READIN_TREND_TEFF_VS_BALMER"],
                                                 soln_write_name = config_gen["data_dirs"]["TEST_DIR_BIN"] + config_gen["file_names"]["CALIB_SOLN"],
+                                                model_type_override = "abcdfghk", 
                                                 test_flag=True)
     
-    test_abcdfghk = inst_abcdfghk.run_step()
+    test_abcdfghk = inst_abcdfghk.run_step(attribs=config_gen)
 
     # assert correct type and expected cols exist
     assert isinstance(test_abcd,fits.hdu.table.BinTableHDU)

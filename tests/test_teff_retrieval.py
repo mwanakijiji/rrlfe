@@ -23,29 +23,32 @@ from modules import teff_retrieval
 from conf import *
 
 # configuration data for reduction
-config_red = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
+config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
 # config for reduction to find a, b, c, d
-config_red.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_red.ini'))
+config_gen.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
 
 
-def test_temp_vs_balmer(test_df_poststack_file_name_read = config_red["data_dirs"]["TEST_DIR_SRC"]+config_red["file_names"]["TEST_RESTACKED_EW_DATA_W_METADATA_STANDALONE"],
-                        test_df_poststack_file_name_write = config_red["data_dirs"]["TEST_DIR_SRC"]+config_red["file_names"]["TEST_RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"],
-                        test_teff_data_write = config_red["data_dirs"]["TEST_DIR_BIN"] + config_red["file_names"]["TEST_TREND_TEFF_VS_BALMER"]):
+def test_TempVsBalmer(test_df_poststack_file_name_read = config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_METADATA_STANDALONE"],
+                        test_df_poststack_file_name_write = config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"],
+                        test_teff_data_write = config_gen["data_dirs"]["TEST_DIR_BIN"] + config_gen["file_names"]["TEST_TREND_TEFF_VS_BALMER"]):
 
 
-    df_test = teff_retrieval.temp_vs_balmer(df_poststack_file_name_read = test_df_poststack_file_name_read,
-                                            df_poststack_file_name_write = test_df_poststack_file_name_write,
-                                            teff_data_write = test_teff_data_write,
-                                            plot_write = "dummy.png",
+    inst = teff_retrieval.TempVsBalmer(module_name = "test1",
+                                       file_ew_poststack_read = test_df_poststack_file_name_read,
+                                            file_ew_tefffit_write = test_teff_data_write,
+                                            plot_tefffit_write = "dummy.png",
+                                            data_tefffit_write = test_df_poststack_file_name_write,
                                             plot=False,
                                             test_flag=True)
+    
+    df_test = inst.run_step(attribs = config_gen)
 
     # check that returned filetype is a pandas dataframe, and that new column 'teff_bestfit' exists
     assert isinstance(df_test, pd.DataFrame)
     assert 'teff_bestfit' in df_test.keys()
 
 
-def test_line_fit_temp_range(test_df_poststack_file_name_read = config_red["data_dirs"]["TEST_DIR_SRC"]+config_red["file_names"]["TEST_RESTACKED_EW_DATA_W_METADATA_STANDALONE"]):
+def test_line_fit_temp_range(test_df_poststack_file_name_read = config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_METADATA_STANDALONE"]):
 
     # read in data
     df_poststack = pd.read_csv(test_df_poststack_file_name_read)
