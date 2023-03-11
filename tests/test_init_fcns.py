@@ -1,5 +1,6 @@
 import matplotlib
 matplotlib.use('Agg')
+from configparser import ConfigParser, ExtendedInterpolation
 
 #from ../rrlyrae_metallicity.modules2 import *
 
