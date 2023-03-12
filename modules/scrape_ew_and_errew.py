@@ -181,11 +181,11 @@ class Scraper():
             try:
                 # this will fail if there are infs in the EWs
                 df["gaussianAmp"] = df["gaussianAmp"].str.replace("]","", regex=True)
-                df["gaussianAmp"] = df["gaussianAmp"].astype(np.float)
+                df["gaussianAmp"] = df["gaussianAmp"].astype(float)
                 df["uncertaintyAmp"] = df["uncertaintyAmp"].str.replace("]","", regex=True)
-                df["uncertaintyAmp"] = df["uncertaintyAmp"].astype(np.float)
+                df["uncertaintyAmp"] = df["uncertaintyAmp"].astype(float)
                 df["priorAmp"] = df["priorAmp"].str.replace("]","", regex=True)
-                df["priorAmp"] = df["priorAmp"].astype(np.float)
+                df["priorAmp"] = df["priorAmp"].astype(float)
             except:
                 # skip this file
                 logging.error("Parsing error! " + file_list[t])
