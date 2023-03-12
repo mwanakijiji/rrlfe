@@ -121,7 +121,7 @@ class Scraper():
         orig_spec_list = self.input_spec_list_read
 
         # get list of filenames without the path
-        ## ## note the string being sought here is specific to RW's synthetic spectra; this is a weakness here and needs to be fixed later!
+        ## ## note the string being sought here is specific to RW's synthetic spectra; this is a weakness here and needs to be fixed later
         file_list_long = glob.glob(subdir+'/'+'*robolines')
         file_list_unsorted = [os.path.basename(x) for x in file_list_long]
         file_list = sorted(file_list_unsorted)
@@ -129,6 +129,8 @@ class Scraper():
         # read in original file names
         input_list = pd.read_csv(orig_spec_list)
         orig_spec_list = input_list["orig_spec_file_name"]
+        print("!---------  orig_spec_list")
+        print(orig_spec_list)
 
         # EW info will get scraped into this
         write_out_filename = self.file_scraped_info
@@ -170,7 +172,8 @@ class Scraper():
                                         "[2","uncertaintyMu","uncertaintySigma","uncertaintyAmp",
                                         "[3","priorMu","priorSigma","priorAmp","EQW","uncertaintyEQW",
                                         "chiSqr","flags","blendGroup","line_name"])
-
+            print("!---------  df")
+            print(df)
             # remove dummy columns
             df = df.drop(columns=["[1","[2","[3"])
             # remove Robospect delimiter strings from columns and cast contents as floats
@@ -217,7 +220,8 @@ class Scraper():
             else:
                 df_master = pd.concat([df_master, df])
                 del df # clear variable
-
+        print("--------- ! df_master")
+        print(df_master)
         # write to csv, while resetting the indices
         # note THIS TABLE INCLUDES ALL DATA, GOOD AND BAD
         #df_master_reset = df_master.reset_index(drop=True).copy()
