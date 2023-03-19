@@ -28,3 +28,13 @@ Logo art by `Anna McElhannon <https://www.linkedin.com/in/annamcelhannon>`_
   :maxdepth: 1
 
   api
+
+.. toctree::
+  :maxdepth: 1
+
+  tutorial_gen
+
+.. toctree::
+  :maxdepth: 1
+
+  tutorial_apply
