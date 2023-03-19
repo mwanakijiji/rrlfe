@@ -58,8 +58,8 @@ def feh_abcdfghk_vector(coeff_a,coeff_b,coeff_c,coeff_d,coeff_f,coeff_g,coeff_h,
     A_cap = np.add(coeff_g,np.multiply(coeff_k,H))
     B_cap = np.add(coeff_c,np.add(np.multiply(coeff_d,H),np.multiply(coeff_h,np.power(H,2))))
     C_cap = np.add(coeff_a,np.add(np.multiply(coeff_b,H),np.subtract(np.multiply(coeff_f,np.power(H,2)),K)))
+    
     # since this involves a quadratic, there are two roots
-    #import ipdb; ipdb.set_trace()
     F_pos = np.divide(-np.add(
                             B_cap,
                               np.sqrt(
@@ -68,8 +68,7 @@ def feh_abcdfghk_vector(coeff_a,coeff_b,coeff_c,coeff_d,coeff_f,coeff_g,coeff_h,
                                            )
                              ),
                       np.multiply(2,A_cap))
-    #print(F_pos)
-    #import ipdb; ipdb.set_trace()
+
     F_neg = np.divide(-np.subtract(
                                 B_cap,
                                 np.sqrt(
@@ -77,31 +76,11 @@ def feh_abcdfghk_vector(coeff_a,coeff_b,coeff_c,coeff_d,coeff_f,coeff_g,coeff_h,
                                                              4*np.multiply(A_cap,C_cap))
                                             )),
                       np.multiply(2,A_cap))
-    #print(F_neg)
-    #import ipdb; ipdb.set_trace()
 
     return F_pos, F_neg
 
 
 def apply_one_spec(ew_data_pass, N_MCMC_samples, mcmc_chain, soln_header):
-
-
-    print('------apply_one_spec------')
-    print(ew_data_pass)
-    print(N_MCMC_samples)
-    print(mcmc_chain)
-    # unzip
-    #ew_data_pass, N_MCMC_samples, mcmc_chain = zip(*zipped_pass)
-
-    # redefine
-    #ew_data_pass = ew_data_pass[0]
-    #N_MCMC_samples = N_MCMC_samples[0]
-    #mcmc_chain = mcmc_chain[0]
-    #ew_data_split,[N_MCMC_samples],[mcmc_chain])
-
-    print("-------------")
-    print(ew_data_pass)
-    #logging.info("Finding Fe/H for spectrum " + str(ew_data["orig_spec_file_name"]))
 
     Balmer_EW = ew_data_pass["EW_Balmer"]
     CaIIK_EW = ew_data_pass["EW_CaIIK"]
@@ -255,62 +234,19 @@ class FehRetrieval():
         ew_data["err_feh_retrieved"] = np.nan
         ew_data["teff_retrieved"] = np.nan
 
-        # loop over the rows of the table of good EW data, with each row
-        # corresponding to a spectrum; note that, depending on user setting
-        # 'groupby,' this could either be a parent spectrum or individual noise-churned
-        # spectra; the stuff that gets printed to screen here just uses the parent
-        # spectrum name
-        ##for row_num in range(0,len(ew_data)):
         set_start_method('fork') # necessary to spawn children
         pool = multiprocessing.Pool(ncpu)
-        #pool.apply_async(apply_one_spec, args=(ew_data, ), callback=collect_results)
-
-        #results = [[idx, row] for idx, row in ew_data.iterrows()]
 
         # split big dataframe into separate ones, one dataframe per row
         #results = [v for k, v in ew_data.groupby('orig_spec_file_name')]
         ew_data_split = ew_data.to_dict('records')
-        #results = {k: v for k, v in ew_data.groupby('orig_spec_file_name')}
-        #print(results['orig_spec_file_name'])
-        '''
-        print("results")
-        print(results)
-        print(len(results))
-        #print(np.shape(results))
-        print(type(results))
-        print(results[0])
-        print(results[0]['orig_spec_file_name'])
-        '''
-        ## ## CONTINUE HERE
-        #print(results[0])
-        #import ipdb; ipdb.set_trace()
-        #print(len(ew_data_split))
-        #results = pool.map(apply_one_spec, ew_data_split)
 
         # zip things for multiprocessing
-        
-        #test4 = [N_MCMC_samples]
-
-        #data_zipped = zip(ew_data_split,[N_MCMC_samples],[mcmc_chain])
-        data_zipped = zip(ew_data_split,[N_MCMC_samples],[mcmc_chain])
-        
-        #import ipdb; ipdb.set_trace()
-        
         n_elem = len(ew_data_split)
         all_zipped = zip(ew_data_split, list(itertools.repeat(N_MCMC_samples, n_elem)), list(itertools.repeat(mcmc_chain, n_elem)), list(itertools.repeat(soln_header, n_elem)))
         test_results = pool.starmap(apply_one_spec, all_zipped)
-        
-        #pool.map(apply_one_spec, [1,2,3])
-        #print(type(results))
-        #print(results)
-        #results = [pool.apply_async(apply_one_spec, [idx, row]) for idx, row in ew_data.iterrows()]
-        #results2 = pool.map(apply_one_spec, results[0])
-        #pool.apply_async(apply_one_spec, args=(results), callback=collect_results)
-        #pool.close()
-        #pool.join()
 
         final_table = pd.DataFrame(test_results)
-        #final_table = ew_data.copy()
 
         final_table.to_csv(write_out_filename, index=False)
         logging.info("Wrote out retrieved [Fe/H] and Teff to " + write_out_filename)
