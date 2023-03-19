@@ -4,6 +4,7 @@ import os
 import numpy as np
 import sys
 import pickle
+import itertools
 import seaborn as sns
 import multiprocessing
 from multiprocessing import set_start_method
@@ -85,7 +86,7 @@ def feh_abcdfghk_vector(coeff_a,coeff_b,coeff_c,coeff_d,coeff_f,coeff_g,coeff_h,
 def apply_one_spec(ew_data_pass, N_MCMC_samples, mcmc_chain, soln_header):
 
 
-
+    print('------apply_one_spec------')
     print(ew_data_pass)
     print(N_MCMC_samples)
     print(mcmc_chain)
@@ -132,7 +133,7 @@ def apply_one_spec(ew_data_pass, N_MCMC_samples, mcmc_chain, soln_header):
             ew_data_pass["err_feh_retrieved"] = -999
             ew_data_pass["teff_retrieved"] = -999
             
-            return ew_data_pass.values.tolist()
+            return ew_data_pass
 
     elif (len(mcmc_chain.columns)==8):
 
@@ -164,7 +165,7 @@ def apply_one_spec(ew_data_pass, N_MCMC_samples, mcmc_chain, soln_header):
             ew_data_pass["err_feh_retrieved"] = -999
             ew_data_pass["teff_retrieved"] = -999
             
-            return ew_data_pass.values.tolist()
+            return ew_data_pass
 
         print("-----")
 
@@ -178,7 +179,7 @@ def apply_one_spec(ew_data_pass, N_MCMC_samples, mcmc_chain, soln_header):
                                         soln_header["YINT_B"]
                                         )
     
-    return ew_data_pass.values.tolist()
+    return ew_data_pass
 
 
 class FehRetrieval():
@@ -287,14 +288,17 @@ class FehRetrieval():
         #results = pool.map(apply_one_spec, ew_data_split)
 
         # zip things for multiprocessing
-        import ipdb; ipdb.set_trace()
+        
         #test4 = [N_MCMC_samples]
 
         #data_zipped = zip(ew_data_split,[N_MCMC_samples],[mcmc_chain])
         data_zipped = zip(ew_data_split,[N_MCMC_samples],[mcmc_chain])
         
+        #import ipdb; ipdb.set_trace()
         
-        test_results = pool.starmap(apply_one_spec, zip(ew_data_split,[N_MCMC_samples],[mcmc_chain], [soln_header]))
+        n_elem = len(ew_data_split)
+        all_zipped = zip(ew_data_split, list(itertools.repeat(N_MCMC_samples, n_elem)), list(itertools.repeat(mcmc_chain, n_elem)), list(itertools.repeat(soln_header, n_elem)))
+        test_results = pool.starmap(apply_one_spec, all_zipped)
         
         #pool.map(apply_one_spec, [1,2,3])
         #print(type(results))
