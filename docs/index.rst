@@ -27,7 +27,7 @@ Logo art by `Anna McElhannon <https://www.linkedin.com/in/annamcelhannon>`_
 .. toctree::
   :maxdepth: 1
 
-  api
+  prerequisites
 
 .. toctree::
   :maxdepth: 1
@@ -38,3 +38,8 @@ Logo art by `Anna McElhannon <https://www.linkedin.com/in/annamcelhannon>`_
   :maxdepth: 1
 
   tutorial_apply
+
+.. toctree::
+  :maxdepth: 1
+
+  api
