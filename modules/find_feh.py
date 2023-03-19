@@ -6,6 +6,7 @@ import sys
 import pickle
 import seaborn as sns
 import multiprocessing
+from multiprocessing import set_start_method
 import matplotlib.pyplot as plt
 from astropy.table import Table
 from astropy.io import fits
@@ -81,15 +82,28 @@ def feh_abcdfghk_vector(coeff_a,coeff_b,coeff_c,coeff_d,coeff_f,coeff_g,coeff_h,
     return F_pos, F_neg
 
 
-def apply_one_spec(ew_data_pass):
+def apply_one_spec(ew_data_pass, N_MCMC_samples, mcmc_chain, soln_header):
+
+
+
+    print(ew_data_pass)
+    print(N_MCMC_samples)
+    print(mcmc_chain)
+    # unzip
+    #ew_data_pass, N_MCMC_samples, mcmc_chain = zip(*zipped_pass)
+
+    # redefine
+    #ew_data_pass = ew_data_pass[0]
+    #N_MCMC_samples = N_MCMC_samples[0]
+    #mcmc_chain = mcmc_chain[0]
+    #ew_data_split,[N_MCMC_samples],[mcmc_chain])
 
     print("-------------")
     print(ew_data_pass)
-    logging.info("Finding Fe/H for spectrum " + str(ew_data["orig_spec_file_name"]))
+    #logging.info("Finding Fe/H for spectrum " + str(ew_data["orig_spec_file_name"]))
 
-    '''
-    Balmer_EW = ew_data["EW_Balmer"]
-    CaIIK_EW = ew_data["EW_CaIIK"]
+    Balmer_EW = ew_data_pass["EW_Balmer"]
+    CaIIK_EW = ew_data_pass["EW_CaIIK"]
 
     # set the offset (note mu=0; this is a relative offset)
     # (vestigial)
@@ -114,11 +128,11 @@ def apply_one_spec(ew_data_pass):
         except:
 
             print("Convergence failed")
-            ew_data["feh_retrieved"] = -999
-            ew_data["err_feh_retrieved"] = -999
-            ew_data["teff_retrieved"] = -999
+            ew_data_pass["feh_retrieved"] = -999
+            ew_data_pass["err_feh_retrieved"] = -999
+            ew_data_pass["teff_retrieved"] = -999
             
-            return ew_data.values.tolist()
+            return ew_data_pass.values.tolist()
 
     elif (len(mcmc_chain.columns)==8):
 
@@ -146,27 +160,25 @@ def apply_one_spec(ew_data_pass):
         if (frac_finite < 0.95):
 
             print("Convergence failed")
-            ew_data["feh_retrieved"] = -999
-            ew_data["err_feh_retrieved"] = -999
-            ew_data["teff_retrieved"] = -999
+            ew_data_pass["feh_retrieved"] = -999
+            ew_data_pass["err_feh_retrieved"] = -999
+            ew_data_pass["teff_retrieved"] = -999
             
-            return ew_data.values.tolist()
+            return ew_data_pass.values.tolist()
 
         print("-----")
 
 
     # output the results (note this corresponds to one spectrum)
     print("[Fe/H] = ", np.nanmedian(feh_sample))
-    ew_data["feh_retrieved"] = np.nanmedian(feh_sample)
-    ew_data["err_feh_retrieved"] = np.std(feh_sample)
-    ew_data["teff_retrieved"] = np.add(
-                                        np.multiply(ew_data["EW_Balmer"],soln_header["SLOPE_M"]),
+    ew_data_pass["feh_retrieved"] = np.nanmedian(feh_sample)
+    ew_data_pass["err_feh_retrieved"] = np.std(feh_sample)
+    ew_data_pass["teff_retrieved"] = np.add(
+                                        np.multiply(ew_data_pass["EW_Balmer"],soln_header["SLOPE_M"]),
                                         soln_header["YINT_B"]
                                         )
     
-    return ew_data.values.tolist()
-    '''
-    return
+    return ew_data_pass.values.tolist()
 
 
 class FehRetrieval():
@@ -215,7 +227,6 @@ class FehRetrieval():
         soln_header = hdul[1].header
 
         # if write directories do not exist, create them
-        print("ya ya")
         #make_dir(write_pickle_dir)
         #make_dir(write_out_filename)
 
@@ -224,6 +235,8 @@ class FehRetrieval():
         #N_EW_samples = 1 # vestigial
 
         # loop over samples in the MCMC chain ## for serial process
+        #global mcmc_chain_global
+        #mcmc_chain_global = mcmc_chain
         N_MCMC_samples = len(mcmc_chain)
 
         # check if there is already something else in pickle directory
@@ -247,7 +260,7 @@ class FehRetrieval():
         # spectra; the stuff that gets printed to screen here just uses the parent
         # spectrum name
         ##for row_num in range(0,len(ew_data)):
-
+        set_start_method('fork') # necessary to spawn children
         pool = multiprocessing.Pool(ncpu)
         #pool.apply_async(apply_one_spec, args=(ew_data, ), callback=collect_results)
 
@@ -255,9 +268,10 @@ class FehRetrieval():
 
         # split big dataframe into separate ones, one dataframe per row
         #results = [v for k, v in ew_data.groupby('orig_spec_file_name')]
-        results = ew_data.to_dict('records')
+        ew_data_split = ew_data.to_dict('records')
         #results = {k: v for k, v in ew_data.groupby('orig_spec_file_name')}
         #print(results['orig_spec_file_name'])
+        '''
         print("results")
         print(results)
         print(len(results))
@@ -265,16 +279,33 @@ class FehRetrieval():
         print(type(results))
         print(results[0])
         print(results[0]['orig_spec_file_name'])
+        '''
         ## ## CONTINUE HERE
         #print(results[0])
+        #import ipdb; ipdb.set_trace()
+        #print(len(ew_data_split))
+        #results = pool.map(apply_one_spec, ew_data_split)
 
+        # zip things for multiprocessing
+        import ipdb; ipdb.set_trace()
+        #test4 = [N_MCMC_samples]
+
+        #data_zipped = zip(ew_data_split,[N_MCMC_samples],[mcmc_chain])
+        data_zipped = zip(ew_data_split,[N_MCMC_samples],[mcmc_chain])
+        
+        
+        test_results = pool.starmap(apply_one_spec, zip(ew_data_split,[N_MCMC_samples],[mcmc_chain], [soln_header]))
+        
+        #pool.map(apply_one_spec, [1,2,3])
+        #print(type(results))
+        #print(results)
         #results = [pool.apply_async(apply_one_spec, [idx, row]) for idx, row in ew_data.iterrows()]
         #results2 = pool.map(apply_one_spec, results[0])
         #pool.apply_async(apply_one_spec, args=(results), callback=collect_results)
         #pool.close()
         #pool.join()
 
-        final_table = pd.DataFrame(results)
+        final_table = pd.DataFrame(test_results)
         #final_table = ew_data.copy()
 
         final_table.to_csv(write_out_filename, index=False)
