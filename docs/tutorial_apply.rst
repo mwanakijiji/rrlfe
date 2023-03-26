@@ -2,7 +2,9 @@ Tutorial: Applying a calibration
 =================
 
 This tutorial shows you how to take a ready-made calibration and apply it to low-resolution stellar 
-spectra to find their corresponding metallicities.
+spectra to find their corresponding metallicities. The first series of steps is presented without 
+commentary, as they are the same as for generating a calibration, up to and including the section
+'Make a net Balmer line.' Commentary resumes below when the steps diverge.
 
 .. code-block:: python
 
@@ -119,6 +121,9 @@ spectra to find their corresponding metallicities.
     # add step to procedure
     test_gen.add_step(step)
 
+The above steps will provide us a table of EWs. Now apply a pre-existing [Fe/H] calibration contained in a FITS file. This will
+initially generate 'raw' [Fe/H] values.
+
 .. code-block:: python
 
     step = pipeline.find_feh.FehRetrieval(
@@ -130,6 +135,8 @@ spectra to find their corresponding metallicities.
 
     # add step to procedure
     test_gen.add_step(step)
+
+Don't forget to apply the final correction to make the results consistent with high-resolution [Fe/H] studies. 
 
 .. code-block:: python
 
@@ -145,7 +152,7 @@ spectra to find their corresponding metallicities.
     # add step to procedure
     test_gen.add_step(step)
 
-And here's the step that executes the steps which have been strung together: 
+Here's the final line of code that executes the above steps which have been strung together: 
 
 .. code-block:: python
 

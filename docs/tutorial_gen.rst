@@ -15,7 +15,16 @@ To put all this into practice, we call different classes from rrlfe and string t
 The user gives each instantiated module a module_name, which allows it to be distinguished from other modules
 when the pipeline is run.
 
-To get started, let's import the machinery we need:
+Let's get started!
+
+Normalize a given set of spectra
+----
+
+This section can be applied to any given input spectra, be they synthetic or empirical, and for the purpose of either generating 
+a calibration from them, or applying a calibration to them. This tutorial is specifically about generating a calibration,
+so the various choices of directories will be to that end.
+
+Start by importing the machinery we need:
 
 .. code-block:: python
 
@@ -68,7 +77,10 @@ directories already exist before running the pipeline.
 
     test_gen.add_step(step)
 
-Measure the EWs of the normalized (synthetic) spectra by running Robospect.
+Measure EWs of absorption lines
+----
+
+Run Robospect on the spectra to measure and write out the EWs.
 
 .. code-block:: python
 
@@ -117,7 +129,10 @@ different absorption lines.
 
     test_gen.add_step(step)
 
-Make a net Balmer line from the H-delta and H-gamma lines
+Make a net Balmer line
+------
+
+We combine the the H-delta and H-gamma lines to make a 'net' Balmer absorption line
 
 .. code-block:: python
 
@@ -144,7 +159,12 @@ until this point will be essentially the same: we take a bunch of spectra, norma
 them into a big table. 
 
 But now the steps diverge, beginning with the following step to take the known input parameters from synthetic spectra 
-and adding them to the big table we have previously generated. Note this step requires a list of spectra we want to select:
+and adding them to the big table we have previously generated. 
+
+Add known meta-data and run MCMC
+------
+
+Note this step requires a list of spectra we want to select
 
 .. code-block:: python
 
@@ -184,6 +204,9 @@ step makes use of the package emcee.
 
     test_gen.add_step(step)
 
+Export the raw Dicalibration
+------
+
 Export the table to a FITS file:
 
 .. code-block:: python
@@ -212,7 +235,12 @@ This optional step is a wrapper for making a nice corner plot from the emcee pac
     test_gen.run()
 
 Once we have the raw calibration, there is just one piece missing: a final correction to remove any offset relative to [Fe/H] retrievals 
-using high-resolution spectroscopy. To do that, skip to the next tutorial on applying a calibration, and apply the raw
+using high-resolution spectroscopy. 
+
+Add final correction to the raw calibration
+------
+
+To do that, skip to the next tutorial on applying a calibration, and apply the raw
 calibration to a basis set of low-resolution spectra. (In Spalding+ 2023, we used spectra taken from McDonald Observatory.)
 
 Once you have done so, run the following mini-pipeline: 
@@ -242,4 +270,4 @@ And here's the step that executes the steps which have been strung together:
     
     test_gen.run()
 
-Now you should have gotten a FITS file with the calibration, and containing correction parameters in the header.
+Done! Now you should have a FITS file with the raw calibration in the table data, and with correction parameters in the header.

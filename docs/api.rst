@@ -1,6 +1,9 @@
 API
 =================================
 
+Here are all the building blocks that make up rrlfe. Note, however, that most uses of rrlfe will follow the 
+steps in the tutorials very closely.
+
 .. automodule:: modules.create_spec_realizations
     :members:
 
