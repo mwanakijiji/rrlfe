@@ -108,7 +108,45 @@ g = sns.relplot(
     size="[Fe/H]", edgecolor="k",
     palette=cmap, sizes=(30,160), alpha=0.8, zorder=2
 )
-#import ipdb; ipdb.set_trace()
+
+import ipdb; ipdb.set_trace()
+
+
+## BEGIN MAKE ERROR BARS BASED ON TEMPERATURE GROUPS
+
+# add column to contain new errors bars
+df_choice['err_EW_Balmer_from_teff_groups'] = np.nan
+
+groups_temp = df_choice['teff'].drop_duplicates().values # teff only
+groups_temp_feh = df_choice[['teff','feh']].drop_duplicates().values # teff and feh combos
+
+import ipdb; ipdb.set_trace()
+for combo in groups_temp_feh:
+
+    idx = np.logical_and(df_choice['teff'] == combo[0],df_choice['feh'] == combo[1])
+
+    if sum(idx) > 1: # some fits might have failed, but we don't want this to lead to a zero error bar
+        error_bar_Balmer = np.std(df_choice.loc[idx]["EW_Balmer"])
+        error_bar_CaIIK = np.std(df_choice.loc[idx]["EW_CaIIK"])
+
+    else: 
+        error_bar_Balmer = np.median(df_choice.loc[idx]["err_EW_Balmer_from_Robo"])
+        error_bar_CaIIK = np.median(df_choice.loc[idx]["err_EW_CaIIK_from_robo"])
+
+    df_choice.loc[idx,'err_EW_Balmer_from_teff_groups'] = error_bar_Balmer
+    df_choice.loc[idx,'err_EW_CaIIK_from_teff_groups'] = error_bar_CaIIK
+    
+    plt.errorbar(df_choice.loc[idx,'EW_Balmer'],df_choice.loc[idx,'EW_CaIIK'],
+                 xerr=df_choice.loc[idx,'err_EW_Balmer_from_teff_groups'], yerr=df_choice.loc[idx,'err_EW_CaIIK_from_teff_groups'],
+                 linestyle=None, fmt='o')
+
+#plt.errorbar(df_choice['EW_Balmer'],df_choice['EW_CaIIK'],xerr=df_choice['err_EW_Balmer_from_teff_groups'], linestyle=None, fmt='o')
+plt.show()
+import ipdb; ipdb.set_trace()
+## END MAKE ERROR BARS
+
+
+
 # plot points to show median error bars
 # define the line along which they will lie
 balmer_dummy = np.arange(7,16,1)
