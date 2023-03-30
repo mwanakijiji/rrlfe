@@ -494,9 +494,10 @@ class GenerateAddlEwErrors():
         write_out_filename = self.ew_data_w_net_balmer_read
         groupby_parent = self.groupby_parent
 
-        #df_poststack = error_scatter_ew(df_poststack)
         df_postbalmer = pd.read_csv(read_in_filename)
 
+        # calculate errors from noise churning (may get added later)
+        '''
         orig_specs_nonrepeating = df_postbalmer["orig_spec_file_name"].drop_duplicates().values
         df_postbalmer["err_EW_Balmer_based_noise_churning"] = np.nan # initialize
         df_postbalmer["err_EW_Hbeta_based_noise_churning"] = np.nan # initialize
@@ -545,7 +546,29 @@ class GenerateAddlEwErrors():
         else:
             df_postbalmer_errors = df_postbalmer.to_csv(write_out_filename, index=False)
             logging.info("Did not group spectra by parent; table with all noise churnings will be written out.")
+        '''
 
+        # calculate errors from stdev of EWs in groups of Teff-Fe/H combinations
+
+        #groups_temp = df_postbalmer['teff'].drop_duplicates().values # teff only
+        groups_temp_feh = df_postbalmer[['teff','feh']].drop_duplicates().values # teff and feh combos
+
+        for combo in groups_temp_feh:
+
+            idx = np.logical_and(df_postbalmer['teff'] == combo[0],df_postbalmer['feh'] == combo[1])
+
+            if sum(idx) > 1: # some fits might have failed, but we don't want this to lead to a zero error bar
+                error_bar_Balmer = np.std(df_postbalmer.loc[idx]["EW_Balmer"])
+                error_bar_CaIIK = np.std(df_postbalmer.loc[idx]["EW_CaIIK"])
+
+            else: 
+                error_bar_Balmer = np.median(df_postbalmer.loc[idx]["err_EW_Balmer_from_Robo"])
+                error_bar_CaIIK = np.median(df_postbalmer.loc[idx]["err_EW_CaIIK_from_robo"])
+
+            df_postbalmer.loc[idx,'err_EW_Balmer_from_tefffeh_groups'] = error_bar_Balmer
+            df_postbalmer.loc[idx,'err_EW_CaIIK_from_tefffeh_groups'] = error_bar_CaIIK
+
+        df_postbalmer.to_csv(write_out_filename, index=False)
         logging.info("Wrote table out to " + str(write_out_filename))
 
 
