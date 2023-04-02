@@ -7,8 +7,8 @@ import sys
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from astroquery.simbad import Simbad
-from . import *
+#from astroquery.simbad import Simbad
+#from . import *
 
 class LitFehRaw():
     '''
@@ -204,8 +204,9 @@ def main():
     idx_sol = df_clementini["name_match"] == "sol" # row corresponding to solar values
     logepssol = np.mean([df_clementini.loc[idx_sol]["log_eps_feI"][0],df_clementini.loc[idx_sol]["log_eps_feII"][0]]) # net solar logeps
     # estimate errors in solar logeps values (which Clementini does not give), by using averages of the others
-    df_clementini.at[idx_sol,"err_log_eps_feI"] = np.mean(df_clementini.loc[~idx_sol]["err_log_eps_feI"])
-    df_clementini.at[idx_sol,"err_log_eps_feII"] = np.mean(df_clementini.loc[~idx_sol]["err_log_eps_feII"])
+
+    df_clementini.loc[idx_sol,"err_log_eps_feI"] = np.mean(df_clementini.loc[~idx_sol]["err_log_eps_feI"])
+    df_clementini.loc[idx_sol,"err_log_eps_feII"] = np.mean(df_clementini.loc[~idx_sol]["err_log_eps_feII"])
     cols_clementini = ["log_eps_feI", "log_eps_feII"]
     df_clementini["logeps_single"] = df_clementini[cols_clementini].mean(axis=1)
     # avoid rounding error, which is present in authors "feh" column
@@ -266,8 +267,8 @@ def main():
 
     # Crestani+ 2021
     cols_crestani = ["fehI","fehII"]
-    df_crestani["feh_single"] = df_crestani[cols_crestani].mean(axis=1)
-    df_crestani["err_feh_single"] = 0.5*np.sqrt(np.add(np.power(df_crestani["err_fehI"],2.),np.power(df_crestani["err_fehII"],2.)))
+    df_crestani["feh_single"] = df_crestani["feh"]
+    df_crestani["err_feh_single"] = df_crestani["err_feh"]
 
     # Kemper+ 1982
     df_kemper["feh_single"] = df_kemper["feh"]
