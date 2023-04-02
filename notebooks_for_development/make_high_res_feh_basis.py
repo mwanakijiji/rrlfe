@@ -436,8 +436,16 @@ def main():
     print("b error: ", b_error)
 
     # calculate the Fe/H of our program stars, given their values in Layden
-    match_our_stars_layden["feh_high_res"] = m_final*match_our_stars_layden["feh_basis"] + b_final
-    cols_relevant = ["name_match", "err_feh_basis", "feh_basis", "feh_high_res", "type"]
+    match_our_stars_layden["feh_high_res_mapped"] = m_final*match_our_stars_layden["feh_basis"] + b_final
+    # propagate errors: sig_y**2 = SUM_i( (delf/delxi)**2 ) * sig_xi**2 + 2*sig_xy * (delf/delx) * (delf/dely)  [ last term for any correlated variables x, y ]
+    # if y=mx+b, sig_y**2 = (x**2)*sig_m**2 + m*sig_x**2 + sig_b**2
+    # (here, x is the Layden94 value)
+    x2sig_m2 = np.power(match_our_stars_layden["feh_basis"],2.)*np.diag(cov)[0]
+    m2sig_x2 = np.power(m_final,2.)*np.power(match_our_stars_layden["err_feh_basis"],2.)
+    sig_b2 = np.diag(cov)[1]
+    corr_term = 2.*cov[0,1]*match_our_stars_layden["feh_basis"]
+    match_our_stars_layden["err_feh_high_res_mapped"] = np.sqrt(np.add(x2sig_m2,m2sig_x2)+sig_b2+corr_term)
+    cols_relevant = ["name_match", "err_feh_basis", "feh_basis", "feh_high_res_mapped", "err_feh_high_res_mapped","type"]
     match_our_stars_layden.to_csv("junk_mapped.csv", columns=cols_relevant)
     print("Wrote junk_mapped.csv")
 
