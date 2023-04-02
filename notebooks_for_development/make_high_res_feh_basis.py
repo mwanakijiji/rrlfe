@@ -423,9 +423,17 @@ def main():
     # [Fe/H]_highres = m * [Fe/H]_Lay94 + b
     print("-----")
     print("Final high-res vs. Layden (Chadid p. 8, LH col.):")
-    m_final, b_final = np.polyfit(df_abcissa_synched,df_ordinate_synched,1)
+
+    z, cov = np.polyfit(x=df_abcissa_synched, y=df_ordinate_synched, deg=1, cov=True)
+    m_final = z[0]
+    m_error = np.sqrt(np.diag(cov))[0]
+    b_final = z[1]
+    b_error = np.sqrt(np.diag(cov))[1]
+
     print("m final: ", m_final)
+    print("m error: ", m_error)
     print("b final: ", b_final)
+    print("b error: ", b_error)
 
     # calculate the Fe/H of our program stars, given their values in Layden
     match_our_stars_layden["feh_high_res"] = m_final*match_our_stars_layden["feh_basis"] + b_final
