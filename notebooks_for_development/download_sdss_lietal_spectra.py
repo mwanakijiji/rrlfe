@@ -12,6 +12,7 @@ import time
 stem = '/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/'
 
 df = pd.read_csv(stem + 'li_catalog_ra_dec.csv', names=['ra','dec'])
+stem_write = './tbd_dir/'
 
 for idx in range(0,len(df)):
         
@@ -31,7 +32,7 @@ for idx in range(0,len(df)):
             for epoch_num in range(0,len(spec)):
                 
                 file_name_write = 'obj_id_' + str(int(spec[epoch_num][0].header['spec_id'])) + '.fits'
-                spec[epoch_num].writeto(file_name_write, overwrite=True)
+                spec[epoch_num].writeto(stem_write + file_name_write, overwrite=True)
                 print('Wrote',file_name_write)
             
         except:
