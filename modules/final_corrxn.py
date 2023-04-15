@@ -44,21 +44,25 @@ class FindCorrxn:
         values of rrlfe [Fe/H] mapped onto SSPP
         '''
 
-        df_raw_retrieved = pd.read_csv(self.file_name_basis_raw_retrieved_fehs) # raw values retrieved with rrlfe
-        df_basis = pd.read_csv(self.file_name_basis_lit_fehs) # based on high-res spectroscopy from the literature
+        # raw [Fe/H] values retrieved with rrlfe
+        df_raw_retrieved = pd.read_csv(self.file_name_basis_raw_retrieved_fehs)
+        # [Fe/H] based on high-res spectroscopy from the literature; this should include both
+        # raw (average) literature values, and the values after remapping onto a common basis set
+        df_basis = pd.read_csv(self.file_name_basis_lit_fehs)
 
         # average the high-res values for each 
 
-        ## make matching
+        ## make matching and merger
         df_raw_retrieved['name_match'] = df_raw_retrieved['orig_spec_file_name'].str[:6].str.rstrip('_')
         df_raw_retrieved['name_match'].loc[df_raw_retrieved['name_match'] == 'V445_O'] = 'V445_Oph' # to make the name matching for this star to work right
 
-        df_merged = df_raw_retrieved[['name_match','feh_retrieved']].merge(df_basis[['name_match','feh']], on='name_match', how='inner')
-        df_merged.rename(columns={'feh': 'feh_lit'}, inplace=True) # rename for clarity
+        df_merged = df_raw_retrieved[['name_match','feh_retrieved']].merge(df_basis[['name_match','feh_lit_mapped']], on='name_match', how='inner')
         ##
 
-        vals_basis = df_merged['feh_lit'].values
-        vals_rrlfe_r = df_merged['feh_retrieved'].values # _r for raw
+        # the literature [Fe/H] after remapping them onto a common basis
+        vals_basis = df_merged['feh_lit_mapped'].values
+        # _r for raw
+        vals_rrlfe_r = df_merged['feh_retrieved'].values
 
         # initial best fit between rrlfe vs. basis
         m_b, b_b = np.polyfit(vals_basis,vals_rrlfe_r,1) # _b: best-fit

@@ -148,14 +148,15 @@ step = pipeline.run_emcee.CornerPlot(
 # add step to procedure
 test_gen.add_step(step)
 
-
+'''
 # apply the raw calibration to the McD star EW data, and find the correction based on them
 # this requires a separate application script to have run on the McD data; it's too complicated to build it in here; TBD later
 step = pipeline.final_corrxn.FindCorrxn(
     module_name="module16",
-    file_name_mcd_lit_fehs="", # McD EW values
+    file_name_basis_raw_retrieved_fehs=""
+    file_name_basis_lit_fehs="", # McD EW values
     soln_write_name=stem_abs+"rrlfe_io_20230415_synthetic/bin/calib_solution_20230415.fits" # solution to which we will append corrxn to
 )
-
+'''
 
 test_gen.run()

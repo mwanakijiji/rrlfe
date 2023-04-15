@@ -571,7 +571,6 @@ class GenerateAddlEwErrors():
         df_postbalmer.to_csv(write_out_filename, index=False)
         logging.info("Wrote table out to " + str(write_out_filename))
 
-
         '''
         logging.info("------------------------------")
         #logging.info("Data will be written out to file " + write_out_filename)
