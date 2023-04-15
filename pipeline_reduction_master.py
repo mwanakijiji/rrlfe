@@ -30,6 +30,7 @@ test_gen.add_step(step)
 # take list of unnormalized empirical spectra, normalize them, and write out
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
+    cc_bkgrnd_dir=stem_abs+"src/",
     input_spec_list_read=stem_abs+"src/"+spectra_basenames,
     unnorm_spectra_dir_read=stem_abs+"src/model_spectra/rrmods_all/original_ascii_files/",
     unnorm_noise_churned_spectra_dir_read=stem_abs+"src/realizations_output_20230415_synthetic/",

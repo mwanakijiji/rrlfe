@@ -325,6 +325,7 @@ class CreateSpecRealizationsMain():
 
     def __init__(self,
                 module_name,
+                cc_bkgrnd_dir,
                 input_spec_list_read,
                 unnorm_spectra_dir_read,
                 unnorm_noise_churned_spectra_dir_read,
@@ -336,6 +337,7 @@ class CreateSpecRealizationsMain():
                 verb=False):
 
         self.name = module_name
+        self.cc_bkgrnd_dir = cc_bkgrnd_dir
         self.input_spec_list_read = input_spec_list_read
         self.unnorm_spectra_dir_read = unnorm_spectra_dir_read
         self.unnorm_noise_churned_spectra_dir_read = unnorm_noise_churned_spectra_dir_read
@@ -419,7 +421,7 @@ class CreateSpecRealizationsMain():
                     'into the normalization routine is ' + bkg_input_file)
 
         # normalize each spectrum realization (smoothing parameter is set in __init__)
-        bkgrnd = Popen([str(attribs["data_dirs"]["DIR_BIN"]) + "bkgrnd", "--smooth "+str(attribs["reduc_params"]["SMOOTH"]),
+        bkgrnd = Popen([str(self.cc_bkgrnd_dir) + "bkgrnd", "--smooth "+str(attribs["reduc_params"]["SMOOTH"]),
                         "--sismoo 1", "--no-plot", "{}".format(bkg_input_file)], stdout=PIPE, stderr=PIPE)
         (out, err) = bkgrnd.communicate() # returns tuple (stdout, stderr)
 
