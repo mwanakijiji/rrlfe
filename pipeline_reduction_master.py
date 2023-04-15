@@ -20,7 +20,9 @@ step = pipeline.ConfigInit(module_name="module1")
 test_gen.add_step(step)
 
 # compile the C spectral normalization script
-step = pipeline.compile_normalization.CompileBkgrnd(module_name="module3")
+step = pipeline.compile_normalization.CompileBkgrnd(
+    module_name="module3", 
+    cc_bkgrnd_dir=stem_abs+"src/")
 
 # add step to procedure
 test_gen.add_step(step)

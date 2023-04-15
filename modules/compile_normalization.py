@@ -10,14 +10,25 @@ class CompileBkgrnd():
         bool: 'True' if compile was successful
     """
 
-    def __init__(self, module_name):
+    def __init__(self, module_name, cc_bkgrnd_dir):
 
         self.name = module_name
+        self.cc_bkgrnd_dir = cc_bkgrnd_dir
 
     def run_step(self, attribs = None):
+        '''
+        Compiles file needed for background normalization
+        
+        INPUTS:
+        module_name (str): name of module (arbitrary)
+        cc_bkgrnd_dir (str): directory containing bkgrnd.cc, and to which binary will be written
+        
+        RETURNS:
+        (compiled binary written to file)
+        '''
 
-        cc_bkgrnd_file_path_abs = str(attribs["data_dirs"]["DIR_SRC"] + "/bkgrnd.cc")
-        compiled_bkgrnd_file_path_abs = str(attribs["data_dirs"]["DIR_BIN"] + "/bkgrnd")
+        cc_bkgrnd_file_path_abs = str(self.cc_bkgrnd_dir + "bkgrnd.cc")
+        compiled_bkgrnd_file_path_abs = str(self.cc_bkgrnd_dir + "bkgrnd")
 
         logging.info("## Making directories ##")
 
