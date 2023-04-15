@@ -624,9 +624,6 @@ class RunEmcee():
                      np.multiply(param_array_0, 1e-4*np.random.randn(ndim))) for i in range(nwalkers)]
 
         # set up sampler
-        print("just before sampler")
-        print("nwalkers", nwalkers, type(nwalkers))
-        print("ndim", ndim, type(ndim))
         sampler = emcee.EnsembleSampler(nwalkers,
                                         ndim,
                                         lnprob,
@@ -634,11 +631,9 @@ class RunEmcee():
 
         # burn-in
         burn_in = int(3e4)
-        print("just before run_mcmc")
-        print("nwalkers", nwalkers, type(nwalkers))
-        print("ndim", ndim, type(ndim))
-        print("burn_in", burn_in, type(burn_in))
-        print("p0", p0, type(p0), type(p0[0]))
+        print("nwalkers:", nwalkers)
+        print("ndim:", ndim)
+        print("burn in:", burn_in)
         state = sampler.run_mcmc(p0, burn_in)
         sampler.reset()
 
