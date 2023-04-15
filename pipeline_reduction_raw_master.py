@@ -135,7 +135,7 @@ step = pipeline.run_emcee.WriteSolnToFits(
     module_name="module14",
     file_name_mcmc_posterior_read=stem_abs+"rrlfe_io_20230415_synthetic/bin/mcmc_output.csv",
     file_name_teff_data_read=stem_abs+"rrlfe_io_20230415_synthetic/bin/teff_vs_balmer_trend.txt",
-    soln_write_name=stem_abs+"rrlfe_io_20230415_synthetic/bin/calib_solution.fits")
+    soln_write_name=stem_abs+"rrlfe_io_20230415_synthetic/bin/calib_solution_20230415.fits")
 
 # add step to procedure
 test_gen.add_step(step)
@@ -154,7 +154,7 @@ test_gen.add_step(step)
 step = pipeline.final_corrxn.FindCorrxn(
     module_name="module16",
     file_name_mcd_lit_fehs="", # McD EW values
-    soln_write_name=stem_abs+"rrlfe_io_20230415_synthetic/bin/calib_solution_20230415_raw.fits" # solution to which we will append corrxn to
+    soln_write_name=stem_abs+"rrlfe_io_20230415_synthetic/bin/calib_solution_20230415.fits" # solution to which we will append corrxn to
 )
 
 
