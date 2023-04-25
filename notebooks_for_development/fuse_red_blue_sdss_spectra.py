@@ -13,10 +13,15 @@ import os
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 
+'''
 stem_read = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/"+ \
                "sdss_processing/02b_morethan1spec_post_cosmic_ray_removal/"
 stem_write = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/"+ \
              "sdss_processing/03_red_blue_fused/"
+'''
+stem_read = '/suphys/espa3021/Documents/lietal_spectra/02b_morethan1spec_post_cosmic_ray_removal/'
+
+stem_write = '/suphys/espa3021/Documents/lietal_spectra/03_red_blue_fused/'
 
 file_list = glob.glob(stem_read + "*csv")
 
