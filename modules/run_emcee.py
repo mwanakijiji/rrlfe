@@ -46,6 +46,7 @@ class CornerPlot():
 
         test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
 
+        print(np.shape(test_samples)[1])
         if np.shape(test_samples)[1] == 5:
             # 5 rows: 1 index and 4 chains
             model = "abcd"
@@ -417,7 +418,6 @@ class WriteSolnToFits():
             dict_teff_data.update({key: val})
 
         hdr["MODEL"] = (model, "Calibration type")
-        print(hdr)
         hdr["TEFF_MIN"] = (dict_teff_data["Teff_min"], "Minimum Teff for linear Teff vs. Balmer EW fit")
         hdr["TEFF_MAX"] = (dict_teff_data["Teff_max"], "Maximum Teff for linear Teff vs. Balmer EW fit")
         hdr["SLOPE_M"] = (dict_teff_data["m"], "Slope of Teff vs. Balmer EW")
