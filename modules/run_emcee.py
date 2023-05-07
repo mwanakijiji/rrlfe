@@ -411,7 +411,7 @@ class WriteSolnToFits():
         # set compound datatype
         dtype=np.rec.fromrecords([['string_key', 189.6752158]]).dtype
         # load data, skipping header and hash corresponding to that file
-        teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=2, usecols=(0,1), delimiter=':', dtype=dtype)
+        teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=1, usecols=(0,1), delimiter=':', dtype=dtype)
         print(teff_data_retrieve_file_name)
         dict_teff_data = {}
         for key, val in teff_data:
