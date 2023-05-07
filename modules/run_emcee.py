@@ -47,6 +47,7 @@ class CornerPlot():
         test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
 
         print(np.shape(test_samples))
+        print(test_samples)
         if np.shape(test_samples)[1] == 5:
             # 5 rows: 1 index and 4 chains
             model = "abcd"
