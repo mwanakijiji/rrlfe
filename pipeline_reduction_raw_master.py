@@ -19,7 +19,7 @@ step = pipeline.ConfigInit(module_name="module1")
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # compile the C spectral normalization script
 step = pipeline.compile_normalization.CompileBkgrnd(
     module_name="module3", 
@@ -27,7 +27,7 @@ step = pipeline.compile_normalization.CompileBkgrnd(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # take list of unnormalized empirical spectra, normalize them, and write out
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
@@ -113,7 +113,7 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.teff_retrieval.TempVsBalmer(
     module_name="module12",
@@ -136,8 +136,9 @@ step = pipeline.run_emcee.RunEmcee(
 
 # add step to procedure
 test_gen.add_step(step)
-
 '''
+
+
 step = pipeline.run_emcee.WriteSolnToFits(
     module_name="module14",
     file_name_mcmc_posterior_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/mcmc_output.csv",
@@ -155,9 +156,13 @@ step = pipeline.run_emcee.CornerPlot(
 # add step to procedure
 test_gen.add_step(step)
 
-
+'''
 # in a separate pipeline, apply the above raw calibration to the McD star data
-# this section takes those EW results and finds the correction based on them
+# this section takes those Fe/H results and finds the offset correction based on them
+# I think this requires scripts for the following:
+# 1. raw calibration from synthetic data
+# 2. application of the above calibration to the McD data
+# 3. calculation of correction based on 1. and 2., and application to the FITS calibration from 1. This FITS file is now the master calibration.
 # this requires a separate application script to have run on the McD data; it's too complicated to build it in here; TBD later
 step = pipeline.final_corrxn.FindCorrxn(
     module_name="module16",
