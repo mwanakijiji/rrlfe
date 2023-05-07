@@ -113,8 +113,6 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
-## EVERYTHING SHOULD WORK UP TO HERE
 
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.teff_retrieval.TempVsBalmer(
@@ -126,7 +124,7 @@ step = pipeline.teff_retrieval.TempVsBalmer(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # skipping, because it takes too much time
 # run_emcee
 # coeff defs: K = a + bH + cF + dHF + f(H^2) + g(F^2) + h(H^2)F + kH(F^2) + m(H^3) + n(F^3)
