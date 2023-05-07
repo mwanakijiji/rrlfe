@@ -56,7 +56,7 @@ class CornerPlot():
         if (model == "abcd"):
 
             # corner plot (requires 'storechain=True' in enumerate above)
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4), delim_whitespace=True, names=["a", "b", "c", "d"])
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4), delimiter = ',', names=["a", "b", "c", "d"])
 
             fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$"],
                                 quantiles=[0.16, 0.5, 0.84],
@@ -98,8 +98,8 @@ class CornerPlot():
         elif (model == "abcdfghk"):
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
-            test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4,5,6,7,8), delim_whitespace=True, names=["a", "b", "c", "d", "f", "g", "h", "k"])
+            test_samples = pd.read_csv(mcmc_text_output_file_name, delimiter = ',', nrows=5) # read in first rows to check column number
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4,5,6,7,8), delimiter = ',', names=["a", "b", "c", "d", "f", "g", "h", "k"])
             fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$", "$f$", "$g$", "$h$", "$k$"],
                                 quantiles=[0.16, 0.5, 0.84],
                                 title_fmt='.2f',
