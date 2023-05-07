@@ -418,6 +418,7 @@ class WriteSolnToFits():
             dict_teff_data.update({key: val})
 
         hdr["MODEL"] = (model, "Calibration type")
+        print(hdr)
         hdr["TEFF_MIN"] = (dict_teff_data["Teff_min"], "Minimum Teff for linear Teff vs. Balmer EW fit")
         hdr["TEFF_MAX"] = (dict_teff_data["Teff_max"], "Maximum Teff for linear Teff vs. Balmer EW fit")
         hdr["SLOPE_M"] = (dict_teff_data["m"], "Slope of Teff vs. Balmer EW")
