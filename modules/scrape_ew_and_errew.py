@@ -588,7 +588,7 @@ class GenerateAddlEwErrors():
         plt.clf()
         plt.title("KH plot")
         plt.errorbar(df_poststack["EW_resc_Hgamma"],df_poststack["EW_CaIIK"],
-                     yerr=df_poststack["err_EW_CaIIK_from_robo"],
+                     yerr=df_poststack["err_EW_CaIIK_from_Robo"],
                      marker="o", markersize=2, mfc="k", mec="k", ecolor="gray", linestyle="")
         plt.ylim([0,30])
         plt.xlabel("EW, net Balmer (Angstr)")
@@ -653,7 +653,7 @@ class StackSpectra():
                                              "EW_Hdelta", "err_EW_Hdelta_from_robo",
                                              "EW_Hgamma", "err_EW_Hgamma_from_robo",
                                              "EW_Heps", "err_EW_Heps_from_robo",
-                                             "EW_CaIIK", "err_EW_CaIIK_from_robo"], index=range(num_indiv_spectra))
+                                             "EW_CaIIK", "err_EW_CaIIK_from_Robo"], index=range(num_indiv_spectra))
 
         for t in range(0,num_indiv_spectra):
             # loop over all spectra realizations we have measured EWs from to populate the dataframe
@@ -713,7 +713,7 @@ class StackSpectra():
                 df_poststack.iloc[t]["EW_Heps"] = Heps
                 df_poststack.iloc[t]["err_EW_Heps_from_robo"] = err_Heps
                 df_poststack.iloc[t]["EW_CaIIK"] = CaIIK
-                df_poststack.iloc[t]["err_EW_CaIIK_from_robo"] = err_CaIIK
+                df_poststack.iloc[t]["err_EW_CaIIK_from_Robo"] = err_CaIIK
 
             except: # pragma: no cover
                 logging.error("Data stacking error in data for " + this_realization_spectrum)

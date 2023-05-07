@@ -543,7 +543,7 @@ class RunEmcee():
         #caii = np.divide(df_choice['K'], 1000.)
         caii = df_choice['EW_CaIIK']
         #ecaii = np.divide(df_choice['err_K'], 1000.)
-        ecaii = df_choice['err_EW_CaIIK_from_robo'] # might try other error sources later
+        ecaii = df_choice['err_EW_CaIIK_from_Robo'] # might try other error sources later
         #ecaii = df_choice['err_EW_CaIIK']
         #ave = np.divide(df_choice['balmer'], 1000.)
         ave = df_choice['EW_Balmer']
