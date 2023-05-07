@@ -422,9 +422,13 @@ class WriteSolnToFits():
         print(hdr)
         import ipdb; ipdb.set_trace()
         hdr["TEFF_MIN"] = (dict_teff_data["Teff_min"], "Minimum Teff for linear Teff vs. Balmer EW fit")
+        import ipdb; ipdb.set_trace()
         hdr["TEFF_MAX"] = (dict_teff_data["Teff_max"], "Maximum Teff for linear Teff vs. Balmer EW fit")
+        import ipdb; ipdb.set_trace()
         hdr["SLOPE_M"] = (dict_teff_data["m"], "Slope of Teff vs. Balmer EW")
+        import ipdb; ipdb.set_trace()
         hdr["ESLOPE_M"] = (dict_teff_data["err_m"], "Error in slope of Teff vs. Balmer EW")
+        import ipdb; ipdb.set_trace()
         hdr["YINT_B"] = (dict_teff_data["b"], "Y-intercept of Teff vs. Balmer EW")
         hdr["EYINT_B"] = (dict_teff_data["err_b"], "Error in y-intercept of Teff vs. Balmer EW")
         # comment explaining the solution
