@@ -548,25 +548,19 @@ class GenerateAddlEwErrors():
             logging.info("Did not group spectra by parent; table with all noise churnings will be written out.")
         '''
 
-        # calculate errors from stdev of EWs in groups of Teff-Fe/H combinations
 
-        #groups_temp = df_postbalmer['teff'].drop_duplicates().values # teff only
-        groups_temp_feh = df_postbalmer[['teff','feh']].drop_duplicates().values # teff and feh combos
+        # calculate EW errors based on linear fit to 
+        # std of EW returned by Robo (y) vs err of EW returned by Robo (x)
+        def scale_robo_err_to_err(robo_err):
+        
+            poly_fit_stdvsRobo = np.array([0.04154731,0.44331584]) # fit coeffs
 
-        for combo in groups_temp_feh:
+            err = np.multiply(poly_fit_stdvsRobo[0],robo_err) + poly_fit_stdvsRobo[1]
 
-            idx = np.logical_and(df_postbalmer['teff'] == combo[0],df_postbalmer['feh'] == combo[1])
+            return err
 
-            if sum(idx) > 1: # some fits might have failed, but we don't want this to lead to a zero error bar
-                error_bar_Balmer = np.std(df_postbalmer.loc[idx]["EW_Balmer"])
-                error_bar_CaIIK = np.std(df_postbalmer.loc[idx]["EW_CaIIK"])
-
-            else: 
-                error_bar_Balmer = np.median(df_postbalmer.loc[idx]["err_EW_Balmer_from_Robo"])
-                error_bar_CaIIK = np.median(df_postbalmer.loc[idx]["err_EW_CaIIK_from_robo"])
-
-            df_postbalmer.loc[idx,'err_EW_Balmer_from_tefffeh_groups'] = error_bar_Balmer
-            df_postbalmer.loc[idx,'err_EW_CaIIK_from_tefffeh_groups'] = error_bar_CaIIK
+        df_postbalmer['err_EW_Balmer_scaled'] = scale_robo_err_to_err(df_postbalmer['err_EW_Balmer_from_Robo'])
+        df_postbalmer['err_EW_CaIIK_scaled'] = scale_robo_err_to_err(df_postbalmer['err_EW_CaIIK_from_Robo'])
 
         df_postbalmer.to_csv(write_out_filename, index=False)
         logging.info("Wrote table out to " + str(write_out_filename))

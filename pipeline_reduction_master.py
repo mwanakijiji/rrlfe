@@ -8,6 +8,7 @@ stem_abs = "/suphys/espa3021/rrlfe/"
 #stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
 
 # file name of list containing basenames of spectra to reduce
+#spectra_basenames = "junk_test_synthetic_spectra_without_feh_m30.list"
 spectra_basenames = "synthetic_spectra_without_feh_m30.list"
 
 # instantiate object that will contain the series of reduction steps
@@ -33,9 +34,9 @@ step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     cc_bkgrnd_dir=stem_abs+"src/",
     input_spec_list_read=stem_abs+"src/"+spectra_basenames,
     unnorm_spectra_dir_read=stem_abs+"src/model_spectra/rrmods_all/original_ascii_files/",
-    unnorm_noise_churned_spectra_dir_read=stem_abs+"src/realizations_output_20230415_synthetic/",
-    bkgrnd_output_dir_write=stem_abs+"rrlfe_io_20230415_synthetic/realizations_output_20230415_synthetic/norm/",
-    final_spec_dir_write=stem_abs+"rrlfe_io_20230415_synthetic/realizations_output_20230415_synthetic/norm/final/",
+    unnorm_noise_churned_spectra_dir_read=stem_abs+"src/realizations_output_20230507_synthetic/",
+    bkgrnd_output_dir_write=stem_abs+"rrlfe_io_20230415_synthetic/realizations_output_20230507_synthetic/norm/",
+    final_spec_dir_write=stem_abs+"rrlfe_io_20230415_synthetic/realizations_output_20230507_synthetic/norm/final/",
     noise_level=0.0,
     spec_file_type="ascii.no_header",
     number_specs=1,
@@ -43,17 +44,20 @@ step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
 
 # add step to procedure
 test_gen.add_step(step)
+
 # skipping, because it takes too much time
 # run_robospect on normalized synthetic spectra
-step = pipeline.run_robo.Robo(
+
+step1 = pipeline.run_robo.Robo(
     module_name="module5",
     robo_dir_read="../robospect.py/",
-    normzed_spec_dir_read=stem_abs+"rrlfe_io_20230415_synthetic/realizations_output_20230415_synthetic/norm/final/",
+    normzed_spec_dir_read=stem_abs+"rrlfe_io_20230415_synthetic/realizations_output_20230507_synthetic/norm/final/",
     robo_output_write=stem_abs+"rrlfe_io_20230415_synthetic/robospect_output/smo_files/")
 
 # add step to procedure
-test_gen.add_step(step)
+test_gen.add_step(step1)
 
+'''
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
@@ -111,6 +115,8 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 # add step to procedure
 test_gen.add_step(step)
 
+## EVERYTHING SHOULD WORK UP TO HERE
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.teff_retrieval.TempVsBalmer(
     module_name="module12",
@@ -152,15 +158,14 @@ step = pipeline.run_emcee.CornerPlot(
 # add step to procedure
 test_gen.add_step(step)
 
-'''
+
 # apply the raw calibration to the McD star EW data, and find the correction based on them
 # this requires a separate application script to have run on the McD data; it's too complicated to build it in here; TBD later
 step = pipeline.final_corrxn.FindCorrxn(
     module_name="module16",
-    file_name_basis_raw_retrieved_fehs=""
-    file_name_basis_lit_fehs="", # McD EW values
+    file_name_basis_raw_retrieved_fehs="",
+    file_name_basis_lit_fehs=stem_abs+"notebooks_for_development/mapped_program_fehs_20230402.csv",
     soln_write_name=stem_abs+"rrlfe_io_20230415_synthetic/bin/calib_solution_20230415.fits" # solution to which we will append corrxn to
 )
 '''
-
 test_gen.run()

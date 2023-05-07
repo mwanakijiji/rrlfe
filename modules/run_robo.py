@@ -100,11 +100,11 @@ class Robo():
     def run_step(self, attribs = None):
 
         # check if write directories exist and are empty
-        make_dir(self.robo_output_write)
+        #make_dir(self.robo_output_write)
 
         ## ## note that I have put in a specific string to look for
         ## ## in the file name here; this might be a weakness later on
-
+        #import ipdb; ipdb.set_trace()
         pool = multiprocessing.Pool(ncpu)
 
         ## ## note the below file name list collects ALL files in that directory,
@@ -119,6 +119,7 @@ class Robo():
         #print(preexisting_file_list)
 
         #print(len(preexisting_file_list))
+        '''
         if (len(preexisting_file_list) > 0):
             logging.info("------------------------------")
             logging.info("Directory to receive Robospect output not empty!!")
@@ -126,9 +127,11 @@ class Robo():
             logging.info("------------------------------")
             if prompt_user:
                 input("Do what you want with those files, then hit [Enter]")
+        '''
 
         # run Robospect on normalized spectra in parallel
         # (N.b. Setting the config files allows Robospect to dump files in the right places)
+       
         run_robospect_instance = RunRobo(write_dir = self.robo_output_write, robo_dir = self.robo_dir_read)
         #if (configuration == "config"):
         #    run_robospect_instance = RunRobo(config_data=configuration)
@@ -136,6 +139,7 @@ class Robo():
         #    run_robospect_instance = RunRobo(config_data=config_apply)
 
         # in parallel
+        
         pool.map(run_robospect_instance, file_name_list)
 
         # serial (testing only)

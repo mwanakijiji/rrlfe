@@ -38,7 +38,7 @@ logging.basicConfig(
 ncpu = 3
 
 # prompt user if files will be overwritten? (turn to false if running on HPC)
-prompt_user = True
+prompt_user = False
 
 # configuration data for reduction
 config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
