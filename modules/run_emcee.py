@@ -45,7 +45,6 @@ class CornerPlot():
         corner_plot_putput_file_name = self.plot_corner_write
 
         test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
-        print(test_samples)
 
         if np.shape(test_samples)[1] == 5:
             # 5 rows: 1 index and 4 chains
@@ -59,7 +58,6 @@ class CornerPlot():
             # corner plot (requires 'storechain=True' in enumerate above)
             samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4), delim_whitespace=True, names=["a", "b", "c", "d"])
 
-            #print(samples)
             fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$"],
                                 quantiles=[0.16, 0.5, 0.84],
                                 title_fmt='.2f',
@@ -69,7 +67,7 @@ class CornerPlot():
             fig.savefig(corner_plot_putput_file_name)
             logging.info("--------------------------")
             logging.info("Corner plot of MCMC posteriors written out to")
-            print(corner_plot_putput_file_name)
+            logging.info(corner_plot_putput_file_name)
 
             # if its necessary to read in MCMC output again
             #data = np.loadtxt(mcmc_text_output_file_name, usecols=range(1,5))
@@ -111,7 +109,7 @@ class CornerPlot():
             fig.savefig(corner_plot_putput_file_name)
             logging.info("--------------------------")
             logging.info("Corner plot of MCMC posteriors written out to")
-            print(str(corner_plot_putput_file_name))
+            logging.info(str(corner_plot_putput_file_name))
 
             # if its necessary to read in MCMC output again
             #data = np.loadtxt(self.mcmc_text_output, usecols=range(1,5))
@@ -394,8 +392,6 @@ class WriteSolnToFits():
 
     def run_step(self, attribs = None):
 
-        print(attribs["calib_type"])
-
         model = str(attribs["calib_type"]["COEFFS"]) # coefficients of model
         mcmc_text_output_file_name = self.file_name_mcmc_posterior_read
         teff_data_retrieve_file_name = self.file_name_teff_data_read
@@ -456,10 +452,8 @@ class WriteSolnToFits():
         elif (model == "abcdfghk"):
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
-            print(model)
-            print(mcmc_text_output_file_name)
+
             samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), delim_whitespace=True, names=["a", "b", "c", "d", "f", "g", "h", "k"])
-            #print(samples)
 
             c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
             c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
@@ -543,11 +537,11 @@ class RunEmcee():
         #caii = np.divide(df_choice['K'], 1000.)
         caii = df_choice['EW_CaIIK']
         #ecaii = np.divide(df_choice['err_K'], 1000.)
-        ecaii = df_choice['err_EW_CaIIK_from_Robo'] # might try other error sources later
+        ecaii = df_choice['err_EW_CaIIK_scaled'] # might try other error sources later
         #ecaii = df_choice['err_EW_CaIIK']
         #ave = np.divide(df_choice['balmer'], 1000.)
         ave = df_choice['EW_Balmer']
-        eave = df_choice['err_EW_Balmer_from_Robo']
+        eave = df_choice['err_EW_Balmer_scaled']
         #eave = np.divide(df_choice['err_balmer'], 1000.)
         ## ## THE BELOW FEH VALUES NEED TO BE CHECKED/FIXED
         feh = df_choice['feh']
@@ -600,16 +594,10 @@ class RunEmcee():
         logging.info(lstsq_soln.x)
 
         ################# MCMC setup #################
-        print("nwalkers", nwalkers, type(nwalkers))
-
-        print(param_array_0)
-        print(type(param_array_0[0]))
-
         logging.info("--------------------------")
         logging.info("Setting up MCMC ...")
 
         ndim = int(len(param_array_0)) # dimensions of space to explore
-        print("ndim", ndim, type(ndim))
 
         # Set up the backend
         # Don't forget to clear it in case the file already exists
