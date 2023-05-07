@@ -19,7 +19,7 @@ step = pipeline.ConfigInit(module_name="module1")
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # compile the C spectral normalization script
 step = pipeline.compile_normalization.CompileBkgrnd(
     module_name="module3", 
@@ -113,7 +113,7 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.teff_retrieval.TempVsBalmer(
     module_name="module12",
