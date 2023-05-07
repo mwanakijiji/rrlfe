@@ -85,7 +85,7 @@ step = pipeline.scrape_ew_and_errew.StackSpectra(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # make a net Balmer line from the H-delta and H-gamma lines
 step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
     module_name="module9",
@@ -94,7 +94,7 @@ step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # take meta-data from file names of synthetic spectra and add to table
 step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(
     module_name="module11",
