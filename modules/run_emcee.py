@@ -412,8 +412,6 @@ class WriteSolnToFits():
         dtype=np.rec.fromrecords([['string_key', 189.6752158]]).dtype
         # load data, skipping header and hash corresponding to that file
         teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=1, usecols=(0,1), delimiter=':', dtype=dtype)
-        print(teff_data_retrieve_file_name)
-        print(teff_data)
         dict_teff_data = {}
         for key, val in teff_data:
             dict_teff_data.update({key: val})
