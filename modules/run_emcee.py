@@ -48,6 +48,7 @@ class CornerPlot():
 
         print(np.shape(test_samples))
         print(test_samples)
+        import ipdb; ipdb.set_trace()
         if np.shape(test_samples)[1] == 5:
             # 5 rows: 1 index and 4 chains
             model = "abcd"
