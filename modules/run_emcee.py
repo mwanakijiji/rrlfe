@@ -420,15 +420,10 @@ class WriteSolnToFits():
 
         hdr["MODEL"] = (model, "Calibration type")
         print(hdr)
-        import ipdb; ipdb.set_trace()
         hdr["TEFF_MIN"] = (dict_teff_data["Teff_min"], "Minimum Teff for linear Teff vs. Balmer EW fit")
-        import ipdb; ipdb.set_trace()
         hdr["TEFF_MAX"] = (dict_teff_data["Teff_max"], "Maximum Teff for linear Teff vs. Balmer EW fit")
-        import ipdb; ipdb.set_trace()
         hdr["SLOPE_M"] = (dict_teff_data["m"], "Slope of Teff vs. Balmer EW")
-        import ipdb; ipdb.set_trace()
         hdr["ESLOPE_M"] = (dict_teff_data["err_m"], "Error in slope of Teff vs. Balmer EW")
-        import ipdb; ipdb.set_trace()
         hdr["YINT_B"] = (dict_teff_data["b"], "Y-intercept of Teff vs. Balmer EW")
         hdr["EYINT_B"] = (dict_teff_data["err_b"], "Error in y-intercept of Teff vs. Balmer EW")
         # comment explaining the solution
@@ -448,7 +443,7 @@ class WriteSolnToFits():
         if (model == "abcd"):
 
             # corner plot (requires 'storechain=True' in enumerate above)
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), delim_whitespace=True, names=["a", "b", "c", "d"])
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), delimiter=",", names=["a", "b", "c", "d"])
             c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
             c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
             c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
@@ -459,8 +454,8 @@ class WriteSolnToFits():
         elif (model == "abcdfghk"):
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
-            import ipdb; ipdb.set_trace()
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), delim_whitespace=True, names=["a", "b", "c", "d", "f", "g", "h", "k"])
+
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), delimiter=",", names=["a", "b", "c", "d", "f", "g", "h", "k"])
 
             c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
             c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
