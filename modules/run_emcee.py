@@ -44,15 +44,12 @@ class CornerPlot():
         mcmc_text_output_file_name = self.file_name_mcmc_posterior_read
         corner_plot_putput_file_name = self.plot_corner_write
 
-        test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace=True, nrows=5) # read in first rows to check column number
+        test_samples = pd.read_csv(mcmc_text_output_file_name, delimiter = ',', nrows=5) # read in first rows to check column number
 
-        print(np.shape(test_samples))
-        print(test_samples)
-        import ipdb; ipdb.set_trace()
-        if np.shape(test_samples)[1] == 5:
+        if np.shape(test_samples)[1] == 4:
             # 5 rows: 1 index and 4 chains
             model = "abcd"
-        elif np.shape(test_samples)[1] == 9:
+        elif np.shape(test_samples)[1] == 8:
             # 9 rows: 1 index and 8 chains
             model = "abcdfghk"
 
