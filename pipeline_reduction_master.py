@@ -66,7 +66,7 @@ step = pipeline.scrape_ew_and_errew.Scraper(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.QualityCheck(
     module_name="module7",
@@ -75,7 +75,7 @@ step = pipeline.scrape_ew_and_errew.QualityCheck(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # transpose/stack all the data, where each row corresponds to a spectrum
 step = pipeline.scrape_ew_and_errew.StackSpectra(
     module_name="module8",
