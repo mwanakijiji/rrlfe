@@ -104,7 +104,7 @@ step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # add errors from other methods: noise-churning, teff-feh groups, etc.
 step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
     module_name="module10",
@@ -113,7 +113,7 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 ## EVERYTHING SHOULD WORK UP TO HERE
 
 # scrape_ew_from_robo and calculate EWs + err_EW
