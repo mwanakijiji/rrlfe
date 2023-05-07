@@ -58,7 +58,6 @@ def line_order_check(line_centers):
     glitch_count = int(0) # boolean for bookeeping
     if ((line_centers[0] < 3933.660-10) or
         (line_centers[0] > 3933.660+10)): # CaIIK
-        print("line center, " + str(line_centers[0]))
         logging.warning('CaIIK line center does not match!')
         glitch_count = int(1) # boolean for bookeeping
     if ((line_centers[1] < 3970.075-10) or
@@ -336,7 +335,6 @@ class QualityCheck():
         bad_robo_spectra = all_data["realization_spec_file_name"][np.squeeze(where_red_flag)]
 
         # remove duplicate names
-        print(bad_robo_spectra)
         try:
             # case of >1 bad spectrum
             bad_robo_spectra_uniq = bad_robo_spectra.drop_duplicates()
