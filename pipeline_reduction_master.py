@@ -44,7 +44,7 @@ step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # skipping, because it takes too much time
 # run_robospect on normalized synthetic spectra
 
@@ -56,7 +56,7 @@ step1 = pipeline.run_robo.Robo(
 
 # add step to procedure
 test_gen.add_step(step1)
-
+'''
 
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
