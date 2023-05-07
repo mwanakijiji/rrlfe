@@ -94,7 +94,7 @@ step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # take meta-data from file names of synthetic spectra and add to table
 step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(
     module_name="module11",
@@ -104,7 +104,7 @@ step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # add errors from other methods: noise-churning, teff-feh groups, etc.
 step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
     module_name="module10",
