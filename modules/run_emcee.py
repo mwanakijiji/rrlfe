@@ -99,6 +99,7 @@ class CornerPlot():
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
             test_samples = pd.read_csv(mcmc_text_output_file_name, delimiter = ',', nrows=5) # read in first rows to check column number
+            import ipdb; ipdb.set_trace()
             samples_all = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4,5,6,7,8), delimiter = ',', names=["a", "b", "c", "d", "f", "g", "h", "k"])
             N_remove = 1e3 # plot only 1 out of every N links of the chains
             samples = samples_all[samples_all.index % N_remove != 0]
