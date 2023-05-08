@@ -99,7 +99,9 @@ class CornerPlot():
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
             test_samples = pd.read_csv(mcmc_text_output_file_name, delimiter = ',', nrows=5) # read in first rows to check column number
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4,5,6,7,8), delimiter = ',', names=["a", "b", "c", "d", "f", "g", "h", "k"])
+            samples_all = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4,5,6,7,8), delimiter = ',', names=["a", "b", "c", "d", "f", "g", "h", "k"])
+            N_remove = 1e3 # plot only 1 out of every N links of the chains
+            samples = samples_all[samples_all.index % N_remove != 0]
             fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$", "$f$", "$g$", "$h$", "$k$"],
                                 quantiles=[0.16, 0.5, 0.84],
                                 title_fmt='.2f',
@@ -108,7 +110,7 @@ class CornerPlot():
                                 title_kwargs={"fontsize": 12})
             fig.savefig(corner_plot_putput_file_name)
             logging.info("--------------------------")
-            logging.info("Corner plot of MCMC posteriors written out to")
+            logging.info("Corner plot of MCMC posteriors (every "+N_remove+" links of chains only) written out to")
             logging.info(str(corner_plot_putput_file_name))
 
             # if its necessary to read in MCMC output again
