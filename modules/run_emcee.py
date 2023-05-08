@@ -110,7 +110,7 @@ class CornerPlot():
                                 title_kwargs={"fontsize": 12})
             fig.savefig(corner_plot_putput_file_name)
             logging.info("--------------------------")
-            logging.info("Corner plot of MCMC posteriors (every "+N_remove+" links of chains only) written out to")
+            logging.info("Corner plot of MCMC posteriors written out to")
             logging.info(str(corner_plot_putput_file_name))
 
             # if its necessary to read in MCMC output again
