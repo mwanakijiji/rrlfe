@@ -234,7 +234,10 @@ class FehRetrieval():
         ew_data["err_feh_retrieved"] = np.nan
         ew_data["teff_retrieved"] = np.nan
 
-        set_start_method('fork') # necessary to spawn children
+        try:
+            set_start_method('fork') # necessary to spawn children
+        except RuntimeError:
+            pass
         pool = multiprocessing.Pool(ncpu)
 
         # split big dataframe into separate ones, one dataframe per row

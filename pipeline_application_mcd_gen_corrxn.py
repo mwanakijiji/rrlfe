@@ -32,7 +32,7 @@ step = pipeline.compile_normalization.CompileBkgrnd(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # take list of unnormalized empirical spectra, normalize them, and write out
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
@@ -107,7 +107,7 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+"rrlfe_io_20230510_mcd_raw/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
