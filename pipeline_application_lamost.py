@@ -21,6 +21,7 @@ step = pipeline.MakeDirsConfig(module_name="module2")
 # add step to procedure
 test_gen.add_step(step)
 '''
+import ipdb; ipdb.set_trace()
 # compile the C spectral normalization script
 step = pipeline.compile_normalization.CompileBkgrnd(
     module_name="module3", 
