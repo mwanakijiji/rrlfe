@@ -56,11 +56,11 @@ class FindCorrxn:
         df_raw_retrieved['name_match'] = df_raw_retrieved['orig_spec_file_name'].str[:6].str.rstrip('_')
         df_raw_retrieved['name_match'].loc[df_raw_retrieved['name_match'] == 'V445_O'] = 'V445_Oph' # to make the name matching for this star to work right
 
-        df_merged = df_raw_retrieved[['name_match','feh_retrieved']].merge(df_basis[['name_match','feh_lit_mapped']], on='name_match', how='inner')
+        df_merged = df_raw_retrieved[['name_match','feh_retrieved']].merge(df_basis[['name_match','feh_high_res_mapped']], on='name_match', how='inner')
         ##
 
         # the literature [Fe/H] after remapping them onto a common basis
-        vals_basis = df_merged['feh_lit_mapped'].values
+        vals_basis = df_merged['feh_high_res_mapped'].values
         # _r for raw
         vals_rrlfe_r = df_merged['feh_retrieved'].values
 
