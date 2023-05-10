@@ -107,7 +107,7 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+"rrlfe_io_20230510_mcd_raw/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
@@ -123,11 +123,11 @@ test_gen.add_step(step)
 # this requires a separate application script to have run on the McD data; it's too complicated to build it in here; TBD later
 step = pipeline.final_corrxn.FindCorrxn(
     module_name="module16",
-    file_name_basis_raw_retrieved_fehs=stem_abs+"rrlfe_io_20220803_01_mcd/bin/retrieved_vals_20220803.csv", # retrieved McD Fe/H values based on raw rrlfe calibration
+    file_name_basis_raw_retrieved_fehs=stem_abs+"rrlfe_io_20230510_mcd_raw/bin/retrieved_vals.csv", # retrieved McD Fe/H values based on raw rrlfe calibration
     file_name_basis_lit_fehs=stem_abs+"notebooks_for_development/mapped_program_fehs_20230402.csv", # mapped high-res literature Fe/H values for McD stars
-    soln_write_name=stem_abs+"rrlfe_io_red/bin/junk_calib_solution.fits" # raw calibration which is applied, and to which corrxn is appended to
+    soln_write_name=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_20230507.fits" # raw calibration which is applied, and to which corrxn is appended to
 )
-'''
+
 # add step to procedure
 test_gen.add_step(step)
 
