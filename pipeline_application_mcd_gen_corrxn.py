@@ -24,13 +24,13 @@ step = pipeline.MakeDirsConfig(module_name="module2")
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # compile the C spectral normalization script
 step = pipeline.compile_normalization.CompileBkgrnd(module_name="module3")
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # take list of unnormalized empirical spectra, normalize them, and write out
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
