@@ -49,21 +49,22 @@ class FindCorrxn:
         # [Fe/H] based on high-res spectroscopy from the literature; this should include both
         # raw (average) literature values, and the values after remapping onto a common basis set
         df_basis = pd.read_csv(self.file_name_basis_lit_fehs)
-        import ipdb; ipdb.set_trace()
         # average the high-res values for each 
 
         ## make matching and merger
         df_raw_retrieved['name_match'] = df_raw_retrieved['orig_spec_file_name'].str[:6].str.rstrip('_')
         df_raw_retrieved['name_match'].loc[df_raw_retrieved['name_match'] == 'V445_O'] = 'V445_Oph' # to make the name matching for this star to work right
 
+        # make lower-case in case of case error
+        df_basis['name_match'] = df_basis['name_match'].str.lower()
+        df_raw_retrieved['name_match'] = df_raw_retrieved['name_match'].str.lower()
         df_merged = df_raw_retrieved[['name_match','feh_retrieved']].merge(df_basis[['name_match','feh_high_res_mapped']], on='name_match', how='inner')
-        import ipdb; ipdb.set_trace()
 
         # the literature [Fe/H] after remapping them onto a common basis
         vals_basis = df_merged['feh_high_res_mapped'].values
         # _r for raw
         vals_rrlfe_r = df_merged['feh_retrieved'].values
-        import ipdb; ipdb.set_trace()
+
         # initial best fit between rrlfe vs. basis
         m_b, b_b = np.polyfit(vals_basis,vals_rrlfe_r,1) # _b: best-fit
         
