@@ -124,7 +124,7 @@ step = pipeline.teff_retrieval.TempVsBalmer(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # skipping, because it takes too much time
 # run_emcee
 # coeff defs: K = a + bH + cF + dHF + f(H^2) + g(F^2) + h(H^2)F + kH(F^2) + m(H^3) + n(F^3)
@@ -167,5 +167,5 @@ step = pipeline.final_corrxn.FindCorrxn(
     file_name_basis_lit_fehs=stem_abs+"notebooks_for_development/mapped_program_fehs_20230402.csv",
     soln_write_name=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_20230507.fits" # solution to which we will append corrxn to
 )
-
+'''
 test_gen.run()
