@@ -25,9 +25,15 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 # set the coefficients of the model
-coeff_array= np.array([26.458560990753856,-2.902133161010684,13.111956399236913,-1.2137255854235038,
-                    0.09607072758758611,1.5487308225785184,0.032702627768572155,-0.08555553824310289,0,0])
-#coeff_array = np.array([1.,1.,1.,1.,1.,1.,1.,1.,0,0])
+aa = 25.117429345800897
+bb = -2.6563029648456977
+cc = 12.274903002252778
+dd = -1.0907146667535803
+ff = 0.08533007648016731
+gg = 1.4174778531349383
+hh = 0.028403870092591366
+kk = -0.07451178772595296
+coeff_array= np.array([aa,bb,cc,dd,ff,gg,hh,kk,0,0])
 
 # read in the data points to be overplotted
 stem = "/Users/bandari/Documents/git.repos/rrlfe/"

@@ -15,8 +15,12 @@ import numpy as np
 import glob
 import os
 
+'''
 stem = "/Users/bandari/Documents/git.repos/rrlfe/src/sdss_original_single_epoch_fits/"
 stem_notebooks = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/sdss_processing/01_separated_and_interpolated/"
+'''
+stem = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal_spectra_test/"
+stem_notebooks = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal_spectra_test/01_separated_and_interpolated/"
 
 file_list = glob.glob(stem + "*fits")
 

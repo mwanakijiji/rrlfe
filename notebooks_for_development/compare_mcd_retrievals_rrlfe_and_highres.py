@@ -82,7 +82,7 @@ df_retrievals_all["$T_{eff}$"] = df_retrievals_all["teff_retrieved"]
 g = sns.relplot(
     data=df_retrievals_all,
     x="feh_high_res_mapped", y="feh_retrieved",
-    hue="$|\Delta \phi|$", size="$T_{eff}$", sizes=(40, 200), edgecolor="k",
+    size="$|\Delta \phi|$", sizes=(40, 300), edgecolor="k",
     palette=cmap, zorder=4, hue_order= [0,0.5], alpha=0.8
 )
 
@@ -96,10 +96,10 @@ h2 = sns.lineplot(x=[-2.8,0.0], y=lobf, legend=False)
 plt.setp(h1, zorder=2)
 plt.setp(h2, zorder=3)
 
-g.set_xlabels("[Fe/H], mapped high-res", fontsize=30)
-g.set_ylabels("[Fe/H], retrieved", fontsize=30)
+g.set_xlabels("[Fe/H], mapped high-res", fontsize=50)
+g.set_ylabels("[Fe/H], retrieved", fontsize=50)
 
-#g.set_yticklabels(g.get_yticks(), size = 25)
+g.tick_params(axis='both', which='major', labelsize=35)
 
 g.fig.set_size_inches(16,9)
 plt.grid()
@@ -112,7 +112,7 @@ leg.set_bbox_to_anchor([0.5, -0.5])  # coordinates of lower left of bounding box
 leg._loc = 2  # if required you can set the loc
 #leg._ncol=3
 
-lgnd = plt.legend(ncol=1)
+lgnd = plt.legend(ncol=1,fontsize=30)
 
 file_name_write = "junk.pdf"
 g.savefig(file_name_write, bbox_inches='tight')

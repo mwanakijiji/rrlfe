@@ -11,8 +11,8 @@ import time
 
 stem = '/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/'
 
-df = pd.read_csv(stem + 'li_catalog_ra_dec.csv', names=['ra','dec'])
-stem_write = './tbd_dir/'
+df = pd.read_csv(stem + 'xac.csv', names=['ra','dec'])
+stem_write = './li3of4/'
 
 for idx in range(0,len(df)):
         
@@ -41,6 +41,11 @@ for idx in range(0,len(df)):
     print('---------')
         
     # keep the sdss server happy
-    if idx%40 == 0:
-        
+    if idx%40 == 0: 
+        # this will still lead to cutoff after ~4275 queries
         time.sleep(61)
+    if np.logical_and(idx%4000 == 0,idx%8000 != 0): 
+        # this will still lead to cutoff after ~8857 queries
+        time.sleep(3601)
+    if np.logical_and(idx%4000 == 0,idx%8000 == 0): 
+        time.sleep(7201)

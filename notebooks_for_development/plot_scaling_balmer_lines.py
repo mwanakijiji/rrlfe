@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm
 from cycler import cycler
 
-file_name = "/Users/bandari/Documents/git.repos/rrlfe/ew_products/all_data_input_mcmc_20220130_run_1.csv"
+file_name = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/retrieved_synthetic_20230515_vals_corrected.csv"
 #file_name = "/Users/bandari/Documents/git.repos/rrlfe/ew_products/all_data_input_mcmc_calib_run_long_100_spectra_from_synthetic_started_20220131_smo_files.csv"
 
 n = 4
@@ -28,6 +28,7 @@ plt.scatter(df["EW_Hdelta"], np.add(df["EW_Heps"],10), s=12, label="H"+r"$\epsil
 plt.scatter(df["EW_Hdelta"], np.add(df["EW_Hbeta"],5), s=12, label="H"+r"$\beta$")
 plt.scatter(df["EW_Hdelta"], df["EW_Hgamma"], s=12, label="H"+r"$\gamma$")
 # note by plotting error bar points, color scheme conveniently repeats colors in order
+'''
 plt.errorbar([5], [2], markersize=7, fmt="", mfc='white', capsize=3, elinewidth=3, capthick=3,
             xerr=np.median(df["err_EW_Hdelta_from_robo"]),
             yerr=np.median(df["err_EW_Heps_from_robo"]))
@@ -37,8 +38,9 @@ plt.errorbar([7], [3], markersize=7, fmt="", mfc='white', capsize=3, elinewidth=
 plt.errorbar([9], [4], markersize=7, fmt="", mfc='white', capsize=3, elinewidth=3, capthick=3,
             xerr=np.median(df["err_EW_Hdelta_from_robo"]),
             yerr=np.median(df["err_EW_Hgamma_from_robo"]))
+'''
 plt.xlim([1.2,15.0])
-plt.xlabel(r"$EW_{\delta}$"+" "+"($\AA$)", fontsize=35)
+plt.xlabel(r"$EW(H\delta)$"+" "+"($\AA$)", fontsize=35)
 plt.ylabel("$EW$"+" "+"($\AA$)", fontsize=35)
 lgnd = plt.legend(loc="lower right", scatterpoints=1, fontsize=25)
 lgnd.legendHandles[0]._sizes = [100]
