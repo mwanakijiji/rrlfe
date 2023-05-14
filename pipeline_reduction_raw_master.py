@@ -27,7 +27,7 @@ step = pipeline.compile_normalization.CompileBkgrnd(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # take list of unnormalized empirical spectra, normalize them, and write out
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
@@ -136,8 +136,6 @@ step = pipeline.run_emcee.RunEmcee(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
-
 
 step = pipeline.run_emcee.WriteSolnToFits(
     module_name="module14",
@@ -156,7 +154,6 @@ step = pipeline.run_emcee.CornerPlot(
 # add step to procedure
 test_gen.add_step(step)
 
-'''
 # in a separate pipeline, apply the above raw calibration to the McD star data
 # this section takes those Fe/H results and finds the offset correction based on them
 # I think this requires scripts for the following:
@@ -170,5 +167,5 @@ step = pipeline.final_corrxn.FindCorrxn(
     file_name_basis_lit_fehs=stem_abs+"notebooks_for_development/mapped_program_fehs_20230402.csv",
     soln_write_name=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_20230507.fits" # solution to which we will append corrxn to
 )
-'''
+
 test_gen.run()
