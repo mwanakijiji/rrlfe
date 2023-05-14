@@ -34,8 +34,8 @@ test_gen.add_step(step)
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
     cc_bkgrnd_dir=stem_abs+"src/",
-    input_spec_list_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated_3900_to_5299_angstr.list",
-    unnorm_spectra_dir_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated_3900_to_5299_angstr/",
+    input_spec_list_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated_3911_to_4950_angstr.list",
+    unnorm_spectra_dir_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated_3911_to_4950_angstr/",
     unnorm_noise_churned_spectra_dir_read=stem_abs+"rrlfe_io_20230514_sdss/realizations_output/",
     bkgrnd_output_dir_write=stem_abs+"rrlfe_io_20230514_sdss/realizations_output/norm/",
     final_spec_dir_write=stem_abs+"rrlfe_io_20230514_sdss/realizations_output/norm/final/",
@@ -60,7 +60,7 @@ test_gen.add_step(step)
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
-    input_spec_list_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated_3900_to_5299_angstr.list",
+    input_spec_list_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated_3911_to_4950_angstr.list",
     robo_output_read=stem_abs+"rrlfe_io_20230514_sdss/robospect_output/smo_files/",
     file_scraped_write=stem_abs+"rrlfe_io_20230514_sdss/ew_products/all_ew_info.csv")
 
@@ -81,7 +81,7 @@ step = pipeline.scrape_ew_and_errew.StackSpectra(
     module_name="module8",
     file_ew_data_read=stem_abs+"rrlfe_io_20230514_sdss/ew_products/ew_info_good_only.csv",
     file_restacked_write=stem_abs+"rrlfe_io_20230514_sdss/ew_products/restacked_ew_info_good_only.csv",
-    input_spec_list_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated_3900_to_5299_angstr.list")
+    input_spec_list_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated_3911_to_4950_angstr.list")
 
 # add step to procedure
 test_gen.add_step(step)

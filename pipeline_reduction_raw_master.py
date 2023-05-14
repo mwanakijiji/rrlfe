@@ -4,7 +4,7 @@
 import high_level_reduction_accordion as pipeline
 
 # absolute stem of repo; needed to make dirs if they don't exist
-stem_abs = "/suphys/espa3021/rrlfe/"
+stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
 #stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
 
 # file name of list containing basenames of spectra to reduce
