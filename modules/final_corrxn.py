@@ -142,8 +142,8 @@ class ApplyCorrxn:
 
         # read in raw FITS calibration
         hdul = fits.open(self.soln_fits_name)
-        m_slope = np.float(hdul[1].header["CO_SLP_M"]) # slope of rrlfe_c vs. rrlfe_r
-        b_yint = np.float(hdul[1].header["CO_YIN_B"]) # Y-intercept of rrlfe_c vs. rrlfe_r
+        m_slope = float(hdul[1].header["CO_SLP_M"]) # slope of rrlfe_c vs. rrlfe_r
+        b_yint = float(hdul[1].header["CO_YIN_B"]) # Y-intercept of rrlfe_c vs. rrlfe_r
 
         # residuals to 1-to-1 line in rrlfe vs. high-res spectroscopy space
         #resids = (m_slope-1)*vals_basis + b_yint
