@@ -24,13 +24,19 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 # set the coefficients of the model
-coeff_array= np.array([26.458560990753856,-2.902133161010684,13.111956399236913,-1.2137255854235038,
-                    0.09607072758758611,1.5487308225785184,0.032702627768572155,-0.08555553824310289,0,0])
-#coeff_array = np.array([1.,1.,1.,1.,1.,1.,1.,1.,0,0])
+aa = 25.117429345800897
+bb = -2.6563029648456977
+cc = 12.274903002252778
+dd = -1.0907146667535803
+ff = 0.08533007648016731
+gg = 1.4174778531349383
+hh = 0.028403870092591366
+kk = -0.07451178772595296
+coeff_array= np.array([aa,bb,cc,dd,ff,gg,hh,kk,0,0])
 
 # read in the data points to be overplotted
-stem = "/Users/bandari/Documents/git.repos/rrlfe/"
-data_points_read = stem + "rrlfe_io_20220803_01_mcd/bin/retrieved_vals_20220803.csv"
+stem = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/"
+data_points_read = stem + "data/20230514_mcd_application_whole_test.csv"
 df_choice = pd.read_csv(data_points_read)
 
 # read in phases, to concatenate to the retrieval info
@@ -38,7 +44,7 @@ df_choice = pd.read_csv(data_points_read)
 # read in full list of spectra reduced so that we can
 # 1. pinpoint the ones that failed the fitting process
 # 2. concatenate the phase info
-data_start = stem + "src/mcd_final_phases_ascii_files_all.list"
+data_start = stem + "../src/mcd_final_phases_ascii_files_all.list"
 df_start = pd.read_csv(data_start)
 
 # merge but return the non-overlapping spectrum names
@@ -101,7 +107,7 @@ g = sns.relplot(
     data=df_choice,
     x="EW_Balmer", y="EW_CaIIK",
     color="white", size="[Fe/H]", edgecolor="k",
-    palette=cmap, sizes=(30,160), alpha=0.8, zorder=5
+    palette=cmap, sizes=(40,40), alpha=0.8, zorder=5
 )
 
 
@@ -128,46 +134,46 @@ df_v445_only = df_choice[idx_v445_only].sort_values(by="phase").reset_index(drop
 
 # plot points to show median error bars
 # define the line along which they will lie
-balmer_dummy = np.arange(7,16,1)
+balmer_dummy = np.arange(5,16,1)
 contour_4_points = np.add(8.,expanded_layden_all_coeffs(coeff_array=coeff_array, H=balmer_dummy, F=0.2))
 bool_p02 = (np.logical_and(df_choice["feh_retrieved"] > -0.9,df_choice["feh_retrieved"] < -0.1))
 
 plt.errorbar(balmer_dummy[4],[12],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_p02]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_p02]), ecolor="k", elinewidth=2, capthick=2, capsize=6) # [Fe/H] = +0.2
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_p02]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_p02]), ecolor="k", elinewidth=2, capthick=2, capsize=6) # [Fe/H] = +0.2
 plt.text(balmer_dummy[4]+0.2,12+0.5,"-0.9 < [Fe/H] < -0.1")
 '''
 bool_p00 = (df_choice["feh_retrieved"] == 0.0)
 plt.errorbar(balmer_dummy[1],contour_4_points[1],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_p00]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_p00]), ecolor="k")  # [Fe/H] = +0.0
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_p00]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_p00]), ecolor="k")  # [Fe/H] = +0.0
 
 bool_m05 = (df_choice["feh_retrieved"] == -0.5)
 plt.errorbar(balmer_dummy[2],contour_4_points[2],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m05]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m05]), ecolor="k") # [Fe/H] = -0.5
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_m05]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_m05]), ecolor="k") # [Fe/H] = -0.5
 '''
 bool_m10 = (np.logical_and(df_choice["feh_retrieved"] > -1.7,df_choice["feh_retrieved"] < -0.9))
-plt.errorbar(balmer_dummy[5],[10],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m10]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m10]), ecolor="k", elinewidth=2, capthick=2, capsize=6) # [Fe/H] = -1.0
-plt.text(balmer_dummy[5]+0.2,10+0.5,"-1.7 < [Fe/H] < -0.9")
+plt.errorbar(balmer_dummy[5]+0.4,[10],
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_m10]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_m10]), ecolor="k", elinewidth=2, capthick=2, capsize=6) # [Fe/H] = -1.0
+plt.text(balmer_dummy[5]+0.4+0.2,10+0.5,"-1.7 < [Fe/H] < -0.9")
 '''
 bool_m15 = (df_choice["feh_retrieved"] == -1.5)
 plt.errorbar(balmer_dummy[4],contour_4_points[4],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m15]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m15]), ecolor="k")  # [Fe/H] = -1.5
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_m15]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_m15]), ecolor="k")  # [Fe/H] = -1.5
 
 bool_m20 = (df_choice["feh_retrieved"] == -2.0)
 plt.errorbar(balmer_dummy[5],contour_4_points[5],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m20]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m20]), ecolor="k")  # [Fe/H] = -2.0
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_m20]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_m20]), ecolor="k")  # [Fe/H] = -2.0
 '''
 bool_m25 = (np.logical_and(df_choice["feh_retrieved"] > -2.5,df_choice["feh_retrieved"] < -1.7))
-plt.errorbar(balmer_dummy[6],[8],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m25]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m25]), ecolor="k", elinewidth=2, capthick=2, capsize=6)  # [Fe/H] = -2.5
-plt.text(balmer_dummy[6]+0.2,8+0.5,"-2.5 < [Fe/H] < -1.7")
+plt.errorbar(balmer_dummy[6]+0.8,[8],
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_m25]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_m25]), ecolor="k", elinewidth=2, capthick=2, capsize=6)  # [Fe/H] = -2.5
+plt.text(balmer_dummy[6]+0.8+0.2,8+0.5,"-2.5 < [Fe/H] < -1.7")
 
 # plot isometallicity contours
 success_rate_x = 14.5
@@ -274,8 +280,8 @@ plt.legend().set_visible(False)
 
 g.fig.set_size_inches(28,8)
 
-g.set_ylabels(r"$EW_{K}$"+" ($\AA$)", fontsize=22)
-g.set_xlabels(r"$EW_{B}$"+" ($\AA$)", fontsize=22)
+g.set_ylabels("Ca II K EW"+" ($\AA$)", fontsize=22)
+g.set_xlabels("Balmer EW"+" ($\AA$)", fontsize=22)
 g.set(ylim=(0, 14))
 g.set(xlim=(1, 15.5))
 

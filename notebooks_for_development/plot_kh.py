@@ -37,25 +37,17 @@ coeff_array= np.array([aa,bb,cc,dd,ff,gg,hh,kk,0,0])
 
 # read in the data points to be overplotted
 stem = "/Users/bandari/Documents/git.repos/rrlfe/"
-data_points_read = stem + "rrlfe_io_20220811_job_594776_abcdfghk/rrlfe_io/ew_products/all_data_input_mcmc.csv"
+data_points_read = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/all_data_input_mcmc_synthetic_application_20230515.csv"
 df_choice = pd.read_csv(data_points_read)
 
 # read in full list of spectra reduced (so that we can pinpoint the ones that failed the fitting process)
 data_start = stem + "src/synthetic_spectra_without_feh_m30.list"
 df_start = pd.read_csv(data_start)
 
-# read in ALL EW data (good and bad), to plot and/or troubleshoot the failed fits
-'''
-# not sure if useful
-good_bad = stem + "rrlfe_io_20220811_job_594776_abcdfghk/rrlfe_io/ew_products/all_ew_info.csv"
-df_goodbad = pd.read_csv(good_bad)
-'''
-
 # merge but return the non-overlapping spectrum names (print manually)
 indicator_merge = df_start.merge(df_choice, on='orig_spec_file_name', how='outer', indicator=True)
 df_lost = indicator_merge[indicator_merge['_merge']=='left_only'] # 'lost' spectra
 
-#
 #df_lost["feh_x"]
 #import ipdb; ipdb.set_trace()
 
@@ -115,86 +107,48 @@ g = sns.relplot(
     palette=cmap, sizes=(30,160), alpha=0.8, zorder=2
 )
 
-import ipdb; ipdb.set_trace()
-
-
-## BEGIN MAKE ERROR BARS BASED ON TEMPERATURE GROUPS
-
-# add column to contain new errors bars
-df_choice['err_EW_Balmer_from_teff_groups'] = np.nan
-
-groups_temp = df_choice['teff'].drop_duplicates().values # teff only
-groups_temp_feh = df_choice[['teff','feh']].drop_duplicates().values # teff and feh combos
-
-import ipdb; ipdb.set_trace()
-for combo in groups_temp_feh:
-
-    idx = np.logical_and(df_choice['teff'] == combo[0],df_choice['feh'] == combo[1])
-
-    if sum(idx) > 1: # some fits might have failed, but we don't want this to lead to a zero error bar
-        error_bar_Balmer = np.std(df_choice.loc[idx]["EW_Balmer"])
-        error_bar_CaIIK = np.std(df_choice.loc[idx]["EW_CaIIK"])
-
-    else: 
-        error_bar_Balmer = np.median(df_choice.loc[idx]["err_EW_Balmer_from_Robo"])
-        error_bar_CaIIK = np.median(df_choice.loc[idx]["err_EW_CaIIK_from_robo"])
-
-    df_choice.loc[idx,'err_EW_Balmer_from_teff_groups'] = error_bar_Balmer
-    df_choice.loc[idx,'err_EW_CaIIK_from_teff_groups'] = error_bar_CaIIK
-    
-    plt.errorbar(df_choice.loc[idx,'EW_Balmer'],df_choice.loc[idx,'EW_CaIIK'],
-                 xerr=df_choice.loc[idx,'err_EW_Balmer_from_teff_groups'], yerr=df_choice.loc[idx,'err_EW_CaIIK_from_teff_groups'],
-                 linestyle=None, fmt='o')
-
-#plt.errorbar(df_choice['EW_Balmer'],df_choice['EW_CaIIK'],xerr=df_choice['err_EW_Balmer_from_teff_groups'], linestyle=None, fmt='o')
-plt.show()
-import ipdb; ipdb.set_trace()
-## END MAKE ERROR BARS
-
-
-
 # plot points to show median error bars
 # define the line along which they will lie
-balmer_dummy = np.arange(7,16,1)
+balmer_dummy = np.arange(6,15,1)
 contour_4_points = np.add(8.,expanded_layden_all_coeffs(coeff_array=coeff_array, H=balmer_dummy, F=0.2))
 bool_p02 = (df_choice["feh"] == 0.2)
 #import ipdb; ipdb.set_trace()
 plt.errorbar(balmer_dummy[0],[20],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_p02]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_p02]), ecolor="k", elinewidth=2, capthick=2, capsize=6)  # [Fe/H] = +0.2
-plt.text(balmer_dummy[0]+0.1,20+0.5,"[Fe/H] = +0.2")
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_p02]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_p02]), ecolor="k", elinewidth=2, capthick=2, capsize=6)  # [Fe/H] = +0.2
+plt.text(balmer_dummy[0]+0.2,20+1.0,"[Fe/H] = +0.2")
 '''
 bool_p00 = (df_choice["feh"] == 0.0)
 plt.errorbar(balmer_dummy[1],contour_4_points[1],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_p00]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_p00]), ecolor="k")  # [Fe/H] = +0.0
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_p00]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_p00]), ecolor="k")  # [Fe/H] = +0.0
 
 bool_m05 = (df_choice["feh"] == -0.5)
 plt.errorbar(balmer_dummy[2],contour_4_points[2],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m05]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m05]), ecolor="k") # [Fe/H] = -0.5
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_m05]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_m05]), ecolor="k") # [Fe/H] = -0.5
 '''
 bool_m10 = (df_choice["feh"] == -1.0)
 plt.errorbar(balmer_dummy[3],[15],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m10]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m10]), ecolor="k", elinewidth=2, capthick=2, capsize=6) # [Fe/H] = -1.0
-plt.text(balmer_dummy[3]+0.1,15+0.5,"-1.0")
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_m10]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_m10]), ecolor="k", elinewidth=2, capthick=2, capsize=6) # [Fe/H] = -1.0
+plt.text(balmer_dummy[3]+0.2,15+1.0,"-1.0")
 '''
 bool_m15 = (df_choice["feh"] == -1.5)
 plt.errorbar(balmer_dummy[4],contour_4_points[4],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m15]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m15]), ecolor="k")  # [Fe/H] = -1.5
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_m15]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_m15]), ecolor="k")  # [Fe/H] = -1.5
 
 bool_m20 = (df_choice["feh"] == -2.0)
 plt.errorbar(balmer_dummy[5],contour_4_points[5],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m20]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m20]), ecolor="k")  # [Fe/H] = -2.0
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_m20]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_m20]), ecolor="k")  # [Fe/H] = -2.0
 '''
 bool_m25 = (df_choice["feh"] == -2.5)
 plt.errorbar(balmer_dummy[6],[10],
-                xerr=np.median(df_choice["err_EW_Balmer_from_Robo"][bool_m25]),
-                yerr=np.median(df_choice["err_EW_CaIIK_from_robo"][bool_m25]), ecolor="k", elinewidth=2, capthick=2, capsize=6)  # [Fe/H] = -2.5
-plt.text(balmer_dummy[6]+0.1,10+0.5,"-2.5")
+                xerr=np.median(df_choice["err_EW_Balmer_scaled"][bool_m25]),
+                yerr=np.median(df_choice["err_EW_CaIIK_scaled"][bool_m25]), ecolor="k", elinewidth=2, capthick=2, capsize=6)  # [Fe/H] = -2.5
+plt.text(balmer_dummy[6]+0.2,10+1.0,"-2.5")
 
 # plot isometallicity contours
 success_rate_x = 14.5
@@ -230,8 +184,8 @@ plt.legend(loc="upper right", ncol=3, title="[Fe/H]")
 
 g.fig.set_size_inches(28,8)
 
-g.set_ylabels(r"$EW_{K}$"+" ($\AA$)", fontsize=22)
-g.set_xlabels(r"$EW_{B}$"+" ($\AA$)", fontsize=22)
+g.set_ylabels("Ca II K EW"+" ($\AA$)", fontsize=22)
+g.set_xlabels("Balmer EW"+" ($\AA$)", fontsize=22)
 g.set(ylim=(0, 25))
 
 g.savefig(file_name_write, bbox_inches='tight')
