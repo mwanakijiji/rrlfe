@@ -269,8 +269,8 @@ axs[0, 0].scatter(df_rw_ari["Phase"],df_rw_ari["y_photom_norm"], color="k", s=2,
 axs[0, 0].plot(df_rw_ari["Phase"],df_rw_ari["y_spline_norm"], color="r", zorder=5)
 axs[0, 0].set_xlim([0,1.0])
 axs[0, 0].set_ylim([0,1.0])
-axs[0, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[0, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[0, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[0, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # X Ari
 axs[0, 1].set_title(cases[1] + " (ab)", fontsize=font_size_subtitles)
@@ -280,8 +280,8 @@ axs[0, 1].scatter(df_x_ari["Phase"],df_x_ari["y_photom_norm"], color="k", s=2,zo
 axs[0, 1].plot(df_x_ari["Phase"],df_x_ari["y_spline_norm"], color="r", zorder=5)
 axs[0, 1].set_xlim([0,1.0])
 axs[0, 1].set_ylim([0,1.0])
-axs[0, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[0, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[0, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[0, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # UY Cam
 axs[0, 2].set_title(cases[2] + " (c)", fontsize=font_size_subtitles)
@@ -291,8 +291,8 @@ axs[0, 2].scatter(df_uy_cam["Phase"], df_uy_cam["y_photom_norm"], color="k", s=2
 axs[0, 2].plot(df_uy_cam["Phase"],df_uy_cam["y_spline_norm"], color="r", zorder=5)
 axs[0, 2].set_xlim([0,1.0])
 axs[0, 2].set_ylim([0,1.0])
-axs[0, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[0, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[0, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[0, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # RR Cet
 axs[1, 0].set_title(cases[3] + " (ab)", fontsize=font_size_subtitles)
@@ -302,8 +302,8 @@ axs[1, 0].scatter(df_rr_cet["Phase"], df_rr_cet["y_photom_norm"], color="k", s=2
 axs[1, 0].plot(df_rr_cet["Phase"],df_rr_cet["y_spline_norm"], color="r", zorder=5)
 axs[1, 0].set_xlim([0,1.0])
 axs[1, 0].set_ylim([0,1.0])
-axs[1, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[1, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[1, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[1, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # SV Eri
 axs[1, 1].set_title(cases[4] + " (ab)", fontsize=font_size_subtitles)
@@ -313,8 +313,8 @@ axs[1, 1].scatter(df_sv_eri["Phase"], df_sv_eri["y_photom_norm"], color="k", s=2
 axs[1, 1].plot(df_sv_eri["Phase"],df_sv_eri["y_spline_norm"], color="r", zorder=5)
 axs[1, 1].set_xlim([0,1.0])
 axs[1, 1].set_ylim([0,1.0])
-axs[1, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[1, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[1, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[1, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # VX Her
 axs[1, 2].set_title(cases[5] + " (ab)", fontsize=font_size_subtitles)
@@ -324,8 +324,8 @@ axs[1, 2].scatter(df_vx_her["Phase"], df_vx_her["y_photom_norm"], color="k", s=2
 axs[1, 2].plot(df_vx_her["Phase"],df_vx_her["y_spline_norm"], color="r", zorder=5)
 axs[1, 2].set_xlim([0,1.0])
 axs[1, 2].set_ylim([0,1.0])
-axs[1, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[1, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[1, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[1, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # RR Leo
 axs[2, 0].set_title(cases[6] + " (ab)", fontsize=font_size_subtitles)
@@ -335,8 +335,8 @@ axs[2, 0].scatter(df_rr_leo["Phase"], df_rr_leo["y_photom_norm"], color="k", s=2
 axs[2, 0].plot(df_rr_leo["Phase"],df_rr_leo["y_spline_norm"], color="r", zorder=5)
 axs[2, 0].set_xlim([0,1.0])
 axs[2, 0].set_ylim([0,1.0])
-axs[2, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[2, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[2, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[2, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # TT Lyn
 axs[2, 1].set_title(cases[7] + " (ab)", fontsize=font_size_subtitles)
@@ -346,8 +346,8 @@ axs[2, 1].scatter(df_tt_lyn["Phase"], df_tt_lyn["y_photom_norm"], color="k", s=2
 axs[2, 1].plot(df_tt_lyn["Phase"],df_tt_lyn["y_spline_norm"], color="r", zorder=5)
 axs[2, 1].set_xlim([0,1.0])
 axs[2, 1].set_ylim([0,1.0])
-axs[2, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[2, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[2, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[2, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # TV Lyn
 axs[2, 2].set_title(cases[8] + " (c)", fontsize=font_size_subtitles)
@@ -357,8 +357,8 @@ axs[2, 2].scatter(df_tv_lyn["Phase"], df_tv_lyn["y_photom_norm"], color="k", s=2
 axs[2, 2].plot(df_tv_lyn["Phase"],df_tv_lyn["y_spline_norm"], color="r", zorder=5)
 axs[2, 2].set_xlim([0,1.0])
 axs[2, 2].set_ylim([0,1.0])
-axs[2, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[2, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[2, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[2, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # TW Lyn
 axs[3, 0].set_title(cases[9] + " (ab)", fontsize=font_size_subtitles)
@@ -368,8 +368,8 @@ axs[3, 0].scatter(df_tw_lyn["Phase"], df_tw_lyn["y_photom_norm"], color="k", s=2
 axs[3, 0].plot(df_tw_lyn["Phase"],df_tw_lyn["y_spline_norm"], color="r", zorder=5)
 axs[3, 0].set_xlim([0,1.0])
 axs[3, 0].set_ylim([0,1.0])
-axs[3, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[3, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[3, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[3, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # RR Lyr
 axs[3, 1].set_title(cases[10] + " (ab)", fontsize=font_size_subtitles)
@@ -379,8 +379,8 @@ axs[3, 1].scatter(df_rr_lyr["Phase"], df_rr_lyr["y_photom_norm"], color="k", s=2
 axs[3, 1].plot(df_rr_lyr["Phase"],df_rr_lyr["y_spline_norm"], color="r", zorder=5)
 axs[3, 1].set_xlim([0,1.0])
 axs[3, 1].set_ylim([0,1.0])
-axs[3, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[3, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[3, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[3, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # V535 Mon
 axs[3, 2].set_title(cases[11] + " (c)", fontsize=font_size_subtitles)
@@ -390,8 +390,8 @@ axs[3, 2].scatter(df_v535_mon["Phase"], df_v535_mon["y_photom_norm"], color="k",
 axs[3, 2].plot(df_v535_mon["Phase"],df_v535_mon["y_spline_norm"], color="r", zorder=5)
 axs[3, 2].set_xlim([0,1.0])
 axs[3, 2].set_ylim([0,1.0])
-axs[3, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[3, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[3, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[3, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # V445 Oph
 axs[4, 0].set_title(cases[12] + " (ab)", fontsize=font_size_subtitles)
@@ -401,19 +401,21 @@ axs[4, 0].scatter(df_v445_oph["Phase"], df_v445_oph["y_photom_norm"], color="k",
 axs[4, 0].plot(df_v445_oph["Phase"],df_v445_oph["y_spline_norm"], color="r", zorder=5)
 axs[4, 0].set_xlim([0,1.0])
 axs[4, 0].set_ylim([0,1.0])
-axs[4, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[4, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[4, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[4, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+
+import ipdb; ipdb.set_trace()
 
 # AV Peg
 axs[4, 1].set_title(cases[13] + " (ab)", fontsize=font_size_subtitles)
 axs[4, 1].annotate("KELT", xy=(0.1,0.9), xytext=(0.1, 0.9), bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=1), fontsize=font_size_source)
 [axs[4, 1].axvline(i) for i in df_phases["my_phase"][idx_av_peg].values]
 axs[4, 1].scatter(df_av_peg["Phase"], df_av_peg["y_photom_norm"], color="k", s=2,zorder=3)
-axs[4, 1].plot(df_av_peg["Phase"], df_av_peg["y_spline_norm"], color="r", zorder=5)
+axs[4, 1].plot(df_av_peg["Phase"]-1.0, df_av_peg["y_spline_norm"], color="r", zorder=5) # -1.0 in phase to shift plotted area to the region without the stray plotted line
 axs[4, 1].set_xlim([0,1.0])
 axs[4, 1].set_ylim([0,1.0])
-axs[4, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[4, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[4, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[4, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # BH Peg
 axs[4, 2].set_title(cases[14] + " (ab)", fontsize=font_size_subtitles)
@@ -423,8 +425,8 @@ axs[4, 2].scatter(df_bh_peg["Phase"], df_bh_peg["y_photom_norm"], color="k", s=2
 axs[4, 2].plot(df_bh_peg["Phase"], df_bh_peg["y_spline_norm"], color="r", zorder=5)
 axs[4, 2].set_xlim([0,1.0])
 axs[4, 2].set_ylim([0,1.0])
-axs[4, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[4, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[4, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[4, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # AR Per
 axs[5, 0].set_title(cases[15] + " (ab)", fontsize=font_size_subtitles)
@@ -434,8 +436,8 @@ axs[5, 0].scatter(df_ar_per["Phase"], df_ar_per["y_photom_norm"], color="k", s=2
 axs[5, 0].plot(df_ar_per["Phase"], df_ar_per["y_spline_norm"], color="r", zorder=5)
 axs[5, 0].set_xlim([0,1.0])
 axs[5, 0].set_ylim([0,1.0])
-axs[5, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[5, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[5, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[5, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 
 # RU Psc
@@ -446,8 +448,8 @@ axs[5, 1].scatter(df_ru_psc["Phase"], df_ru_psc["y_photom_norm"], color="k", s=2
 axs[5, 1].plot(df_ru_psc["Phase"], df_ru_psc["y_spline_norm"], color="r",zorder=5)
 axs[5, 1].set_xlim([0,1.0])
 axs[5, 1].set_ylim([0,1.0])
-axs[5, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[5, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[5, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[5, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # T Sex
 
@@ -458,8 +460,8 @@ axs[5, 2].scatter(df_t_sex["Phase"], df_t_sex["y_photom_norm"], color="k", s=2,z
 axs[5, 2].plot(df_t_sex["Phase"], df_t_sex["y_spline_norm"], color="red",zorder=5)
 axs[5, 2].set_xlim([0,1.0])
 axs[5, 2].set_ylim([0,1.0])
-axs[5, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[5, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[5, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[5, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # TU UMa
 axs[6, 0].set_title(cases[18] + " (ab)", fontsize=font_size_subtitles)
@@ -469,8 +471,8 @@ axs[6, 0].scatter(df_tu_uma["Phase"], df_tu_uma["y_photom_norm"], color="k", s=2
 axs[6, 0].plot(df_tu_uma["Phase"], df_tu_uma["y_spline_norm"], color="red",zorder=5)
 axs[6, 0].set_xlim([0,1.0])
 axs[6, 0].set_ylim([0,1.0])
-axs[6, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[6, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[6, 0].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[6, 0].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 
 # All RRabs
@@ -508,8 +510,8 @@ axs[6, 1].set_title(cases[19], fontsize=font_size_subtitles)
 [axs[6, 1].axvline(i) for i in example_phase_phases_star_1]
 axs[6, 1].set_xlim([0,1.0])
 axs[6, 1].set_ylim([0,1.0])
-axs[6, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[6, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[6, 1].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[6, 1].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 # All RRcs
 [axs[6, 2].axvline(i) for i in df_phases["my_phase"][idx_rw_ari].values]
@@ -528,8 +530,8 @@ axs[6, 2].set_title(cases[20], fontsize=font_size_subtitles)
 [axs[6, 2].axvline(i) for i in example_phase_phases_star_1]
 axs[6, 2].set_xlim([0,1.0])
 axs[6, 2].set_ylim([0,1.0])
-axs[6, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
-axs[6, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
+#axs[6, 2].axvspan(0, bad_phase_region[1], color="k", alpha=greyness_alpha)
+#axs[6, 2].axvspan(bad_phase_region[0], 1, color="k", alpha=greyness_alpha)
 
 for ax in axs.flat:
     ax.set(xlabel="Phase $\phi$", ylabel="$\Delta$m")
