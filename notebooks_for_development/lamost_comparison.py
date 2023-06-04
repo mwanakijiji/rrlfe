@@ -23,7 +23,8 @@ df_liu_stars = pd.read_csv(stem + "notebooks_for_development/spec_sets_check/lam
                                names=["ID","RAdeg","DEdeg","VType","SNR","FeH","e_FeH","Num"])
 
 # read in our retrieved Fe/H for LAMOST spectra and splice stuff to enable matching
-df_our_data = pd.read_csv(stem + "bin/20230120_all_spectra_retrieved_vals.csv")
+#df_our_data = pd.read_csv(stem + "bin/20230120_all_spectra_retrieved_vals.csv")
+df_our_data = pd.read_csv(stem + "notebooks_for_development/data/retrieved_liu_2020_lamost_vals_corrected.csv")
 
 # standalone (for notebook): make table of spectrum names and their RA, DEC from FITS headers
 '''

@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 stem = "/Users/bandari/Documents/git.repos/rrlfe/"
 
 # read in our values
-df_retrieved = pd.read_csv(stem + "rrlfe_io_20220914_catalina/bin/retrieved_vals_20220914_catalina.csv")
+df_retrieved = pd.read_csv(stem + "notebooks_for_development/data/retrieved_catalina_20230515_vals_corrected.csv")
 
 # SSPP values (from YSL)
 
