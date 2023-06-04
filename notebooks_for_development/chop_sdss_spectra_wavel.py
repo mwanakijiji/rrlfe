@@ -29,23 +29,7 @@ for file_num in range(0,len(file_list_read)):
     print(str(file_num) + " out of " + str(len(file_list_read)))
 
     df = pd.read_csv(file_list_read[file_num])
-wavel,flux_net,noise_net
-    # extensions
-    # 'Flux, Inverse, Wavelength, Andmask, Ormask'
-    # ('Inverse' is 1/sigma^2)
-    ra_this = hdu[0].header["RA"]
-    dec_this = hdu[0].header["DEC"]
-
-    # these bits of info will go into a row of a data table
-    df_ra_dec["file_name"].loc[file_num] = os.path.basename(file_list_read[file_num])
-    df_ra_dec["ra"].loc[file_num] = ra_this
-    df_ra_dec["dec"].loc[file_num] = dec_this
-
-    '''
-    plt.plot(hdu[0].data[2,:],1./np.sqrt(hdu[0].data[1,:]))
-    plt.plot(hdu[0].data[2,:],hdu[0].data[0,:])
-    plt.show()
-    '''
+    # wavel,flux_net,noise_net
 
     # indices of the desired wavelength range
     import ipdb; ipdb.set_trace()
