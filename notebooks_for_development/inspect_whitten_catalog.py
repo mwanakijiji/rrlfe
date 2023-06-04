@@ -14,6 +14,12 @@ stem = "/Users/bandari/Documents/git.repos/rrlfe/"
 # read in Whitten+ retrievals
 df_whitten_stars = pd.read_csv("./data/SPLUS_STRIPE82_ebv_retrain.csv")
 
+# read in our retrieved Fe/H
+#df_our_data = pd.read_csv(stem + "rrlfe_io_20221220_sdss_test/bin/retrieved_vals.csv")
+#df_our_data = pd.read_csv(stem + "notebooks_for_development/data/retrieved_sdss_20221213_cosmic_rays_removed_automated_3911_to_4950_angstr_vals_corrected.csv")
+#df_our_data = pd.read_csv(stem + "notebooks_for_development/data/retrieved_catalina_20230515_vals_corrected.csv")
+df_our_data = pd.read_csv(stem + "notebooks_for_development/data/retrieved_sdss_20230514_corrected.csv")
+
 # intermediate functionality to read in our SDSS star IDs, remove repeats, and write back out
 # so that they can be fed into SDSS SkyServer
 '''
@@ -41,8 +47,7 @@ df_our_sdss_stars["dec_round"] = np.round(df_our_sdss_stars["dec"],3)
 # (but our FeH is still missing)
 merged_df_whitten_feh = pd.merge(df_whitten_stars, df_our_sdss_stars, how="inner", on=["ra_round","dec_round"])
 
-# read in our retrieved Fe/H and splice stuff to enable matching
-df_our_data = pd.read_csv(stem + "rrlfe_io_20221220_sdss_test/bin/retrieved_vals.csv")
+# take out list of retrieved Fe/H and splice stuff to enable matching
 split_1 = df_our_data["orig_spec_file_name"].str.split("-", 3, expand=True)
 split_2 = split_1[3].str.split("_", 1, expand=True)
 df_our_data["plate"] = split_1[1].astype(int)
@@ -58,6 +63,8 @@ merged_df_whitten_and_our_feh = pd.merge(df_our_data, merged_df_whitten_feh, on=
 
 # drop any remaining NaN values
 merged_df_whitten_and_our_feh = merged_df_whitten_and_our_feh[merged_df_whitten_and_our_feh["feh_retrieved"].notna()]
+# drop repeats
+merged_df_whitten_and_our_feh = merged_df_whitten_and_our_feh.drop_duplicates()
 
 # best-fit coefficients, where vals are sane (-4.0 to 1.0)
 idx_sane_whitten = np.logical_and(merged_df_whitten_and_our_feh["NET_FEH"] > -4.0, merged_df_whitten_and_our_feh["NET_FEH"]<1.0)

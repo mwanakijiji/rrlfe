@@ -22,7 +22,7 @@ import numpy as np
 df_sspp_single = pd.read_csv("comparison_sspp_single_20230604.csv") # source: examine_sspp_output.py
 df_sspp_coadded = pd.read_csv("comparison_sspp_coadded_20230604.csv") # source: examine_sspp_output.py
 df_liu_2020 = pd.read_csv("comparison_liu_2020_20230604.csv") # source: lamost_comparison.py 
-df_whitten = pd.read_csv("junk_whitten.csv")
+df_whitten = pd.read_csv("comparison_whitten_20230604.csv")
 df_li_2023 = pd.read_csv("comparison_sspp_single_20230604.csv")
 
 fig, axes = plt.subplots(ncols=2, nrows=3, sharex='row', sharey='row', figsize=(10, 15))
@@ -41,8 +41,6 @@ ylim = [-3,0]
 
 char_size = 20
 loc = ticker.MultipleLocator(base=1.0) # for ticks
-
-#import ipdb; ipdb.set_trace()
 
 # rrlfe vs. SSPP (single-epoch)
 hb = axes[0,0].hexbin(df_sspp_single["feh_sspp_single"],df_sspp_single["feh_rrlfe"], extent=(-4.,1.,-4.,1.), linewidths=0.01)
@@ -100,7 +98,6 @@ idx_sane_liu = (np.isfinite(df_liu_2020["feh_liu"]) & np.isfinite(df_liu_2020["f
         ((np.abs(df_liu_2020["feh_rrlfe"]) < 5.) & (np.abs(df_liu_2020["feh_liu"]) < 5.))
 coeffs_liu = np.polyfit(df_liu_2020["feh_liu"][idx_sane_liu], df_liu_2020["feh_rrlfe"][idx_sane_liu], deg=1)
 axes[1,0].plot([-3, 0],[coeffs_liu[0]*(-3.0)+coeffs_liu[1],coeffs_liu[0]*(0.0)+coeffs_liu[1]], linestyle="-", color="white", zorder=1)
-import ipdb; ipdb.set_trace()
 axes[1,0].set_ylabel("[Fe/H], rrlfe", fontsize = char_size)
 axes[1,0].annotate("Liu+ 2020", xy=(-1.15, -2.8), xycoords='data', fontsize = char_size, color='white')
 axes[1,0].tick_params(axis='both', which='major', labelsize=char_size-2)
