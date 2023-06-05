@@ -11,13 +11,17 @@ import time
 
 stem = '/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/'
 
-df = pd.read_csv(stem + 'xac.csv', names=['ra','dec'])
-stem_write = './li3of4/'
+df = pd.read_csv(stem + 'junk.csv', names=['ra','dec'])
+stem_write = './junk/'
 
 for idx in range(0,len(df)):
-        
+
+    '''
     ra = np.round(df.loc[idx]['ra'],4)
     dec = np.round(df.loc[idx]['dec'],4)
+    '''
+    ra = np.round(123.21872,4)
+    dec = np.round(31.586593,4)
 
     print('ra:',ra)
     print('dec:',dec)
