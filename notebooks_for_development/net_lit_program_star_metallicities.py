@@ -14,11 +14,11 @@ import matplotlib.pyplot as plt
 
 # set linear relation values, based on >200 data points, offsets, and best-fitting 
 # using error in x and y in Matlab
-
-m_matlab = 1.1215
-b_matlab = 0.029461
-sigma_m_matlab = 0.0254
-sigma_b_matlab = 0.0367
+# (note added later: _matlab is actually obsolete here; these vals are generated in make_high_res_feh_basis.py)
+m_matlab = 1.0401625282974445
+b_matlab = -0.060221399367776464
+sigma_m_matlab = 0.02568848255048297
+sigma_b_matlab = 0.03499115602745869
 
 file_name = "/Users/bandari/Documents/git.repos/rrlfe/src/high_res_feh/layden_1994_abundances.dat"
 df_layden = pd.read_csv(file_name)

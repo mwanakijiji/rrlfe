@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 stem = "/Users/bandari/Documents/git.repos/rrlfe/"
 
 # phases
-df_phases = pd.read_csv(stem + "/src/mcd_final_phases_ascii_files_all.list")
+df_phases = pd.read_csv(stem + "/src/mcd_final_phases_ascii_files_all_pub_20230606.list")
 
 # retrieved values
 df_teff = pd.read_csv(stem + "notebooks_for_development/data/retrieved_mcd_incl_corrxn_20230606.csv")
@@ -37,10 +37,12 @@ idx = df_net.index[df_net["star_name"] == star_name_array[i]].tolist()
 plt.clf()
 fig, ax = plt.subplots(3, 1, sharex=True, figsize=(11,7))
 for i in range(0,len(star_name_array)):
+    
     print("---")
     print(i)
     print(star_name_array[i])
-    idx = df_net.index[df_net["star_name"] == star_name_array[i]].tolist()
+    # find right star, and make sure retrieved Fe/H converged
+    idx = df_net.index[np.logical_and(df_net["star_name"] == star_name_array[i],df_net["feh_retrieved"]>-10)].tolist()
     # determine subtype for plot
     if df_net["subtype"][idx[0]] == "ab":
         linestyle = "-"
@@ -51,6 +53,7 @@ for i in range(0,len(star_name_array)):
         fill_style="full"
     else:
         fill_style="none"
+
     ax[0].plot(df_net["phase"][idx], df_net["teff_retrieved"][idx], marker='o',
              markersize=5, fillstyle=fill_style, linestyle=linestyle, label=star_name_array[i].replace("_"," "))
     '''

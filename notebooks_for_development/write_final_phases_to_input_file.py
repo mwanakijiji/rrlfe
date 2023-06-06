@@ -41,4 +41,5 @@ df_relevant["phase"] = df_relevant["my_phase"]
 cols_2_write = ["orig_spec_file_name","subtype","phase","feh","err_feh"]
 df_2_write = df_relevant[cols_2_write]
 
+import ipdb; ipdb.set_trace()
 df_2_write.to_csv("junk.csv", index=False)
