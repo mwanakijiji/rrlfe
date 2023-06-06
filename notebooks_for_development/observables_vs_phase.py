@@ -16,7 +16,7 @@ stem = "/Users/bandari/Documents/git.repos/rrlfe/"
 df_phases = pd.read_csv(stem + "/src/mcd_final_phases_ascii_files_all.list")
 
 # retrieved values
-df_teff = pd.read_csv(stem + "rrlfe_io_20220803_01_mcd/bin/retrieved_vals_20220803.csv")
+df_teff = pd.read_csv(stem + "notebooks_for_development/data/retrieved_mcd_incl_corrxn_20230606.csv")
 
 # merge by spectrum name
 df_net = pd.merge(df_phases, df_teff, on=["orig_spec_file_name","orig_spec_file_name"])
