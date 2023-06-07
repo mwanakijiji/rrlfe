@@ -41,14 +41,13 @@ model     float32   pipeline best model fit used for classification and redshift
 # blue end: interpolate between [3850,5970] at intervals of 1.4 angstroms such that 3900.00, 3901.40 [...] 4999.00
 # red end: interpolate between [6030:]
 
-string_troubleshoot = '/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal2023_raw_spectra/00_original_spectra/spec-3766-55213-0506.fits'
+#string_troubleshoot = '/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal2023_raw_spectra/00_original_spectra/spec-3766-55213-0506.fits'
 
 for i in range(0,len(file_list)):
 
     print(i,"out of",len(file_list))
 
-    #hdul = fits.open(file_list[i]) ## ## REMOVE !
-    hdul = fits.open(string_troubleshoot)
+    hdul = fits.open(file_list[i])
 
     num_spec_total = len(hdul)-4
 
@@ -87,7 +86,7 @@ for i in range(0,len(file_list)):
         idx_blue = np.where( np.logical_and(abcissa_interp > 3849., abcissa_interp < 6031.) )
         # indices of data points corresponding to abcissa [5970:9000] (note includes overlap region)
         idx_red = np.where( np.logical_and(abcissa_interp > 5969., abcissa_interp < 9001.) )
-        import ipdb; ipdb.set_trace()
+
         f_flux_blue = interp1d(wavel_blue,flux_blue)
         flux_blue_interp = f_flux_blue(abcissa_interp[idx_blue])
         f_error_blue = interp1d(wavel_blue,sigma_blue)
@@ -97,7 +96,7 @@ for i in range(0,len(file_list)):
         flux_red_interp = f_flux_red(abcissa_interp[idx_red])
         f_error_red = interp1d(wavel_red,sigma_red)
         error_flux_red_interp = f_error_red(abcissa_interp[idx_red])
-        import ipdb; ipdb.set_trace()
+
         '''
         # old code here; not working anymore, often just returns constant
         flux_blue_interp = np.interp(x = abcissa_interp[idx_blue], xp = wavel_blue, fp = flux_blue)
@@ -131,7 +130,7 @@ for i in range(0,len(file_list)):
         file_name_red_this = stem_notebooks + os.path.basename(file_list[i]).split(".")[0] + '_g{:0>3}'.format(num_blue) + "_color_red.csv"
         df_red_write.to_csv(file_name_red_this, index=False)
         print("Wrote",file_name_red_this)
-        import ipdb; ipdb.set_trace()
+
         # plotting
         '''
         plt.clf()

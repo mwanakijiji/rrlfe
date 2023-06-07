@@ -74,7 +74,7 @@ for i in range(0,len(parent_single_epoch_stems)):
         df_fused["noise_red"] = df_fused["noise_red"].fillna(0)
         df_fused["noise_net"] = 0.5*np.sqrt(np.add(np.power(df_fused["noise_blue"].values,2.),
                                          np.power(df_fused["noise_red"].values,2.)))
-        import ipdb; ipdb.set_trace()
+
         # write csv
         csv_write_name = stem_write + os.path.basename(parent_single_epoch_stems[i]) + "_net.csv"
         df_fused.to_csv(csv_write_name, columns=["wavel","flux_net","noise_net"], index=False)
