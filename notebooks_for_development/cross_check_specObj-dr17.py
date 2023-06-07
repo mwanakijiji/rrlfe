@@ -9,6 +9,7 @@
 from astropy.io import fits
 from astropy.table import Table
 import pandas as pd
+import numpy as np
 
 stem = "/Users/bandari/Documents/git.repos/rrlfe/"
 
@@ -20,20 +21,8 @@ df_lietal2023_results = pd.read_csv(stem + "notebooks_for_development/data/RRLyr
 # takes 2.5 min to load
 dat_sdss = Table.read(stem + 'notebooks_for_development/data/specObj-dr17.fits', format='fits')
 
-'''
-parameters of interest:
-'PLATE'
-'MJD'
-'FIBERID'
-
-'PLUG_RA'
-'PLUG_DEC'
-'''
-
-import ipdb; ipdb.set_trace()
-
-# TRUNCATE FOR TESTING ONLY !!!
-dat_tbl = dat_sdss[:10000]
+# vestigial; can truncate here for troubleshooting
+dat_tbl = dat_sdss
 
 # filter out multidimensional columns that we don't care about
 names = [name for name in dat_tbl.colnames if len(dat_tbl[name].shape) <= 1]
@@ -58,27 +47,37 @@ merged_df = pd.merge(
 # RUN2D: an integer denoting the version of extraction and redshift-finding used
 
 '''
-pmfr_of_interest = merged_df[['plate','mjd','fiberid','run2d']]
+parameters of interest:
+'PLATE'
+'MJD'
+'FIBERID'
 
+'PLUG_RA'
+'PLUG_DEC'
 '''
+
+pmfr_of_interest = merged_df.rename(columns={"PLATE": "plate", "MJD": "mjd", "FIBERID": "fiberid"})
+# convert a column of byte objects to strings
+pmfr_of_interest['run2d'] = pmfr_of_interest['RUN2D'].str.decode("utf-8").str.strip()
+#pmfr_of_interest = merged_df[['plate','mjd','fiberid','run2d']]
 
 # write combinations of interest to file
 with open("junk.txt", "a") as myfile:
 
     # loop over all matches
-    for combo_interest in range(0,2): #len(pmfr_of_interest)):
+    for index, row in pmfr_of_interest.iterrows():
 
-        plate = 3851
-        mjd = 55302
-        fiberid = 1
-        run2d = 42
+        plate = row['plate']
+        mjd = row['mjd']
+        fiberid = row['fiberid']
+        run2d = row['run2d']
 
         # write the combos into strings:
-        file_this_string = '/sdss/spectro/redux/'+str(run2d)+'/spectra/full/'+ \
+        row_this_string = '/sdss/spectro/redux/'+str(run2d)+'/spectra/full/'+ \
                             str(plate)+'/spec-'+str(plate)+'-'+str(mjd)+'-'+f'{fiberid:04}' + '.fits' + '\n'
 
         # append to file
-        myfile.write(file_this_string)
+        myfile.write(row_this_string)
 
 '''
 --Email from SDSS help desk, June 6, 2023:--
