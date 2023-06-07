@@ -24,10 +24,9 @@ import matplotlib.pyplot as plt
 from astropy.stats import sigma_clip
 
 # top-level directory for SDSS spectra cosmic ray removal
-stem_raw_single_epoch = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/sdss_processing/"+\
-                        "01_separated_and_interpolated/"
+stem_raw_single_epoch = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal2023_raw_spectra/01_separated_and_interpolated/"
 # write spectra following cosmic ray removal to this destination
-stem_write = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/sdss_processing/"+\
+stem_write = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal2023_raw_spectra/"+\
                         "02b_morethan1spec_post_cosmic_ray_removal/"
 
 # find individual file names

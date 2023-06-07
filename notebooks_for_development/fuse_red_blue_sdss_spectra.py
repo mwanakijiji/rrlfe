@@ -19,9 +19,9 @@ stem_read = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/
 stem_write = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/"+ \
              "sdss_processing/03_red_blue_fused/"
 '''
-stem_read = '/suphys/espa3021/Documents/lietal_spectra/02b_morethan1spec_post_cosmic_ray_removal/'
+stem_read = '/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal2023_raw_spectra/02b_morethan1spec_post_cosmic_ray_removal/'
 
-stem_write = '/suphys/espa3021/Documents/lietal_spectra/03_red_blue_fused/'
+stem_write = '/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal2023_raw_spectra/03_red_blue_fused/'
 
 file_list = glob.glob(stem_read + "*csv")
 
@@ -39,10 +39,11 @@ for i in range(0,len(parent_single_epoch_stems)):
     files_available = glob.glob(parent_single_epoch_stems[i] + "*csv")
 
     # if just red or blue is available, skip it
+
     if (len(files_available) == 1):
 
         continue
-
+    
     # if both red and blue are available, fuse them
     elif (len(files_available) == 2):
 
@@ -73,7 +74,7 @@ for i in range(0,len(parent_single_epoch_stems)):
         df_fused["noise_red"] = df_fused["noise_red"].fillna(0)
         df_fused["noise_net"] = 0.5*np.sqrt(np.add(np.power(df_fused["noise_blue"].values,2.),
                                          np.power(df_fused["noise_red"].values,2.)))
-
+        import ipdb; ipdb.set_trace()
         # write csv
         csv_write_name = stem_write + os.path.basename(parent_single_epoch_stems[i]) + "_net.csv"
         df_fused.to_csv(csv_write_name, columns=["wavel","flux_net","noise_net"], index=False)

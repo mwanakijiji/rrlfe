@@ -19,8 +19,8 @@ import os
 stem = "/Users/bandari/Documents/git.repos/rrlfe/src/sdss_original_single_epoch_fits/"
 stem_notebooks = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/sdss_processing/01_separated_and_interpolated/"
 '''
-stem = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal_spectra_test/"
-stem_notebooks = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal_spectra_test/01_separated_and_interpolated/"
+stem = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal2023_raw_spectra/00_original_spectra/"
+stem_notebooks = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal2023_raw_spectra/01_separated_and_interpolated/"
 
 file_list = glob.glob(stem + "*fits")
 
@@ -41,11 +41,14 @@ model     float32   pipeline best model fit used for classification and redshift
 # blue end: interpolate between [3850,5970] at intervals of 1.4 angstroms such that 3900.00, 3901.40 [...] 4999.00
 # red end: interpolate between [6030:]
 
+string_troubleshoot = '/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/lietal2023_raw_spectra/00_original_spectra/spec-3766-55213-0506.fits'
+
 for i in range(0,len(file_list)):
 
     print(i,"out of",len(file_list))
 
-    hdul = fits.open(file_list[i])
+    #hdul = fits.open(file_list[i]) ## ## REMOVE !
+    hdul = fits.open(string_troubleshoot)
 
     num_spec_total = len(hdul)-4
 
@@ -69,8 +72,8 @@ for i in range(0,len(file_list)):
         sigma_red = np.divide(1.,np.sqrt(data_red["ivar"]))
 
         # make new abcissae for interpolating the plots
-        blue_0 = 3850. # bluest of blue end
-        red_1 = 9000. # reddest of red end
+        blue_0 = 3850. # bluest of blue end [angstroms]
+        red_1 = 9000. # reddest of red end [angstroms]
         num_steps = int(np.floor((red_1-blue_0)/1.4))
         abcissa_interp = np.add(blue_0-0.4,1.4*np.arange(0,num_steps+2,1)) # -0.4 to get the phase right
 
@@ -80,15 +83,28 @@ for i in range(0,len(file_list)):
         # red region I ultimately want: [6030:9000]
         # overlap region that needs to be averaged: [5970:6030]
 
-        # indices of data points corresponding to abcissa [3850:6030] (note includes overlap region)
+        # indices of data points corresponding to abcissa [3850:6030] (units angstroms; note includes overlap region)
         idx_blue = np.where( np.logical_and(abcissa_interp > 3849., abcissa_interp < 6031.) )
         # indices of data points corresponding to abcissa [5970:9000] (note includes overlap region)
         idx_red = np.where( np.logical_and(abcissa_interp > 5969., abcissa_interp < 9001.) )
+        import ipdb; ipdb.set_trace()
+        f_flux_blue = interp1d(wavel_blue,flux_blue)
+        flux_blue_interp = f_flux_blue(abcissa_interp[idx_blue])
+        f_error_blue = interp1d(wavel_blue,sigma_blue)
+        error_flux_blue_interp = f_error_blue(abcissa_interp[idx_blue])
 
+        f_flux_red = interp1d(wavel_red,flux_red)
+        flux_red_interp = f_flux_red(abcissa_interp[idx_red])
+        f_error_red = interp1d(wavel_red,sigma_red)
+        error_flux_red_interp = f_error_red(abcissa_interp[idx_red])
+        import ipdb; ipdb.set_trace()
+        '''
+        # old code here; not working anymore, often just returns constant
         flux_blue_interp = np.interp(x = abcissa_interp[idx_blue], xp = wavel_blue, fp = flux_blue)
         error_flux_blue_interp = np.interp(x = abcissa_interp[idx_blue], xp = wavel_blue, fp = sigma_blue)
         flux_red_interp = np.interp(x = abcissa_interp[idx_red], xp = wavel_red, fp = flux_red)
         error_flux_red_interp = np.interp(x = abcissa_interp[idx_red], xp = wavel_red, fp = sigma_red)
+        '''
 
         # write out
         # cols:
@@ -115,7 +131,7 @@ for i in range(0,len(file_list)):
         file_name_red_this = stem_notebooks + os.path.basename(file_list[i]).split(".")[0] + '_g{:0>3}'.format(num_blue) + "_color_red.csv"
         df_red_write.to_csv(file_name_red_this, index=False)
         print("Wrote",file_name_red_this)
-
+        import ipdb; ipdb.set_trace()
         # plotting
         '''
         plt.clf()
