@@ -15,11 +15,11 @@ import os
 from astropy.io import fits
 import matplotlib.pyplot as plt
 
-stem = '/suphys/espa3021/Documents/'
-#stem = "/Users/bandari/Documents/git.repos/rrlfe/"
-
-file_list_read = glob.glob(stem + "lietal_spectra/03_red_blue_fused/" + "*csv")
-dir_write = stem + "lietal_spectra/04_chopped_3911_to_4950/"
+#stem = '/suphys/espa3021/Documents/'
+stem = "/Users/bandari/Documents/git.repos/rrlfe/"
+#file_list_read = glob.glob(stem + "lietal_spectra/03_red_blue_fused/" + "*csv")
+file_list_read = glob.glob(stem + "notebooks_for_development/data/lietal2023_raw_spectra/03_red_blue_fused/" + "*csv")
+dir_write = stem + "notebooks_for_development/data/lietal2023_raw_spectra/04_chopped_3911_to_4950/"
 
 # initialize a table for file names, RA, DEC, to write out separately from the spectrum itself
 #df_ra_dec = pd.DataFrame(np.zeros([len(file_list_read),4]), columns=["file_name","ra","dec","emp_snr"])

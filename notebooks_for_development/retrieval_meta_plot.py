@@ -23,7 +23,7 @@ df_sspp_single = pd.read_csv("comparison_sspp_single_20230604.csv") # source: ex
 df_sspp_coadded = pd.read_csv("comparison_sspp_coadded_20230604.csv") # source: examine_sspp_output.py
 df_liu_2020 = pd.read_csv("comparison_liu_2020_20230604.csv") # source: lamost_comparison.py 
 df_whitten = pd.read_csv("comparison_whitten_20230604.csv")
-df_li_2023 = pd.read_csv("comparison_sspp_single_20230604.csv")
+df_li_2023 = pd.read_csv("comparison_lietal2023_20230608.csv") # source: cross_ref_sdss_lietal2023_retrievals.py
 
 fig, axes = plt.subplots(ncols=2, nrows=3, sharex='row', sharey='row', figsize=(10, 15))
 #matplotlib.rc('xtick', labelsize=40) 
@@ -108,15 +108,19 @@ axes[1,0].yaxis.set_major_locator(loc)
 axes[1,0].tick_params(width=2, length=8)
 
 # rrlfe vs. Li+
-# !uncomment below when ready!
-#hb = axes[2,0].hexbin(df_li_2023["feh_li"],df_li_2023["feh_rrlfe"], extent=(-4.,1.,-4.,1.), linewidths=0.01)
-axes[1,1].plot([-3, 0], [-3, 0], linestyle="--", color="k")
+hb = axes[1,1].hexbin(df_li_2023["feh_lietal2023"],df_li_2023["feh_rrlfe"], extent=(-4.,1.,-4.,1.), linewidths=0.01)
+axes[1,1].plot([-3, 0], [-3, 0], linestyle="--", color="white", zorder=1, label="1-to-1")
 axes[1,1].set_xlim(xlim)
 axes[1,1].set_ylim(ylim)
-#axes[1,1].set_xlabel("Li+ 2022", fontsize = char_size)
+#axes[1,1].set_xlabel("Liu+ 2020", fontsize = char_size)
 axes[1,1].set(adjustable='box', aspect='equal')
-#axes[1,1].set_ylabel("[Fe/H], rrlfe", fontsize = char_size)
-axes[1,1].annotate("Li+ 2023", xy=(-1.05, -2.8), xycoords='data', fontsize = char_size, color='k')
+# best-fit coeffs
+idx_sane_lietal2023 = (np.isfinite(df_li_2023["feh_lietal2023"]) & np.isfinite(df_li_2023["feh_rrlfe"])) & \
+        ((np.abs(df_li_2023["feh_rrlfe"]) < 5.) & (np.abs(df_li_2023["feh_lietal2023"]) < 5.))
+coeffs_lietal2023 = np.polyfit(df_li_2023["feh_lietal2023"][idx_sane_lietal2023], df_li_2023["feh_rrlfe"][idx_sane_lietal2023], deg=1)
+axes[1,1].plot([-3, 0],[coeffs_lietal2023[0]*(-3.0)+coeffs_lietal2023[1],coeffs_lietal2023[0]*(0.0)+coeffs_lietal2023[1]], linestyle="-", color="white", zorder=1)
+axes[1,1].set_ylabel("[Fe/H], rrlfe", fontsize = char_size)
+axes[1,1].annotate("Li+ 2023", xy=(-1.15, -2.8), xycoords='data', fontsize = char_size, color='white')
 axes[1,1].tick_params(axis='both', which='major', labelsize=char_size-2)
 axes[1,1].xaxis.set_major_formatter(ticker.FormatStrFormatter('%0.f'))
 axes[1,1].yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.f'))
@@ -146,18 +150,17 @@ axes[2,0].yaxis.set_major_locator(loc)
 axes[2,0].tick_params(width=2, length=8)
 
 # all best-fit lines together
-coeffs_rrlfe_synth = 1.1*coeffs_liu
-print("!!!! SYNTHETIC BASIS SET VALUES ARE PLACEHOLDERS !!!!")
-axes[2,1].plot([-3, 0], [-3, 0], linestyle="--", color="gray")
+axes[2,1].plot([-4, 1], [-4, 1], linestyle="--", color="gray")
 axes[2,1].set_xlim([-4.0,1.0])
 axes[2,1].set_ylim([-4.0,1.0])
 axes[2,1].set_xlabel("[Fe/H]", fontsize = char_size)
 axes[2,1].set(adjustable='box', aspect='equal')
-axes[2,1].plot([-3, 0], [-3, 0],[coeffs_rrlfe_synth[0]*(-4.0)+coeffs_rrlfe_synth[1],coeffs_rrlfe_synth[0]*(1.0)+coeffs_rrlfe_synth[1]], linestyle="-", zorder=0, label="rrlfe synthetic basis set (PLACEHOLDER)")
-axes[2,1].plot([-3, 0], [-3, 0],[coeffs_single_epoch[0]*(-4.0)+coeffs_single_epoch[1],coeffs_single_epoch[0]*(1.0)+coeffs_single_epoch[1]], linestyle="-", zorder=0, label="SDSS, single-epoch")
-axes[2,1].plot([-3, 0], [-3, 0],[coeffs_coadded[0]*(-4.0)+coeffs_coadded[1],coeffs_coadded[0]*(1.0)+coeffs_coadded[1]], linestyle="-", zorder=0, label="SDSS, coadded")
-axes[2,1].plot([-3, 0], [-3, 0],[coeffs_liu[0]*(-4.0)+coeffs_liu[1],coeffs_liu[0]*(1.0)+coeffs_liu[1]], linestyle="-", zorder=0, label="Liu+ 2020")
-axes[2,1].plot([-3, 0], [-3, 0],[coeffs_whitten[0]*(-4.0)+coeffs_whitten[1],coeffs_whitten[0]*(1.0)+coeffs_whitten[1]], linestyle="-", zorder=0, label="Whitten+ 2021")
+#axes[2,1].plot([-4, 1], [-4, 1],[coeffs_rrlfe_synth[0]*(-4.0)+coeffs_rrlfe_synth[1],coeffs_rrlfe_synth[0]*(1.0)+coeffs_rrlfe_synth[1]], linestyle="-", zorder=0, label="rrlfe synthetic basis set (PLACEHOLDER)")
+axes[2,1].plot([-4, 1], [coeffs_single_epoch[0]*(-4.0)+coeffs_single_epoch[1],coeffs_single_epoch[0]*(1.0)+coeffs_single_epoch[1]], linestyle="-", zorder=0, label="SSPP, single-epoch")
+axes[2,1].plot([-4, 1], [coeffs_coadded[0]*(-4.0)+coeffs_coadded[1],coeffs_coadded[0]*(1.0)+coeffs_coadded[1]], linestyle="-", zorder=0, label="SSPP, coadded")
+axes[2,1].plot([-4, 1], [coeffs_liu[0]*(-4.0)+coeffs_liu[1],coeffs_liu[0]*(1.0)+coeffs_liu[1]], linestyle="-", zorder=0, label="Liu+ 2020")
+axes[2,1].plot([-4, 1], [coeffs_lietal2023[0]*(-4.0)+coeffs_lietal2023[1],coeffs_lietal2023[0]*(1.0)+coeffs_lietal2023[1]], linestyle="-", zorder=0, label="Li+ 2023")
+axes[2,1].plot([-4, 1], [coeffs_whitten[0]*(-4.0)+coeffs_whitten[1],coeffs_whitten[0]*(1.0)+coeffs_whitten[1]], linestyle="-", zorder=0, label="Whitten+ 2021")
 axes[2,1].legend()
 axes[2,1].tick_params(axis='both', which='major', labelsize=char_size-2)
 axes[2,1].xaxis.set_major_formatter(ticker.FormatStrFormatter('%0.f'))
