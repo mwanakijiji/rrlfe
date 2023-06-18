@@ -85,9 +85,9 @@ leg2 = a0.legend(loggpts[0],['3.0','2.5','2.0'], loc='lower right', title="log g
 # Manually add the first legend back
 a0.add_artist(leg1)
 
-a0.set_ylabel("Retrieved Teff", fontsize=20)
-a1.set_xlabel("Simulated Teff", fontsize=20)
-a1.set_ylabel("Residuals", fontsize=20)
+a0.set_ylabel("Retrieved Teff (K)", fontsize=20)
+a1.set_xlabel("Simulated Teff (K)", fontsize=20)
+a1.set_ylabel("Residuals (K)", fontsize=20)
 
 a0.set_xlim([5500,8000])
 a0.set_ylim([5500,8500])
