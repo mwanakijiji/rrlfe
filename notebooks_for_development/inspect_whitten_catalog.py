@@ -20,6 +20,15 @@ df_whitten_stars = pd.read_csv("./data/SPLUS_STRIPE82_ebv_retrain.csv")
 #df_our_data = pd.read_csv(stem + "notebooks_for_development/data/retrieved_catalina_20230515_vals_corrected.csv")
 df_our_data = pd.read_csv(stem + "notebooks_for_development/data/retrieved_sdss_20230514_corrected.csv")
 
+# read in S/N of SDSS spectra 
+df_s2n = pd.read_csv(stem + "notebooks_for_development/data/s_to_n_sdss_spectra_cosmic_rays_removed_automated_3911_to_4950_angstr.csv")
+
+df_our_data['file_name_s2n_match'] = df_our_data["orig_spec_file_name"].str.split("_net", 0, expand=True)[0]
+df_s2n['file_name_s2n_match'] = df_s2n['file_name'].str.split("_net", 0, expand=True)[0]
+
+# merge
+df_our_data = df_our_data.merge(df_s2n, on='file_name_s2n_match', how='inner')
+
 # intermediate functionality to read in our SDSS star IDs, remove repeats, and write back out
 # so that they can be fed into SDSS SkyServer
 '''
@@ -38,8 +47,8 @@ df_whitten_stars["ra"] = df_whitten_stars["RA"]
 df_whitten_stars["dec"] = df_whitten_stars["Dec"]
 
 # some rounding is necessary to enable matching
-df_whitten_stars["ra_round"] = np.round(df_whitten_stars["ra"],2)
-df_our_sdss_stars["ra_round"] = np.round(df_our_sdss_stars["ra"],2)
+df_whitten_stars["ra_round"] = np.round(df_whitten_stars["ra"],3)
+df_our_sdss_stars["ra_round"] = np.round(df_our_sdss_stars["ra"],3)
 df_whitten_stars["dec_round"] = np.round(df_whitten_stars["dec"],3)
 df_our_sdss_stars["dec_round"] = np.round(df_our_sdss_stars["dec"],3)
 
@@ -54,7 +63,6 @@ df_our_data["plate"] = split_1[1].astype(int)
 df_our_data["mjd"] = split_1[2].astype(int)
 df_our_data["fiberid"] = split_2[0].astype(int)
 
-
 # our stars can have multiple FeHs, because of multiple epochs
 # (an 'inner' merge in this context means that repeats are allowed, but any rows with NaNs
 # left in either FeH column is removed)
@@ -65,6 +73,11 @@ merged_df_whitten_and_our_feh = pd.merge(df_our_data, merged_df_whitten_feh, on=
 merged_df_whitten_and_our_feh = merged_df_whitten_and_our_feh[merged_df_whitten_and_our_feh["feh_retrieved"].notna()]
 # drop repeats
 merged_df_whitten_and_our_feh = merged_df_whitten_and_our_feh.drop_duplicates()
+# drop S/N < 10
+merged_df_whitten_and_our_feh = merged_df_whitten_and_our_feh.where(merged_df_whitten_and_our_feh['s_to_n']>10.)
+
+# to see S/N
+#plt.scatter(merged_df_whitten_and_our_feh["NET_FEH"],merged_df_whitten_and_our_feh["feh_retrieved"],c = merged_df_whitten_and_our_feh["s_to_n"], cmap="viridis")
 
 # best-fit coefficients, where vals are sane (-4.0 to 1.0)
 idx_sane_whitten = np.logical_and(merged_df_whitten_and_our_feh["NET_FEH"] > -4.0, merged_df_whitten_and_our_feh["NET_FEH"]<1.0)
@@ -90,6 +103,6 @@ merged_df_whitten_and_our_feh.rename(
     columns=({ "NET_FEH": "feh_whitten", "feh_retrieved": "feh_rrlfe"}), 
     inplace=True,
 )
-header = ["feh_whitten", "feh_rrlfe"]
+header = ["feh_whitten", "feh_rrlfe", "s_to_n"]
 merged_df_whitten_and_our_feh.to_csv(text_file_name, columns = header, index=False)
 print("Wrote",text_file_name)

@@ -19,11 +19,23 @@ import numpy as np
 # [1,1]: rrlfe vs. Whitten+
 # [2,0]: rrlfe vs. Li+
 
+stem = '/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/'
+
+'''
 df_sspp_single = pd.read_csv("comparison_sspp_single_20230604.csv") # source: examine_sspp_output.py
 df_sspp_coadded = pd.read_csv("comparison_sspp_coadded_20230604.csv") # source: examine_sspp_output.py
 df_liu_2020 = pd.read_csv("comparison_liu_2020_20230604.csv") # source: lamost_comparison.py 
-df_whitten = pd.read_csv("comparison_whitten_20230604.csv")
+df_whitten = pd.read_csv("comparison_whitten_20230604.csv") # source: inspect_whitten_catalog.py
 df_li_2023 = pd.read_csv("comparison_lietal2023_20230608.csv") # source: cross_ref_sdss_lietal2023_retrievals.py
+'''
+df_sspp_single = pd.read_csv("comparison_sspp_single_20230604.csv") # source: examine_sspp_output.py
+df_sspp_coadded = pd.read_csv("comparison_sspp_coadded_20230604.csv") # source: examine_sspp_output.py
+df_liu_2020 = pd.read_csv(stem + "data/comparison_liu_2020_w_s2n_20230604.csv") # source: lamost_comparison.py 
+df_whitten = pd.read_csv(stem + "data/comparison_whitten_w_s2n_20230604.csv") # source: inspect_whitten_catalog.py
+df_li_2023 = pd.read_csv(stem + "data/comparison_lietal2023_w_s2n_20230608.csv") # source: cross_ref_sdss_lietal2023_retrievals.py
+
+
+
 
 fig, axes = plt.subplots(ncols=2, nrows=3, sharex='row', sharey='row', figsize=(10, 15))
 #matplotlib.rc('xtick', labelsize=40) 

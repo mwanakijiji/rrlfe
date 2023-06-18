@@ -26,6 +26,18 @@ df_liu_stars = pd.read_csv(stem + "notebooks_for_development/spec_sets_check/lam
 #df_our_data = pd.read_csv(stem + "bin/20230120_all_spectra_retrieved_vals.csv")
 df_our_data = pd.read_csv(stem + "notebooks_for_development/data/retrieved_liu_2020_lamost_vals_corrected.csv")
 
+# read in S/N of the SDSS spectra
+
+df_s2n = pd.read_csv(stem + "notebooks_for_development/data/liuetal2020_s2n.csv")
+
+# now read in our own retrievals, and merge with the above by file name
+df_lamost_rrlfe_retrievals = pd.read_csv(stem + "/bin/20230120_all_spectra_retrieved_vals.csv")
+
+# merge with S/N
+df_lamost_rrlfe_retrievals['file_name_s2n_match'] = df_lamost_rrlfe_retrievals["orig_spec_file_name"].str.split("_net", 0, expand=True)[0]
+df_s2n['file_name_s2n_match'] = df_s2n['file_name'].str.split("_net", 0, expand=True)[0]
+df_lamost_rrlfe_retrievals = df_lamost_rrlfe_retrievals.merge(df_s2n, on='file_name_s2n_match', how='inner')
+
 # standalone (for notebook): make table of spectrum names and their RA, DEC from FITS headers
 '''
 fits_dir = stem + "notebooks_for_development/spec_sets_check/lamost/spectra/"
@@ -75,9 +87,6 @@ print("Number of stars in Liu:",len(df_liu_stars.drop_duplicates()))
 print("Number of LAMOST spectra:",len(df_lamost_specs_ra_dec.drop_duplicates()))
 print("Number of Liu-LAMOST matches:",len(merged_df_liu_feh.drop_duplicates()))
 
-# now read in our own retrievals, and merge with the above by file name
-df_lamost_rrlfe_retrievals = pd.read_csv(stem + "/bin/20230120_all_spectra_retrieved_vals.csv")
-
 # for clarity
 df_lamost_rrlfe_retrievals["feh_rrlfe"] = df_lamost_rrlfe_retrievals["feh_retrieved"]
 
@@ -98,8 +107,22 @@ rrlfe_bad = merged_df_liu_rrlfe_good_liu["feh_rrlfe"] > 50
 print("Unphysical rrlfe values:",np.sum(rrlfe_bad))
 merged_df_liu_rrlfe_good_all = merged_df_liu_rrlfe_good_liu.drop(merged_df_liu_rrlfe_good_liu.loc[merged_df_liu_rrlfe_good_liu["feh_rrlfe"] > 50].index, inplace=False)
 
+# drop S/N < 10
+merged_df_liu_rrlfe_good_all = merged_df_liu_rrlfe_good_all.where(merged_df_liu_rrlfe_good_all['s_to_n']>10.)
+
 # drop any remaining NaN values
 merged_df_liu_rrlfe_good_all = merged_df_liu_rrlfe_good_all[merged_df_liu_rrlfe_good_all["feh_rrlfe"].notna()]
+
+# plot to check
+'''
+from scipy.stats import binned_statistic_2d
+x_bins = np.linspace(-3, 0, 50)
+y_bins = np.linspace(-3, 0, 50)
+ret = binned_statistic_2d(merged_df_liu_rrlfe_good_all['feh_liu'], merged_df_liu_rrlfe_good_all['feh_rrlfe'], merged_df_liu_rrlfe_good_all['s_to_n'], statistic=np.mean, bins=[x_bins, y_bins])
+plt.imshow(ret.statistic.T, origin='lower', extent=(-3, 0, -3, 0))
+plt.colorbar()
+plt.show()
+'''
 
 # find best fit, using non-NaN values
 coeffs_poly = np.polyfit(merged_df_liu_rrlfe_good_all["feh_liu"], merged_df_liu_rrlfe_good_all["feh_rrlfe"], deg=1)
@@ -119,7 +142,7 @@ print("Wrote " + file_name_placeholder)
 
 # write out data as csvs (rename cols for clarity)
 text_file_name = "junk_liu.csv"
-header = ["feh_liu", "feh_rrlfe"]
+header = ["feh_liu", "feh_rrlfe", "s_to_n"]
 merged_df_liu_rrlfe_good_all.to_csv(text_file_name, columns = header, index=False)
 print("Wrote",text_file_name)
 

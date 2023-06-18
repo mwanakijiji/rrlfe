@@ -15,6 +15,9 @@ stem = "/Users/bandari/Documents/git.repos/rrlfe/"
 # read in our values
 df_retrieved = pd.read_csv(stem + "notebooks_for_development/data/retrieved_catalina_20230515_vals_corrected.csv")
 
+# read in S/N (single-epoch)
+df_s2n = pd.read_csv(stem + "notebooks_for_development/data/s_to_n_sdss_spectra_cosmic_rays_removed_automated_3911_to_4950_angstr.csv")
+
 # SSPP values (from YSL)
 
 ## COADDED spectra
