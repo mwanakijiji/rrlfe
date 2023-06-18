@@ -20,7 +20,7 @@ ra_dec_sdss = pd.read_csv(stem + "notebooks_for_development/data/specObj-dr17_fi
 #ra_dec_sdss = pd.read_csv(stem + "notebooks_for_development/data/ra_dec_sdss_spec_overlapping_lietal2023.csv")
 
 # read in S/N of the SDSS spectra
-df_s2n = pd.read_csv(stem + "notebooks_for_development/data/lietal2023_s2n.csv")
+df_s2n = pd.read_csv(stem + "notebooks_for_development/data/lietal2023_s2n_only.csv")
 
 # merge in S/N data
 df_retrieved['file_name_s2n_match'] = df_retrieved["orig_spec_file_name"].str.split("_net", 0, expand=True)[0]

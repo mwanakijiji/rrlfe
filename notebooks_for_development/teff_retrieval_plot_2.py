@@ -16,7 +16,7 @@ import numpy as np
 #get_ipython().run_line_magic('matplotlib', 'qt')
 
 # name of csv file with EWs as produced by pipeline
-ew_good_data_poststack_file_name = "/Users/bandari/Documents/git.repos/rrlfe/ew_products/" +                                     "all_data_input_mcmc_20220130_run_1.csv"
+ew_good_data_poststack_file_name = "/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/data/all_data_input_mcmc_synthetic_application_20230515.csv"
 
 # read in
 df_poststack = pd.read_csv(ew_good_data_poststack_file_name)
@@ -34,7 +34,7 @@ scatter_x = np.subtract(60*np.random.rand(len(df_poststack["teff"])),30)
 colormap="Reds"
 norm = matplotlib.colors.Normalize(vmin=np.min(feh_values),vmax=np.max(feh_values))
 
-f, (a0, a1) = plt.subplots(nrows=2, ncols=1, gridspec_kw={'height_ratios': [1, 1]}, sharex=True)
+f, (a0, a1) = plt.subplots(nrows=2, ncols=1, gridspec_kw={'height_ratios': [1, 1]}, sharex=True, figsize=(8,7))
 
 a0.axvspan(6000, 7250, color='y', alpha=0.5, lw=0,zorder=0) # RRLs in instability strip (Catelan 2015)
 a1.axvspan(6000, 7250, color='y', alpha=0.5, lw=0,zorder=0)
@@ -46,12 +46,15 @@ a0.scatter(np.add(scatter_x,df_poststack["teff"]),
             c=df_poststack["feh"],
             s=np.power(np.divide(df_poststack["logg"],0.7),3),
             cmap=colormap, norm=norm, edgecolor="k",zorder=2)
+a0.tick_params(axis='both', which='major', labelsize=15)
 
 a1.scatter(np.add(scatter_x,df_poststack["teff"]),
             np.subtract(df_poststack["teff_bestfit"],df_poststack["teff"]),
             c=df_poststack["feh"],
            s=np.power(np.divide(df_poststack["logg"],0.7),3),
             cmap=colormap, norm=norm, edgecolor="k",zorder=2)
+a1.tick_params(axis='both', which='major', labelsize=15)
+
 
 # kludge to add legend while mapping colors correctly
 for i in range(0,len(feh_values)):
@@ -78,16 +81,18 @@ f.canvas.draw() # need before legend to render
 leg1 = a0.legend(loc='upper left', title="[Fe/H]", fontsize=12, title_fontsize=14)
 # Add second legend for the maxes and mins.
 # leg1 will be removed from figure
-leg2 = a0.legend(loggpts[0],['3.0','2.5','2.0'], loc='lower right', title="log(g)", fontsize=12, title_fontsize=14)
+leg2 = a0.legend(loggpts[0],['3.0','2.5','2.0'], loc='lower right', title="log g", fontsize=12, title_fontsize=14)
 # Manually add the first legend back
 a0.add_artist(leg1)
 
-a0.set_ylabel("Retrieved T$_{eff}$", fontsize=20)
-a1.set_xlabel("Simulated T$_{eff}$", fontsize=20)
+a0.set_ylabel("Retrieved Teff", fontsize=20)
+a1.set_xlabel("Simulated Teff", fontsize=20)
 a1.set_ylabel("Residuals", fontsize=20)
 
 a0.set_xlim([5500,8000])
 a0.set_ylim([5500,8500])
+
+plt.tight_layout()
 
 #plt.show()
 plt.savefig("junk.pdf")
