@@ -196,6 +196,7 @@ class ConfigInit():
         logging.info("rrlfe git hash: " + sha)
         print(attribs.sections)
 
+        # put config parameters into log file, and print to screen
         for each_section in attribs.sections():
             logging.info("----")
             logging.info("- " + each_section + " -")
