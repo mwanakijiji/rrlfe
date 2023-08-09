@@ -56,7 +56,7 @@ class CornerPlot():
         if (model == "abcd"):
 
             # corner plot (requires 'storechain=True' in enumerate above)
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4), delimiter = ',', names=["a", "b", "c", "d"])
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), delimiter = ',', names=["a", "b", "c", "d"])
 
             fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$"],
                                 quantiles=[0.16, 0.5, 0.84],
