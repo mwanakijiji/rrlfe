@@ -48,7 +48,7 @@ test_gen.add_step(step)
 
 # skipping, because it takes too much time
 # run_robospect on normalized synthetic spectra
-'''
+
 step1 = pipeline.run_robo.Robo(
     module_name="module5",
     robo_dir_read="../robospect.py/",
@@ -154,7 +154,7 @@ step = pipeline.run_emcee.CornerPlot(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # in a separate pipeline, apply the above raw calibration to the McD star data
 # this section takes those Fe/H results and finds the offset correction based on them
 # I think this requires scripts for the following:
