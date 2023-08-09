@@ -125,7 +125,7 @@ step = pipeline.teff_retrieval.TempVsBalmer(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # skipping, because it takes too much time
 # run_emcee
 # coeff defs: K = a + bH + cF + dHF + f(H^2) + g(F^2) + h(H^2)F + kH(F^2) + m(H^3) + n(F^3)
@@ -146,7 +146,7 @@ step = pipeline.run_emcee.WriteSolnToFits(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 step = pipeline.run_emcee.CornerPlot(
     module_name="module15",
     file_name_mcmc_posterior_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/mcmc_output.csv",
