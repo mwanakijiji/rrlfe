@@ -563,6 +563,10 @@ class RunEmcee():
 
         # starting position, before adding a perturbation
 
+        # TEST
+        print('model',model)
+        # TEST
+
         if model == 'abcd':
             # coeffs_pass = [a,b,c,d]
 
