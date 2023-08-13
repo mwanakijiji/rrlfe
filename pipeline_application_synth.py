@@ -123,7 +123,7 @@ test_gen.add_step(step)
 step = pipeline.final_corrxn.ApplyCorrxn(
     module_name="module16",
     file_name_basis_raw_retrieved_fehs=stem_abs+"rrlfe_io_20230515_synthetic/bin/retrieved_vals.csv", # retrieved McD Fe/H values based on raw rrlfe calibration
-    soln_fits_name=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_raw_abcd_20230810.fits", # calibration file which includes correction info in the header
+    soln_fits_name=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_20230507.fits", # calibration file which includes correction info in the header
     file_name_corrected_retrieved_fehs_write=stem_abs+"rrlfe_io_20230515_synthetic/bin/retrieved_vals_corrected.csv" # mapped high-res literature Fe/H values for McD stars
 )
 

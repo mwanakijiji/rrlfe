@@ -111,6 +111,7 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 test_gen.add_step(step)
 '''
 
+'''
 # retrieve Fe/H using * abcd * calibration
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
@@ -118,16 +119,17 @@ step = pipeline.find_feh.FehRetrieval(
     file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_w_corrxn_abcd_20230810.fits",
     dir_retrievals_write=stem_abs+"rrlfe_io_20230515_synthetic/bin/pickled_info/",
     file_retrievals_write=stem_abs+"rrlfe_io_20230515_synthetic/bin/retrieved_vals_synth_abcd_raw_20230813.csv")
-
 '''
+
+
 # retrieve Fe/H using * abcdfghk * calibration
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+"rrlfe_io_20230515_synthetic/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
-    file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_w_corrxn_abcd_20230810.fits",
+    file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_20230507.fits",
     dir_retrievals_write=stem_abs+"rrlfe_io_20230515_synthetic/bin/pickled_info/",
-    file_retrievals_write=stem_abs+"rrlfe_io_20230515_synthetic/bin/retrieved_vals.csv")
-'''
+    file_retrievals_write=stem_abs+"rrlfe_io_20230515_synthetic/bin/retrieved_vals_synth_abcdfghk_raw_20230813.csv")
+
 
 # add step to procedure
 test_gen.add_step(step)
