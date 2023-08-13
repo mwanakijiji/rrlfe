@@ -137,7 +137,7 @@ step = pipeline.run_emcee.RunEmcee(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 step = pipeline.run_emcee.WriteSolnToFits(
     module_name="module14",
     file_name_mcmc_posterior_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/mcmc_output.csv",
@@ -146,7 +146,7 @@ step = pipeline.run_emcee.WriteSolnToFits(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 step = pipeline.run_emcee.CornerPlot(
     module_name="module15",
     file_name_mcmc_posterior_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/mcmc_output.csv",
