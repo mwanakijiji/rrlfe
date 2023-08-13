@@ -114,7 +114,7 @@ test_gen.add_step(step)
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+"rrlfe_io_20230810_mcd_raw/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
-    file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_abcd_20230810.fits",
+    file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_raw_abcd_20230810.fits",
     dir_retrievals_write=stem_abs+"rrlfe_io_20230810_mcd_raw/bin/pickled_info/",
     file_retrievals_write=stem_abs+"rrlfe_io_20230810_mcd_raw/bin/retrieved_vals.csv")
 
