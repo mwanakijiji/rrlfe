@@ -20,127 +20,27 @@ from astropy import stats
 from scipy import optimize
 import matplotlib.pyplot as plt
 
-# read in abcdfghk data
-stem = "/Users/bandari/Documents/git.repos/rrlfe/"
-df = pd.read_csv(stem + "rrlfe_io_20220810_synth/rrlfe_io/ew_products/all_data_input_mcmc.csv")
+# read in data which would be input into the MCMC
+stem = '/Users/bandari/Documents/git.repos/rrlfe/'
+df_abcd = pd.read_csv(stem + 'notebooks_for_development/data/retrieved_vals_corrected_synth_abcd_20230813.csv')
+df_abcdfghk = pd.read_csv(stem + 'notebooks_for_development/data/retrieved_vals_synth_abcdfghk_raw_20230813.csv')
 
-# read in abcd data
-'''
-df_abcd = pd.read_csv(stem + "rrlfe_io_20220825_job_596280_abcd/rrlfe_io/ew_products/all_data_input_mcmc.csv")
+# add cols indicating true logg, teff, feh
+df_abcd['teff_true'] = df_abcd['orig_spec_file_name'].str[0:4]
+df_abcd['logg_true'] = df_abcd['orig_spec_file_name'].str[4:6]
+df_abcd['feh_true'] = 0.1*df_abcd['orig_spec_file_name'].str[6:9].str.replace('m','-').str.replace('p','+').astype(float)
+
+df_abcdfghk['teff_true'] = df_abcdfghk['orig_spec_file_name'].str[0:4]
+df_abcdfghk['logg_true'] = df_abcdfghk['orig_spec_file_name'].str[4:6]
+df_abcdfghk['feh_true'] = 0.1*df_abcdfghk['orig_spec_file_name'].str[6:9].str.replace('m','-').str.replace('p','+').astype(float)
+
 import ipdb; ipdb.set_trace()
-'''
 
-# remove the three really bad datapoints
-'''
-index_names1 = df[ df["original_spec_file_name"]=="600025p00.smo" ].index
-df.drop(index_names1 , inplace=True)
-index_names2 = df[ df["original_spec_file_name"]=="625025p02.smo" ].index
-df.drop(index_names2 , inplace=True)
-index_names3 = df[ df["original_spec_file_name"]=="600030p02.smo" ].index
-df.drop(index_names3 , inplace=True)
-index_names4 = df[ df["logg"]=="2.5" ].index # test of individual values of logg
-df.drop(index_names4 , inplace=True)
-df = df.reset_index(drop = True)
-'''
-
-df_choice = df
-
-# set name of csv written-out data to which we will append BIC info
-csv_file_name = "junk.csv"
-
-# figure out all subsets of coefficients beyond [a,b,c,d]
-'''
-coeffs_strings = ["f","g","h","k","m","n"]
-coeffs_strings_nan = ["NaN1"]
-new_coeffs_6 = list(itertools.combinations(coeffs_strings, 6))
-new_coeffs_5 = list(itertools.combinations(coeffs_strings, 5))
-new_coeffs_4 = list(itertools.combinations(coeffs_strings, 4))
-new_coeffs_3 = list(itertools.combinations(coeffs_strings, 3))
-new_coeffs_2 = list(itertools.combinations(coeffs_strings, 2))
-new_coeffs_1 = list(itertools.combinations(coeffs_strings, 1))
-baseline = list(itertools.combinations(coeffs_strings_nan, 1)) # original Layden [a,b,c,d] coefficients only
-
-# create the array of arrays, so we can map them across cores
-new_coeffs_mother_array = [baseline,new_coeffs_1,new_coeffs_2,new_coeffs_3,new_coeffs_4,new_coeffs_5,new_coeffs_6]
-'''
-
-def expanded_layden_all_coeffs(coeff_array,H,F):
-
-    # definition of coefficients as of 2020 Mar 9:
-    # K = a + bH + cF + dHF + f(H^{2}) + g(F^{2}) + hF(H^{2}) + kH(F^{2}) + m(H^{3}) + n(F^{3})
-
-    a_coeff = coeff_array[0]
-    b_coeff = coeff_array[1]
-    c_coeff = coeff_array[2]
-    d_coeff = coeff_array[3]
-    f_coeff = coeff_array[4]
-    g_coeff = coeff_array[5]
-    h_coeff = coeff_array[6]
-    k_coeff = coeff_array[7]
-    m_coeff = coeff_array[8]
-    n_coeff = coeff_array[9]
-
-    K_calc = a_coeff + b_coeff*H + c_coeff*F + d_coeff*H*F + \
-        f_coeff*np.power(H,2.) + g_coeff*np.power(F,2.) + \
-        h_coeff*F*np.power(H,2.) + k_coeff*H*np.power(F,2.) + \
-        m_coeff*np.power(H,3.) + n_coeff*np.power(F,3.)
-
-    return K_calc
-
-
-def original_layden_abcd(coeff_array,H,F):
-
-    # definition of coefficients as of 2020 Mar 9:
-    # K = a + bH + cF + dHF + f(H^{2}) + g(F^{2}) + hF(H^{2}) + kH(F^{2}) + m(H^{3}) + n(F^{3})
-
-    a_coeff = coeff_array[0]
-    b_coeff = coeff_array[1]
-    c_coeff = coeff_array[2]
-    d_coeff = coeff_array[3]
-
-    K_calc = a_coeff + b_coeff*H + c_coeff*F + d_coeff*H*F
-
-    return K_calc
-
-
-# Find some metallicities
-H = df_choice["EW_Balmer"]
-K = df_choice["EW_CaIIK"]
-
-## calculate retrieved Fe/H using solution with [a,b,c,d,f,g,h,k], using logg3pt0_bic_output_20200322.csv
-modified_soln_7_abcdfghk = [26.458560990753856,-2.902133161010684,13.111956399236913,-1.2137255854235038,0.09607072758758611,1.5487308225785184,0.032702627768572155,-0.08555553824310289]
-
-coeff_a = modified_soln_7_abcdfghk[0]
-coeff_b = modified_soln_7_abcdfghk[1]
-coeff_c = modified_soln_7_abcdfghk[2]
-coeff_d = modified_soln_7_abcdfghk[3]
-coeff_f = modified_soln_7_abcdfghk[4]
-coeff_g = modified_soln_7_abcdfghk[5]
-coeff_h = modified_soln_7_abcdfghk[6]
-coeff_k = modified_soln_7_abcdfghk[7]
-
-A_cap = coeff_g + coeff_k*H
-B_cap = coeff_c + coeff_d*H + coeff_h*np.power(H,2)
-C_cap = coeff_a + coeff_b*H + coeff_f*np.power(H,2) - K
-
-F_pos = np.divide(-B_cap + np.sqrt(np.power(B_cap,2.)-4*A_cap*C_cap),2*A_cap)
-F_neg = np.divide(-B_cap - np.sqrt(np.power(B_cap,2.)-4*A_cap*C_cap),2*A_cap)
-
-
-## and calculate retrieved Fe/H using just [a,b,c,d] (the Layden fit, but with our best-fit values)
-original_layden_our_fit_soln_0_abcd = [20.508474951108703,-1.52237914721989,7.335609141293953,-0.5508692067401945]
-coeff_a_original = original_layden_our_fit_soln_0_abcd[0]
-coeff_b_original = original_layden_our_fit_soln_0_abcd[1]
-coeff_c_original = original_layden_our_fit_soln_0_abcd[2]
-coeff_d_original = original_layden_our_fit_soln_0_abcd[3]
-F_original_our_fit = np.divide(K-coeff_a_original-coeff_b_original*H,coeff_c_original+coeff_d_original*H)
-
-plt.clf()
 plt.clf()
 #plt.figure(figsize=(7,14))
-plt.scatter(df_choice["feh"],F_original_our_fit,facecolors="none",
+plt.scatter(df_abcd["feh_true"],df_abcd["feh_retrieved"],facecolors="none",
             edgecolors="k",label="abcd", zorder=2)
-plt.scatter(df_choice["feh"],F_pos,facecolors="orange",edgecolors="r",
+plt.scatter(df_abcdfghk["feh_true"],df_abcdfghk["feh_retrieved"],facecolors="orange",edgecolors="r",
             label="abcdfghk (+ solution)", zorder=3)
 '''
 for i in range(0,len(df)):
