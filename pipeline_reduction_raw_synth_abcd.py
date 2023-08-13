@@ -142,7 +142,7 @@ step = pipeline.run_emcee.WriteSolnToFits(
     module_name="module14",
     file_name_mcmc_posterior_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/mcmc_output.csv",
     file_name_teff_data_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/teff_vs_balmer_trend.txt",
-    soln_write_name=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_20230507.fits")
+    soln_write_name=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_abcd_20230507.fits")
 
 # add step to procedure
 test_gen.add_step(step)
