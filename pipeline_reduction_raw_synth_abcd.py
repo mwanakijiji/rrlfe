@@ -168,5 +168,8 @@ step = pipeline.final_corrxn.FindCorrxn(
     file_name_basis_lit_fehs=stem_abs+"notebooks_for_development/mapped_program_fehs_20230402.csv",
     soln_write_name=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_20230507.fits" # solution to which we will append corrxn to
 )
+
+# add step to procedure
+test_gen.add_step(step)
 '''
 test_gen.run()

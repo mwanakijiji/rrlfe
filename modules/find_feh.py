@@ -168,7 +168,9 @@ class FehRetrieval():
     CaIIK EWs, given their errors
 
     Parameters:
-        write_out_filename (str): the file name of everything, incl. retrieved Teff and Fe/H
+        write_out_filename (str): file name of everything, incl. retrieved Teff and Fe/H
+        file_calib_read (str): file name of FITS file containing a calibration (this can be 
+        a raw calibration, or one with a correction in the header; it is applied as-is)
 
     Returns:
         final_table (DataFrame): dataframe equivalent of the written csv file, for unit testing
