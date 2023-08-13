@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 
 # read in data which would be input into the MCMC
 stem = '/Users/bandari/Documents/git.repos/rrlfe/'
-df_abcd = pd.read_csv(stem + 'notebooks_for_development/data/retrieved_vals_corrected_synth_abcd_20230813.csv')
+df_abcd = pd.read_csv(stem + 'notebooks_for_development/data/retrieved_vals_synth_abcd_raw_20230813.csv')
 df_abcdfghk = pd.read_csv(stem + 'notebooks_for_development/data/retrieved_vals_synth_abcdfghk_raw_20230813.csv')
 
 # add cols indicating true logg, teff, feh

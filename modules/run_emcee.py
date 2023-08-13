@@ -44,19 +44,22 @@ class CornerPlot():
         mcmc_text_output_file_name = self.file_name_mcmc_posterior_read
         corner_plot_putput_file_name = self.plot_corner_write
 
-        test_samples = pd.read_csv(mcmc_text_output_file_name, delimiter = ',', nrows=5) # read in first rows to check column number
+        test_samples = pd.read_csv(mcmc_text_output_file_name, delim_whitespace = True, nrows=5) # read in first rows to check column number
 
-        if np.shape(test_samples)[1] == 4:
+        #print('hiya2')
+        #print(mcmc_text_output_file_name)
+        #print(np.shape(test_samples)[1])
+        if np.shape(test_samples)[1] == 5:
             # 5 rows: 1 index and 4 chains
             model = "abcd"
-        elif np.shape(test_samples)[1] == 8:
+        elif np.shape(test_samples)[1] == 9:
             # 9 rows: 1 index and 8 chains
             model = "abcdfghk"
 
         if (model == "abcd"):
 
             # corner plot (requires 'storechain=True' in enumerate above)
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), delimiter = ',', names=["a", "b", "c", "d"])
+            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), delim_whitespace = True, names=["a", "b", "c", "d"])
 
             fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$"],
                                 quantiles=[0.16, 0.5, 0.84],
@@ -99,9 +102,11 @@ class CornerPlot():
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
             test_samples = pd.read_csv(mcmc_text_output_file_name, delimiter = ',', nrows=5) # read in first rows to check column number
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), delimiter = ',', names=["a", "b", "c", "d", "f", "g", "h", "k"])
+            samples = pd.read_csv(mcmc_text_output_file_name, delimiter = ',', usecols=(0,1,2,3,4,5,6,7), names=["a", "b", "c", "d", "f", "g", "h", "k"])
             #N_remove = 1e3 # plot only 1 out of every N links of the chains
             #samples = samples_all[samples_all.index % N_remove != 0]
+            print('------samples------')
+            print(samples)
             fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$", "$f$", "$g$", "$h$", "$k$"],
                                 quantiles=[0.16, 0.5, 0.84],
                                 title_fmt='.2f',
@@ -413,7 +418,7 @@ class WriteSolnToFits():
         # set compound datatype
         dtype=np.rec.fromrecords([['string_key', 189.6752158]]).dtype
         # load data, skipping header and hash corresponding to that file
-        teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=1, usecols=(0,1), delimiter=':', dtype=dtype)
+        teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=2, usecols=(0,1), delimiter=':', dtype=dtype)
         dict_teff_data = {}
         for key, val in teff_data:
             dict_teff_data.update({key: val})
@@ -443,6 +448,7 @@ class WriteSolnToFits():
 
             # corner plot (requires 'storechain=True' in enumerate above)
             samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), delimiter=",", names=["a", "b", "c", "d"])
+
             c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
             c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
             c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
