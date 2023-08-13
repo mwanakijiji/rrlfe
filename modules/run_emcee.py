@@ -548,6 +548,8 @@ class RunEmcee():
         feh = df_choice['feh']
         efeh = df_choice['err_feh']
 
+        import ipdb; ipdb.set_trace()
+
         # non-zero starting points for coefficients fghk (i.e., those beyond the Layden
         # model)
         f_init = 0.1
