@@ -94,6 +94,7 @@ def apply_one_spec(ew_data_pass, N_MCMC_samples, mcmc_chain, soln_header):
     feh_sample_array = np.nan*np.ones((N_MCMC_samples, 1))
 
     # find one value of Fe/H given those samples in Balmer and CaIIK EWs
+    import ipdb; ipdb.set_trace()
     if (len(mcmc_chain.columns)==4):
 
         try:
@@ -207,8 +208,6 @@ class FehRetrieval():
         ew_data = pd.read_csv(ew_file).copy(deep=True)
         hdul = fits.open(calib_file)
         soln_header = hdul[1].header
-
-        import ipdb; ipdb.set_trace()
 
         # if write directories do not exist, create them
         #make_dir(write_pickle_dir)
