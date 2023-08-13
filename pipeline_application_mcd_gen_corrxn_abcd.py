@@ -25,6 +25,8 @@ step = pipeline.MakeDirsConfig(module_name="module2")
 # add step to procedure
 test_gen.add_step(step)
 '''
+
+'''
 # compile the C spectral normalization script
 step = pipeline.compile_normalization.CompileBkgrnd(
     module_name="module3", 
@@ -59,7 +61,7 @@ step = pipeline.run_robo.Robo(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
