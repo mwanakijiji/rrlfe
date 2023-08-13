@@ -94,7 +94,6 @@ def apply_one_spec(ew_data_pass, N_MCMC_samples, mcmc_chain, soln_header):
     feh_sample_array = np.nan*np.ones((N_MCMC_samples, 1))
 
     # find one value of Fe/H given those samples in Balmer and CaIIK EWs
-    import ipdb; ipdb.set_trace()
     if (len(mcmc_chain.columns)==4):
 
         try:
@@ -250,6 +249,7 @@ class FehRetrieval():
         # zip things for multiprocessing
         n_elem = len(ew_data_split)
         all_zipped = zip(ew_data_split, list(itertools.repeat(N_MCMC_samples, n_elem)), list(itertools.repeat(mcmc_chain, n_elem)), list(itertools.repeat(soln_header, n_elem)))
+        import ipdb; ipdb.set_trace()
         test_results = pool.starmap(apply_one_spec, all_zipped)
 
         final_table = pd.DataFrame(test_results)
