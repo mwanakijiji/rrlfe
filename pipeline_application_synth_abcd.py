@@ -112,7 +112,7 @@ test_gen.add_step(step)
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+"rrlfe_io_20230515_synthetic/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
-    file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_20230507.fits",
+    file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_w_corrxn_abcd_20230810.fits",
     dir_retrievals_write=stem_abs+"rrlfe_io_20230515_synthetic/bin/pickled_info/",
     file_retrievals_write=stem_abs+"rrlfe_io_20230515_synthetic/bin/retrieved_vals.csv")
 
@@ -123,8 +123,8 @@ test_gen.add_step(step)
 step = pipeline.final_corrxn.ApplyCorrxn(
     module_name="module16",
     file_name_basis_raw_retrieved_fehs=stem_abs+"rrlfe_io_20230515_synthetic/bin/retrieved_vals.csv", # retrieved McD Fe/H values based on raw rrlfe calibration
-    soln_fits_name=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_raw_abcd_20230810.fits", # calibration file which includes correction info in the header
-    file_name_corrected_retrieved_fehs_write=stem_abs+"rrlfe_io_20230515_synthetic/bin/retrieved_vals_corrected.csv" # mapped high-res literature Fe/H values for McD stars
+    soln_fits_name=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution_w_corrxn_abcd_20230810.fits", # calibration file which includes correction info in the header
+    file_name_corrected_retrieved_fehs_write=stem_abs+"rrlfe_io_20230515_synthetic/bin/retrieved_vals_corrected_abcd.csv" # mapped high-res literature Fe/H values for McD stars
 )
 
 # add step to procedure
