@@ -208,6 +208,8 @@ class FehRetrieval():
         hdul = fits.open(calib_file)
         soln_header = hdul[1].header
 
+        import ipdb; ipdb.set_trace()
+
         # if write directories do not exist, create them
         #make_dir(write_pickle_dir)
         #make_dir(write_out_filename)
