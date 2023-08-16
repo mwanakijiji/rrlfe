@@ -45,11 +45,18 @@ df_sspp_singleepoch = pd.read_csv(stem + "notebooks_for_development/data/NEWEST_
                  names=["coadded_spec_name","TEFF_ADOP","FEH_ADOP","FEH_ADOP_UNC","FEH_SPEC","FEH_SPEC_UNC"])
 df_sspp_singleepoch["name_match_single_epoch"] = df_sspp_singleepoch["coadded_spec_name"]
 df_sspp_singleepoch["name_match_single_epoch"] = df_sspp_singleepoch["name_match_single_epoch"].str.strip()
-# make column for merging
+# make columns for merging
 df_retrieved["junk0"] = df_retrieved["orig_spec_file_name"].str.split(pat="spec-", expand=True)[1]
 df_retrieved["junk1"] = df_retrieved["junk0"].str.split(pat=".dat", expand=True)[0]
 df_retrieved["name_match_single_epoch"] = df_retrieved["junk1"].str.replace(r"g", "")
-df_merged_single_epoch = df_retrieved.merge(df_sspp_singleepoch, on="name_match_single_epoch", how="outer", indicator=True)
+df_merged_single_epoch_intermed = df_retrieved.merge(df_sspp_singleepoch, on="name_match_single_epoch", how="outer", indicator=True)
+# merge s/n onto single epoch data
+df_s2n["junk0"] = df_s2n["file_name"].str.split(pat="spec-", expand=True)[1]
+df_s2n["junk1"] = df_s2n["junk0"].str.split(pat="_net", expand=True)[0]
+df_s2n["name_match_single_epoch"] = df_s2n["junk1"].str.replace(r"_g", "")
+
+df_merged_single_epoch = df_merged_single_epoch_intermed.merge(df_s2n, on="name_match_single_epoch", how="outer")
+
 # remove crazy points
 idx_sane_single_epoch = (np.isfinite(df_merged_single_epoch["FEH_ADOP"]) & np.isfinite(df_merged_single_epoch["feh_retrieved"])) & \
     ((np.abs(df_merged_single_epoch["feh_retrieved"]) < 5.) & (np.abs(df_merged_single_epoch["FEH_ADOP"]) < 5.))
@@ -66,7 +73,8 @@ plt.plot([-4.0,0.5],[-4.0,0.5], linestyle="--", color="black", zorder=0) # one-t
 # if we want to compare Feh
 plt.scatter(df_merged["FEH_ADOP"][idx_sane], df_merged["feh_retrieved"][idx_sane],
             c=df_merged["TEFF_ADOP"][idx_sane], cmap="Greens", s=20, alpha=1.0, label="Teff", edgecolors="k")
-plt.plot([-4.0,0.5],[coeffs[0]*(-4.0)+coeffs[1],coeffs[0]*(0.5)+coeffs[1]], linestyle="-", label="best-fit, RRabs and cs (coadded)", zorder=0) # line of best fit, both types
+plt.plot([-4.0,0.5],[coeffs[0]*(-4.0)+coeffs[1],coeffs[0]*(0.5)+coeffs[1]], 
+         linestyle="-", label="best-fit, RRabs and cs (coadded)", zorder=0) # line of best fit, both types
 plt.xlabel("[Fe/H], SSPP (coadded spectra)", fontsize=25)
 plt.ylabel("[Fe/H], rrlfe (single epoch)", fontsize=25)
 plt.xticks(fontsize=20)
@@ -88,7 +96,8 @@ plt.plot([-4.0,0.5],[-4.0,0.5], linestyle="--", color="black", zorder=0) # one-t
 # if we want to compare Feh
 plt.scatter(df_merged_single_epoch["FEH_ADOP"][idx_sane_single_epoch], df_merged_single_epoch["feh_retrieved"][idx_sane_single_epoch],
             c=df_merged_single_epoch["TEFF_ADOP"][idx_sane_single_epoch], cmap="Greens", s=20, alpha=1.0, label="Teff", edgecolors="k")
-plt.plot([-4.0,0.5],[coeffs_single_epoch[0]*(-4.0)+coeffs_single_epoch[1],coeffs_single_epoch[0]*(0.5)+coeffs_single_epoch[1]], linestyle="-", label="best-fit, RRabs and cs (single-epoch)", zorder=0) # line of best fit, both types
+plt.plot([-4.0,0.5],[coeffs_single_epoch[0]*(-4.0)+coeffs_single_epoch[1],coeffs_single_epoch[0]*(0.5)+coeffs_single_epoch[1]], 
+         linestyle="-", label="best-fit, RRabs and cs (single-epoch)", zorder=0) # line of best fit, both types
 plt.xlabel("[Fe/H], SSPP (single epoch)", fontsize=25)
 plt.ylabel("[Fe/H], rrlfe (single epoch)", fontsize=25)
 plt.xticks(fontsize=20)
@@ -164,6 +173,6 @@ df_merged_single_epoch.rename(
     columns=({ "FEH_ADOP": "feh_sspp_single", "feh_retrieved": "feh_rrlfe"}), 
     inplace=True,
 )
-header = ["feh_sspp_single", "feh_rrlfe"]
+header = ["feh_sspp_single", "feh_rrlfe", "s_to_n"]
 df_merged_single_epoch.to_csv(text_file_name, columns = header, index=False)
 print("Wrote",text_file_name)
