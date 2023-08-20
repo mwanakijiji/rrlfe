@@ -21,8 +21,8 @@ df_s2n = pd.read_csv(stem + "notebooks_for_development/data/s_to_n_sdss_spectra_
 # SSPP values (from YSL)
 
 ## COADDED spectra
-df_sspp = pd.read_csv(stem + "notebooks_for_development/data/NEWEST_SDSS_RRLYRAE_ECKHARD/coadded/ssppOut-RRLyae.param.csv", usecols=[1,8,65,67,173,175],
-                 names=["coadded_spec_name","TEFF_ADOP","FEH_ADOP","FEH_ADOP_UNC","FEH_SPEC","FEH_SPEC_UNC"])
+df_sspp = pd.read_csv(stem + "notebooks_for_development/data/NEWEST_SDSS_RRLYRAE_ECKHARD/coadded/ssppOut-RRLyae.param.csv", usecols=[1,8,65,67,173,175,236],
+                 names=["coadded_spec_name","TEFF_ADOP","FEH_ADOP","FEH_ADOP_UNC","FEH_SPEC","FEH_SPEC_UNC","SNR"])
 # make column for merging
 df_sspp["name_match"] = df_sspp["coadded_spec_name"]
 df_sspp["name_match"] = df_sspp["name_match"].str.strip()
@@ -65,6 +65,16 @@ coeffs_single_epoch = np.polyfit(df_merged_single_epoch["FEH_ADOP"][idx_sane_sin
 
 print("coeffs, coadded", coeffs)
 print("coeffs, single epoch", coeffs_single_epoch)
+
+# separate out plate, mjd, fiberid for obtaining S/N from SDSS website
+# ref. https://dr17.sdss.org/optical/spectrum/search
+df_merged['plate'] = df_merged['orig_spec_file_name'].str.split('-', expand=True)[1]
+df_merged['mjd'] = df_merged['orig_spec_file_name'].str.split('-', expand=True)[2]
+df_merged['fiberid'] = df_merged['orig_spec_file_name'].str.split('-', expand=True)[3].str.split('g',expand=True)[0]
+header = ["plate", "mjd", "fiberid"]
+file_name_1 = "junk_coadded_plate_mjd_fiberid.csv"
+df_merged.to_csv(file_name_1, columns = header, index=False)
+print("Wrote",file_name_1)
 
 # plot: coadded spectra
 plt.clf()
@@ -161,10 +171,10 @@ print("Wrote",file_name_write_feh2)
 # write out data as csvs (rename cols for clarity)
 text_file_name = "junk_coadded.csv"
 df_merged.rename(
-    columns=({ "FEH_ADOP": "feh_sspp_coadded", "feh_retrieved": "feh_rrlfe"}), 
+    columns=({ "FEH_ADOP": "feh_sspp_coadded", "feh_retrieved": "feh_rrlfe", "SNR": "s_to_n"}), 
     inplace=True,
 )
-header = ["feh_sspp_coadded", "feh_rrlfe"]
+header = ["feh_sspp_coadded", "feh_rrlfe", "plate", "mjd", "fiberid","s_to_n"]
 df_merged.to_csv(text_file_name, columns = header, index=False)
 print("Wrote",text_file_name)
 
