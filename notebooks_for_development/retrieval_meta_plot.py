@@ -20,7 +20,7 @@ from scipy.stats import binned_statistic_2d
 
 # plot 2:
 # [1,0]: rrlfe vs. Liu+
-# [1,0]: rrlfe vs. Whitten+
+# [1,0]: rrlfe vs. Whitten+ [ REMOVED ]
 # [2,0]: rrlfe vs. Li+
 
 stem = '/Users/bandari/Documents/git.repos/rrlfe/notebooks_for_development/'
@@ -59,7 +59,7 @@ loc = ticker.MultipleLocator(base=1.0) # for ticks
 v_min = 10
 v_max = 50
 
-fig, axes = plt.subplots(ncols=2, nrows=5, sharex='row', sharey='row', figsize=(11, 25))
+fig, axes = plt.subplots(ncols=2, nrows=4, sharex='row', sharey='row', figsize=(11, 20))
 
 # rrlfe vs. SSPP (single-epoch)
 hb = axes[0,0].hexbin(df_sspp_single["feh_sspp_single"],df_sspp_single["feh_rrlfe"], extent=(-4.,1.,-4.,1.), linewidths=0.01)
@@ -240,6 +240,10 @@ axes[3,1].xaxis.set_major_locator(loc)
 axes[3,1].yaxis.set_major_locator(loc)
 axes[3,1].tick_params(width=2, length=8)
 
+axes[3,0].set_xlabel("[Fe/H]", fontsize = char_size)
+axes[3,1].set_xlabel("[Fe/H]", fontsize = char_size)
+
+'''
 # rrlfe vs. Whitten+ (& S/N)
 #axes[2,1].scatter(df_whitten["feh_whitten"], df_whitten["feh_rrlfe"], s=10, color="k")
 axes[4,1].scatter(df_whitten["feh_whitten"], df_whitten["feh_rrlfe"], c = df_whitten["s_to_n"], cmap="winter", vmin=v_min, vmax=v_max)
@@ -263,8 +267,9 @@ axes[4,1].yaxis.set_major_locator(loc)
 axes[4,1].tick_params(width=2, length=8)
 #axes[2,1].set_facecolor('lightgrey')
 
+
 # all best-fit lines together
-axes[4,0].plot([-3, 1], [-3, 1], linestyle="--", color="gray")
+axes[2,0].plot([-3, 1], [-3, 1], linestyle="--", color="gray")
 axes[4,0].set_xlim(xlim)
 axes[4,0].set_ylim(ylim)
 axes[4,0].set_xlabel("[Fe/H]", fontsize = char_size)
@@ -275,7 +280,7 @@ axes[4,0].plot([-3, 1], [coeffs_single_epoch[0]*(-3.0)+coeffs_single_epoch[1],co
 axes[4,0].plot([-3, 1], [coeffs_coadded[0]*(-3.0)+coeffs_coadded[1],coeffs_coadded[0]*(1.0)+coeffs_coadded[1]], linestyle="-", zorder=0, label="SSPP, coadded")
 axes[4,0].plot([-3, 1], [coeffs_liu[0]*(-3.0)+coeffs_liu[1],coeffs_liu[0]*(1.0)+coeffs_liu[1]], linestyle="-", zorder=0, label="Liu+ 2020")
 axes[4,0].plot([-3, 1], [coeffs_lietal2023[0]*(-3.0)+coeffs_lietal2023[1],coeffs_lietal2023[0]*(1.0)+coeffs_lietal2023[1]], linestyle="-", zorder=0, label="Li+ 2023")
-axes[4,0].plot([-3, 1], [coeffs_whitten[0]*(-3.0)+coeffs_whitten[1],coeffs_whitten[0]*(1.0)+coeffs_whitten[1]], linestyle="-", zorder=0, label="Whitten+ 2021")
+#axes[4,0].plot([-3, 1], [coeffs_whitten[0]*(-3.0)+coeffs_whitten[1],coeffs_whitten[0]*(1.0)+coeffs_whitten[1]], linestyle="-", zorder=0, label="Whitten+ 2021")
 axes[4,0].legend(fontsize=13)
 axes[4,0].tick_params(axis='both', which='major', labelsize=char_size-2)
 axes[4, 0].annotate("All best fits", xy=(-1.25, -2.8), xycoords='data', fontsize = char_size, color='k')
@@ -284,6 +289,7 @@ axes[4,0].yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.f'))
 axes[4,0].xaxis.set_major_locator(loc)
 axes[4,0].yaxis.set_major_locator(loc)
 axes[4,0].tick_params(width=2, length=8)
+'''
 
 plt.subplots_adjust(wspace=0.0, hspace=0.2)
 plt.tight_layout()
@@ -310,10 +316,12 @@ axColor = plt.axes([box.x0*6.5 + box.width * 1.0, box.y0, 0.01, box.height])
 cbar = fig.colorbar(colorbarobj, cax = axColor, orientation="vertical")
 cbar.ax.tick_params(labelsize=20)
 
+'''
 box = axes[4,0].get_position()
 axColor = plt.axes([box.x0*6.5 + box.width * 1.0, box.y0, 0.01, box.height])
 cbar = fig.colorbar(colorbarobj, cax = axColor, orientation="vertical")
 cbar.ax.tick_params(labelsize=20)
+'''
 
 # remove some white space
 plt.subplots_adjust(wspace=-0.2)

@@ -18,7 +18,7 @@ df["err_diff_NDL"] = np.nan
 df["err_tot"] = np.nan
 
 # find final periods: simple average across NDL values
-cols = ['T_KELT', 'T_TESS_NDL', 'T_other']
+cols = ['T_KELT_NDL', 'T_TESS_NDL', 'T_other']
 df["T_final"] = df[cols].mean(axis=1)
 
 '''
@@ -30,23 +30,23 @@ df["T_final"] = df[cols].mean(axis=1)
 
 	err_diff_NDL = abs(T_TESS_NDL - T_KELT_NDL)     # if there is a TESS val from NDL, there will be one from RW too
 
-	err_tot**2 = err_TESS_RW**2  + err_diff_NDL**2
+	err_tot**2 = err_TESS_RW**2  + err_diff_NDL**2 ## ## but if RW also has a period, this should get folded in to error
 
 
 2. case where only TESS-based period available:
 
 	T_total = T_TESS_NDL
 
-	err_diff_avg = avg[  err_diff  ]            # from err_diff vals further above
+	err_diff_avg = avg[  err_diff  ]            # from err_diff vals of other stars further above
 
-	err_tot**2 = err_TESS_RW**2  + err_diff_avg**2
+	err_tot**2 = err_TESS_RW**2  + err_diff_avg**2 ## ## but if NDL also has a period, this should get folded in to error
 
 
 3. case where only KELT-based period available (from NDL, and therefore no error):
 
 	T_total = T_KELT_NDL
 
-	err_diff_avg = avg[  err_diff  ]			# from err_diff vals further above
+	err_diff_avg = avg[  err_diff  ]			# from err_diff vals of other stars further above
 	err_RW_avg = avg[  err_TESS_RW   ]			# from err_TESS_RW vals further above
 
 	err_tot**2 = err_RW_avg**2  + err_diff_avg**2
@@ -57,7 +57,7 @@ df["T_final"] = df[cols].mean(axis=1)
 
     just take average of the other errors
 '''
-
+import ipdb; ipdb.set_trace()
 # 1. case where both KELT-based and TESS-based periods are available:
 for i in range(0,len(df)):
     #print(i)

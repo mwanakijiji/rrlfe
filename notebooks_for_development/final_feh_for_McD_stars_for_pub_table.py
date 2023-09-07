@@ -37,3 +37,7 @@ print("err_feh_retrieved_single: average error in Fe/H across all spectra for th
 print("err_feh_retrieved_stdev: error term from scatter in Fe/H between spectra of the same star (i.e., accounts for systematic differences between spectra")
 print("---------")
 print(df_aggregate)
+
+file_name = 'junk_aggregate_retrieved.csv'
+df_aggregate.to_csv(file_name)
+print('Wrote',file_name)
