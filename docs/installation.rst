@@ -36,3 +36,8 @@ This file tells Robospect which absorption lines
 to look for.
 
 That's it! You're ready to roll. If you would ever like to file an issue on the ``rrlfe`` Github repo, you can do so `here <https://github.com/mwanakijiji/rrlfe/issues>`_.
+
+Note: The repository code contains a 3 Mb FITS file, which contains a calibration solution corresponding to that in the paper [TBD], except that it is a 1:100 
+undersampling of the posterior chain links. Using the 'degraded' version provided, however, produces 
+[Fe/H] retrievals which differ negligibly from those using the full, 300 Mb calibration file. (The full calibration file is available on request.) Here is a plot showing
+how the answers differ. The variation is well below typical [Fe/H] uncertainties of ~ \pm 0.15
