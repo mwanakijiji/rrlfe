@@ -217,7 +217,7 @@ def main():
 
     # Fernley+ 1996 (superceded by Fernley+ 1997)
     df_fernley96["feh_single"] = df_fernley96["feh"]
-    df_fernley96["err_feh_single"] = 0.15 # estimate
+    df_fernley96["err_feh_single"] = 0.15 # estimate; upper bound to 'We estimate the typical uncertainty in these abundances as ±0.13 dex'
 
     # Fernley+ 1997
     df_fernley97["feh_single"] = df_fernley97["feh"]
@@ -229,7 +229,7 @@ def main():
     #     = log(epsFe) - log(NFe,sol/NH,sol)
     #     = log(epsFe) - 7.51 # value of 7.51 from Anstee+ 1997, MNRAS
     df_lambert["feh_single"] = np.subtract(df_lambert["log_eps_fe_spec"],7.51)
-    df_lambert["err_feh_single"] = 0.15 # estimate
+    df_lambert["err_feh_single"] = 0.15 # estimate; 0.13 is largest photometric uncertainty (their Table 3), 0.01 is the uncertainty in 7.51 from Anstee+; if they were added in quadrature, it would yield np.sqrt( 0.13**2 + 0.01**2) 
 
     # Wallerstein and Huang 2010
     df_wallerstein["feh_single"] = df_wallerstein["feh"]
@@ -244,7 +244,7 @@ def main():
     # group multiple Fe/H values from different phase values by star name
     df_liu = df_liu.groupby(["name_match"],axis=0,as_index=False).mean()
     df_liu["feh_single"] = df_liu["feh"]
-    df_liu["err_feh_single"] = 0.15 # estimate
+    df_liu["err_feh_single"] = 0.15 # estimate; upper bound based on the largest value of uncertainty in [Fe/H] of 0.11 in the two example cases in Liu Tables 4, 5
 
     # Nemec+ 2013
     df_nemec["feh_single"] = df_nemec["feh"]
@@ -485,7 +485,7 @@ def main():
     mean_err_basis = 0.17706422018348625
     mean_err_lit = 0.12125638062465309
     plt.plot([-2.6, 0.05], [m_matlab*(-2.6)+b_matlab, m_matlab*0.05+b_matlab], label="Best fit") # line of best fit
-    plt.errorbar([-2.25], [-0.25], yerr=mean_err_lit, xerr=mean_err_basis, fmt="", ecolor="k", capsize=3)
+    #plt.errorbar([-2.25], [-0.25], yerr=mean_err_lit, xerr=mean_err_basis, fmt="", ecolor="k", capsize=3)
     plt.scatter(match_clementini["feh_single_basis"],match_clementini["feh_single_lit_synced"], label="Clementini+ 1995")
     plt.scatter(match_lambert["feh_single_basis"],match_lambert["feh_single_lit_synced"], label="Lambert+ 1996")
     plt.scatter(match_fernley97["feh_single_basis"],match_fernley97["feh_single_lit_synced"], label="Fernley+ 1997")

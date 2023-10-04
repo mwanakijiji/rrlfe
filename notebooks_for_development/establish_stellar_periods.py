@@ -50,7 +50,7 @@ df["T_final"] = df[cols].mean(axis=1)
 
     average of the other errors
 '''
-import ipdb; ipdb.set_trace()
+
 # 1. case where both KELT-based and TESS-based periods are available:
 for i in range(0,len(df)):
     #print(i)
@@ -73,7 +73,6 @@ for i in range(0,len(df)):
         print("star", df["star"].iloc[i])
         print("T_final", df["T_final"].loc[i])
         print("err_tot", df["err_tot"].loc[i])
-        import ipdb; ipdb.set_trace()
 
 for i in range(0,len(df)):
     # check if there are errors from both KELT and TESS
@@ -81,6 +80,7 @@ for i in range(0,len(df)):
     T_TESS_NDL = df["T_TESS_NDL"].iloc[i]
     T_KELT_NDL = df["T_KELT_NDL"].iloc[i] # should be nan
     T_TESS_RW = df["T_TESS_RW"].iloc[i]
+    T_KELT_RW = df["T_KELT_RW"].iloc[i]
     err_T_TESS_RW = df["err_T_TESS_RW"].iloc[i]
 
     # 2. case where only TESS-based period available:
@@ -97,7 +97,7 @@ for i in range(0,len(df)):
         print("err_tot", df["err_tot"].loc[i])
 
     # 3. case where only KELT-based period available:
-    elif (np.isnan(T_TESS_NDL) and np.isnan(T_KELT_NDL)) and (np.isnan(T_TESS_RW) and np.isnan(err_T_TESS_RW)):
+    elif (np.isnan(T_TESS_NDL) and np.isnan(T_TESS_RW)) and (~np.isnan(T_KELT_NDL) and ~np.isnan(T_KELT_RW)):
         # err_tot**2 = ( T_KELT_RW - T_KELT_NDL )**2  + err_T_KELT_RW**2
         
         df["err_tot"].loc[i] = np.sqrt( df["err_T_KELT_RW"].loc[i]**2 + (df["T_KELT_RW"].loc[i]-df["T_KELT_NDL"].loc[i])**2 )
@@ -109,16 +109,28 @@ for i in range(0,len(df)):
         print("T_total", df["T_final"].loc[i])
         print("err_tot", df["err_tot"].loc[i])
 
-
 # average total error so far
 avg_err_tot_empirical = np.nanmean(df["err_tot"])
 
+# special case of BH Peg (T_other only)
 for i in range(0,len(df)):
-    # 4. case where neither TESS nor KELT periods are available:
-    T_TESS_NDL = df["T_TESS_NDL"].iloc[i]
-    T_KELT_NDL = df["T_KELT_NDL"].iloc[i]
-    if np.isnan(T_TESS_NDL) and np.isnan(T_KELT_NDL):
+    if df["star"].loc[i] == "BH Peg":
         df["err_tot"].loc[i] = avg_err_tot_empirical
+        print("------")
+        print('case of BH Peg')
+        print("star", df["star"].iloc[i])
+        print("T_total", df["T_final"].loc[i])
+        print("err_tot", df["err_tot"].loc[i])
+
+# special case of VX Her (T_other, T_other_RW, err_T_other_RW)
+for i in range(0,len(df)):
+    if df["star"].loc[i] == "VX Her":
+        df["err_tot"].loc[i] = np.sqrt( df["err_T_other_RW"].loc[i]**2 + (df["T_other"].loc[i]-df["T_other_RW"].loc[i])**2 )
+        print("------")
+        print('case of VX Her')
+        print("star", df["star"].iloc[i])
+        print("T_total", df["T_final"].loc[i])
+        print("err_tot", df["err_tot"].loc[i])
 
 output_file_name = "junk.csv"
 df.reset_index(drop=True, inplace=True)
