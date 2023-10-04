@@ -41,7 +41,8 @@ Note: The repository code contains a 3 Mb FITS file, which contains a calibratio
 undersampling of the posterior chain links. Using the 'degraded' version provided, however, produces 
 [Fe/H] retrievals which differ negligibly from those using the full, 300 Mb calibration file. (The full calibration file is available on request.) 
 
-Below is a plot showing how the answers differ. The variation is well below typical [Fe/H] uncertainties of ~ :math:`\pm`0.15
+Below is a plot showing how the answers differ. The variation is well below typical [Fe/H] uncertainties of ~0.15
+
 .. image:: imgs/degraded_comparison.png
   :width: 400
   :alt: Retrieval comparison
