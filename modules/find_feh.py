@@ -107,7 +107,7 @@ def apply_one_spec(ew_data_pass, N_MCMC_samples, mcmc_chain, soln_header):
 
         except:
 
-            print("Convergence failed")
+            logging.info("Convergence failed")
             ew_data_pass["feh_retrieved"] = -999
             ew_data_pass["err_feh_retrieved"] = -999
             ew_data_pass["teff_retrieved"] = -999
@@ -139,18 +139,18 @@ def apply_one_spec(ew_data_pass, N_MCMC_samples, mcmc_chain, soln_header):
         # spectrum, consider it not to have converged
         if (frac_finite < 0.95):
 
-            print("Convergence failed")
+            logging.info("Convergence failed")
             ew_data_pass["feh_retrieved"] = -999
             ew_data_pass["err_feh_retrieved"] = -999
             ew_data_pass["teff_retrieved"] = -999
             
             return ew_data_pass
 
-        print("-----")
+        logging.info("-----")
 
 
     # output the results (note this corresponds to one spectrum)
-    print("[Fe/H] = ", np.nanmedian(feh_sample))
+    logging.info(ew_data_pass["orig_spec_file_name"] + ", median [Fe/H] = " + str(np.round(np.nanmedian(feh_sample)),3))
     ew_data_pass["feh_retrieved"] = np.nanmedian(feh_sample)
     ew_data_pass["err_feh_retrieved"] = np.std(feh_sample)
     ew_data_pass["teff_retrieved"] = np.add(
