@@ -150,7 +150,7 @@ def apply_one_spec(ew_data_pass, N_MCMC_samples, mcmc_chain, soln_header):
 
 
     # output the results (note this corresponds to one spectrum)
-    logging.info(str(ew_data_pass["orig_spec_file_name"]) + ", median [Fe/H] = ", np.round(np.nanmedian(feh_sample),3))
+    logging.info(str(ew_data_pass["orig_spec_file_name"]) + ", median [Fe/H] = ", np.nanmedian(feh_sample))
     ew_data_pass["feh_retrieved"] = np.nanmedian(feh_sample)
     ew_data_pass["err_feh_retrieved"] = np.std(feh_sample)
     ew_data_pass["teff_retrieved"] = np.add(
