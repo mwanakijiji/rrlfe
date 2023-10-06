@@ -1,7 +1,8 @@
 import high_level_application_accordion as pipeline
 
 # absolute stem of repo; needed to make dirs if they don't exist
-stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
+#stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
+stem_abs = "/suphys/espa3021/Documents/rrlfe_test_install/rrlfe/"
 
 # instantiate object that will contain the series of reduction steps
 test_gen = pipeline.ApplyCalib() ## ## need to let this set config file being read in (currently in __init__)
