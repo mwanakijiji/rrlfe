@@ -1,17 +1,11 @@
-#import matplotlib
-#matplotlib.use('Agg')
-#from io import StringIO
 import sys, os
-#from unittest.mock import patch, call
 
 current_dir = os.path.dirname(__file__)
 target_dir = os.path.abspath(os.path.join(current_dir, "../"))
-print(current_dir)
-print(target_dir)
 sys.path.insert(0, target_dir)
 
-#from modules import *
-import modules
+from modules import *
+from modules import compile_normalization
 
 #@patch('builtins.print')
 def test_compile_bkgrnd():
@@ -23,11 +17,9 @@ def test_compile_bkgrnd():
     From some message board comments, this *may* have something to do with the fact
     that the build it with Ubuntu, not this codebase's native MacOS.
     '''
-    print(modules.__attributes__)
 
-    compile_status = modules.compile_normalization.compile_bkgrnd()
-    #compile_status = compile_normalization.compile_bkgrnd()
+    compile_status = compile_normalization.CompileBkgrnd(module_name="test1",cc_bkgrnd_dir=target_dir+"/src/")
 
-    print("Compilation of bkgrnd.cc skipped.")
+    check = compile_status.run_step()
 
-    assert 1==1
+    assert check==True
