@@ -1,5 +1,4 @@
 Linear fit to Teff vs Balmer EW
-Hash:2b2a8fef914856092422f9f5ad2b9b5f30704f3e
 Teff_min:5900
 Teff_max:7350
 m:3530.6723767378035
