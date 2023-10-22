@@ -46,56 +46,14 @@ class CornerPlot():
 
         test_samples = pd.read_csv(mcmc_text_output_file_name, delimiter = ',', nrows=5) # read in first rows to check column number
 
-        if np.shape(test_samples)[1] == 4:
-            # 5 rows: 1 index and 4 chains
-            model = "abcd"
-        elif np.shape(test_samples)[1] == 8:
+        print(mcmc_text_output_file_name)
+        print(np.shape(test_samples)[1])
+        print(test_samples)
+        if np.shape(test_samples)[1] == 8:
             # 9 rows: 1 index and 8 chains
             model = "abcdfghk"
 
-        if (model == "abcd"):
-
-            # corner plot (requires 'storechain=True' in enumerate above)
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(1,2,3,4), delimiter = ',', names=["a", "b", "c", "d"])
-
-            fig = corner.corner(samples, labels=["$a$", "$b$", "$c$", "$d$"],
-                                quantiles=[0.16, 0.5, 0.84],
-                                title_fmt='.2f',
-                                show_titles=True,
-                                verbose=True,
-                                title_kwargs={"fontsize": 12})
-            fig.savefig(corner_plot_putput_file_name)
-            logging.info("--------------------------")
-            logging.info("Corner plot of MCMC posteriors written out to")
-            logging.info(corner_plot_putput_file_name)
-
-            # if its necessary to read in MCMC output again
-            #data = np.loadtxt(mcmc_text_output_file_name, usecols=range(1,5))
-
-            # This code snippet from Foreman-Mackey's emcee documentation, v2.2.1 of
-            # https://emcee.readthedocs.io/en/stable/user/line.html#results
-            a_mcmc, b_mcmc, c_mcmc, d_mcmc = map(lambda v: (v[1], v[2]-v[1], v[1]-v[0]),
-                                                 zip(*np.percentile(samples, [16, 50, 84], axis=0)))
-
-            print("--------------------------")
-            print("Coefficients a, b, c, d, and errors (see corner plot):")
-            print("coeff a: " + " ".join(map(str,a_mcmc)))
-            print("coeff b: " + " ".join(map(str,b_mcmc)))
-            print("coeff c: " + " ".join(map(str,c_mcmc)))
-            print("coeff d: " + " ".join(map(str,d_mcmc)))
-            logging.info("--------------------------")
-            logging.info("Coefficients a, b, c, d, and errors (see corner plot):")
-            logging.info("coeff a: " + " ".join(map(str,a_mcmc)))
-            logging.info("coeff b: " + " ".join(map(str,b_mcmc)))
-            logging.info("coeff c: " + " ".join(map(str,c_mcmc)))
-            logging.info("coeff d: " + " ".join(map(str,d_mcmc)))
-
-            #logging.info("--------------------------")
-            #logging.info("MCMC data written to ")
-            #logging.info(mcmc_text_output_file_name)
-
-
-        elif (model == "abcdfghk"):
+        if (model == "abcdfghk"):
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
             test_samples = pd.read_csv(mcmc_text_output_file_name, delimiter = ',', nrows=5) # read in first rows to check column number
@@ -121,16 +79,7 @@ class CornerPlot():
             a_mcmc, b_mcmc, c_mcmc, d_mcmc, f_mcmc, g_mcmc, h_mcmc, k_mcmc = map(lambda v: (v[1], v[2]-v[1], v[1]-v[0]),
                                                  zip(*np.percentile(samples, [16, 50, 84], axis=0)))
 
-            print("--------------------------")
-            print("Coefficients a, b, c, d, f, g, h, k, and errors (see corner plot):")
-            print("coeff a: " + " ".join(map(str,a_mcmc)))
-            print("coeff b: " + " ".join(map(str,b_mcmc)))
-            print("coeff c: " + " ".join(map(str,c_mcmc)))
-            print("coeff d: " + " ".join(map(str,d_mcmc)))
-            print("coeff f: " + " ".join(map(str,f_mcmc)))
-            print("coeff g: " + " ".join(map(str,g_mcmc)))
-            print("coeff h: " + " ".join(map(str,h_mcmc)))
-            print("coeff k: " + " ".join(map(str,k_mcmc)))
+
             logging.info("--------------------------")
             logging.info("Coefficients a, b, c, d, f, g, h, k, and errors (see corner plot):")
             logging.info("coeff a: " + " ".join(map(str,a_mcmc)))
@@ -411,8 +360,9 @@ class WriteSolnToFits():
 
         # get Teff vs Balmer line info
         # set compound datatype
-        dtype=np.rec.fromrecords([['string_key', 189.6752158]]).dtype
+        dtype=np.rec.fromrecords([['string_key', 189.6752158]]).dtype # all floats
         # load data, skipping header and hash corresponding to that file
+        print(teff_data_retrieve_file_name)
         teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=1, usecols=(0,1), delimiter=':', dtype=dtype)
         dict_teff_data = {}
         for key, val in teff_data:
@@ -439,22 +389,12 @@ class WriteSolnToFits():
             model = model_type_override
 
         # read in posterior in csv form
-        if (model == "abcd"):
-
-            # corner plot (requires 'storechain=True' in enumerate above)
-            samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3), delimiter=",", names=["a", "b", "c", "d"])
-            c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
-            c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
-            c3 = fits.Column(name="c", array=np.array(samples.iloc[:,2].values), format="D")
-            c4 = fits.Column(name="d", array=np.array(samples.iloc[:,3].values), format="D")
-            table_hdu = fits.BinTableHDU.from_columns([c1, c2, c3, c4], header=hdr)
-
-
-        elif (model == "abcdfghk"):
+        if (model == "abcdfghk"):
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
-
+            print(mcmc_text_output_file_name)
             samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), delimiter=",", names=["a", "b", "c", "d", "f", "g", "h", "k"])
+            print(samples)
 
             c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
             c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
@@ -465,6 +405,10 @@ class WriteSolnToFits():
             c7 = fits.Column(name="h", array=np.array(samples.iloc[:,6].values), format="D")
             c8 = fits.Column(name="k", array=np.array(samples.iloc[:,7].values), format="D")
             table_hdu = fits.BinTableHDU.from_columns([c1, c2, c3, c4, c5, c6, c7, c8], header=hdr)
+            print(table_hdu)
+        
+        else:
+            logging.error('Error! No clear selection of model')
 
 
         # write out as FITS table
@@ -563,17 +507,7 @@ class RunEmcee():
 
         # starting position, before adding a perturbation
 
-        if model == 'abcd':
-            # coeffs_pass = [a,b,c,d]
-
-            nwalkers = int(8) # number of MCMC chains (at least 2x number of parameters)
-
-            param_array_0 = [float(a_layden),
-                            float(b_layden),
-                            float(c_layden),
-                            float(d_layden)]
-
-        elif model == 'abcdfghk':
+        if model == 'abcdfghk':
             # coeffs_pass = [a,b,c,d,f,g,h,k]
 
             nwalkers = int(16) # number of MCMC chains (at least 2x number of parameters)

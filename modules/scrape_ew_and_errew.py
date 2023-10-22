@@ -16,29 +16,6 @@ import matplotlib.pyplot as plt
 import matplotlib.pylab as pl
 from . import *
 
-class junk_Class():
-    """
-    Class for troubleshooting tests
-
-    Parameters:
-        module_name (str): arbitrary module name
-        var_1 (list): string
-
-    Returns:
-        [csv written to disk; dataframe is returned for testing only]
-    """
-
-    def __init__(self,
-        module_name,
-        var1):
-
-        self.name = module_name
-        self.var1 = var1
-
-    def run_step(self, attribs = None):
-
-        return 1
-
 
 def line_order_check(line_centers):
     """
@@ -445,7 +422,7 @@ class GenerateNetBalmer():
         df_poststack["EW_Balmer"] = df_poststack[cols].mean(axis=1) # simple average; note these are all of the spectra
 
 
-        df_poststack["err_EW_Balmer_from_Robo"] = 0.5*np.sqrt(
+        df_poststack["err_EW_Balmer_from_robo"] = 0.5*np.sqrt(
                                                             np.add( np.power(df_poststack["err_EW_Hdelta_from_robo"],2.),
                                                                     np.power(df_poststack["err_EW_Hgamma_from_robo"],2.)
                                                                     )
@@ -557,8 +534,10 @@ class GenerateAddlEwErrors():
 
             return err
 
-        df_postbalmer['err_EW_Balmer_scaled'] = scale_robo_err_to_err(df_postbalmer['err_EW_Balmer_from_Robo'])
-        df_postbalmer['err_EW_CaIIK_scaled'] = scale_robo_err_to_err(df_postbalmer['err_EW_CaIIK_from_Robo'])
+        print(df_postbalmer.keys())
+        print(read_in_filename)
+        df_postbalmer['err_EW_Balmer_scaled'] = scale_robo_err_to_err(df_postbalmer['err_EW_Balmer_from_robo'])
+        df_postbalmer['err_EW_CaIIK_scaled'] = scale_robo_err_to_err(df_postbalmer['err_EW_CaIIK_from_robo'])
 
         df_postbalmer.to_csv(write_out_filename, index=False)
         logging.info("Wrote table out to " + str(write_out_filename))
@@ -653,7 +632,7 @@ class StackSpectra():
                                              "EW_Hdelta", "err_EW_Hdelta_from_robo",
                                              "EW_Hgamma", "err_EW_Hgamma_from_robo",
                                              "EW_Heps", "err_EW_Heps_from_robo",
-                                             "EW_CaIIK", "err_EW_CaIIK_from_Robo"], index=range(num_indiv_spectra))
+                                             "EW_CaIIK", "err_EW_CaIIK_from_robo"], index=range(num_indiv_spectra))
 
         for t in range(0,num_indiv_spectra):
             # loop over all spectra realizations we have measured EWs from to populate the dataframe
@@ -713,7 +692,7 @@ class StackSpectra():
                 df_poststack.iloc[t]["EW_Heps"] = Heps
                 df_poststack.iloc[t]["err_EW_Heps_from_robo"] = err_Heps
                 df_poststack.iloc[t]["EW_CaIIK"] = CaIIK
-                df_poststack.iloc[t]["err_EW_CaIIK_from_Robo"] = err_CaIIK
+                df_poststack.iloc[t]["err_EW_CaIIK_from_robo"] = err_CaIIK
 
             except: # pragma: no cover
                 logging.error("Data stacking error in data for " + this_realization_spectrum)

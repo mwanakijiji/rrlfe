@@ -24,7 +24,7 @@ config_red = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing v
 config_red.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_red.ini'))
 
 
-# this test removed to avoid testing problems in cloud
+# this test removed to avoid testing problems in cloud (requires separate installation of Robospect.py)
 def test_RunRobo():
 
     write_dir_test = config_red["data_dirs"]["TEST_DIR_BIN"]

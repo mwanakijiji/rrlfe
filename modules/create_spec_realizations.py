@@ -7,26 +7,19 @@ import argparse
 import os
 import glob
 from subprocess import Popen, PIPE
-## ## import test.so # experimenting with C extensions
 # -------------------
 # Third-party imports
 # -------------------
-#from astropy.io import fits ## Pylint says this is not used
 from astropy.io import fits
 from astropy.table import Table
-#import pyfits
 import sys
 import numpy as np
 import pandas as pd
 from pathlib import *
 
 current_dir = os.path.dirname(__file__)
-print("Current dir:")
-print(current_dir)
 
 from . import *
-
-
 
 # --------------------
 # Function Definitions
@@ -52,7 +45,6 @@ def create_norm_spec(name_list,
     new_name_list = list()
 
     for spec in name_list: # loop through spectrum realizations
-        #import ipdb; ipdb.set_trace()
 
         # spectrum realization file name (as output by bkgrnd), with relative path info
         spec_name = os.path.join(normdir, spec)
@@ -63,7 +55,6 @@ def create_norm_spec(name_list,
         new_name = os.path.join(finaldir, spec) # vestigial, from adding .smo to help Robospect pick it out
         # add to list
         new_name_list.append(new_name)
-        #import ipdb; ipdb.set_trace()
 
         try:
             # open file to write normalized spectrum to
@@ -132,7 +123,6 @@ def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level)
     # and the header of the source FITS file
     spec_tab, hdr = read_spec(spec_name, format=spec_file_format)
 
-    #import ipdb; ipdb.set_trace()
     basename = os.path.basename(spec_name) # shave off path stem
 
     # generate realizations
@@ -167,8 +157,6 @@ def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level)
             outfile = open(new_name_ascii, 'w')
         except IOError: # pragma: no cover
             logging.info("File {} could not be opened!".format(new_name_ascii))
-
-        #import ipdb; ipdb.set_trace()
 
         # write out new realization of file in ascii, so bkgrnd can read it in
         logging.info("Writing out ascii realization file " + new_name_ascii + \
@@ -403,10 +391,8 @@ class CreateSpecRealizationsMain():
 
         # create noise-churned realizations for each spectrum
         name_list = list() # initialize
-        #import ipdb; ipdb.set_trace()
+
         for i in range(len(list_arr)): # make spectrum realizations and list of their filenames
-            #import ipdb; ipdb.set_trace()
-            print(i)
             name_list.extend(generate_realizations(spec_name=self.unnorm_spectra_dir_read+"/"+list_arr[i],
                                                    outdir=self.unnorm_noise_churned_spectra_dir_read,
                                                    spec_file_format=self.spec_file_type,

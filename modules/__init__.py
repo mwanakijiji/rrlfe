@@ -96,35 +96,44 @@ class MakeDirsConfig():
         # 2. to apply the solution (objective = "apply_calib"; default)
 
         # loop over all directory paths we will need
-        for vals in attribs["data_dirs"]:
-            abs_path_name = str(attribs["data_dirs"][vals])
-            logging.info("Directory exists: " + abs_path_name)
+        try: 
+            for vals in attribs["data_dirs"]:
+                abs_path_name = str(attribs["data_dirs"][vals])
+                logging.info("Directory exists: " + abs_path_name)
 
-            # if directory does not exist, create it
-            if not os.path.exists(abs_path_name):
-                original_umask = os.umask(0) # original system permission
-                os.makedirs(abs_path_name, 0o777)
-                #os.mkdir(abs_path_name)
-                logging.info("Made directory " + abs_path_name)
-                os.umask(original_umask) # revert to previous permission status
+                # if directory does not exist, create it
+                if not os.path.exists(abs_path_name):
+                    original_umask = os.umask(0) # original system permission
+                    os.makedirs(abs_path_name, 0o777)
+                    #os.mkdir(abs_path_name)
+                    logging.info("Made directory " + abs_path_name)
+                    os.umask(original_umask) # revert to previous permission status
 
-            # if it does exist, check if it is not already empty;
-            # if it is non-empty, prompt user (as long as prompt_user
-            # flag has been set further above)
-            # (this needs to be refined, since some directories are not supposed to be empty)
-            if prompt_user and os.path.exists(abs_path_name):
-                with os.scandir(abs_path_name) as list_of_entries1:
-                    counter1 = 0
-                    for entry1 in list_of_entries1:
-                        if entry1.is_file():
-                            counter1 += 1
-                if (counter1 != 0):
-                    logging.info("------------------------------")
-                    logging.info(abs_path_name)
-                    print("The above is a non-empty directory. Do you want to proceed? [Yes]")
-                    print("(N.b. You will be prompted again when the directory is written to.)")
-                    input()
-                    logging.info("------------------------------")
+                # if it does exist, check if it is not already empty;
+                # if it is non-empty, prompt user (as long as prompt_user
+                # flag has been set further above)
+                # (this needs to be refined, since some directories are not supposed to be empty)
+                if prompt_user and os.path.exists(abs_path_name):
+                    with os.scandir(abs_path_name) as list_of_entries1:
+                        counter1 = 0
+                        for entry1 in list_of_entries1:
+                            if entry1.is_file():
+                                counter1 += 1
+                    if (counter1 != 0):
+                        logging.info("------------------------------")
+                        logging.info(abs_path_name)
+                        print("The above is a non-empty directory. Do you want to proceed? [Yes]")
+                        print("(N.b. You will be prompted again when the directory is written to.)")
+                        input()
+                        logging.info("------------------------------")
+            status_success = True
+        
+        except:
+            logging.error("Error in making directories!")
+            status_success = False
+        
+        return status_success
+
 
 def make_dir(abs_path_name_gen):
     '''
@@ -191,28 +200,36 @@ class ConfigInit():
 
     def run_step(self, attribs = None):
 
-        logging.info("## Begin pipeline configuration parameters ##")
+        try: 
+            logging.info("## Begin pipeline configuration parameters ##")
 
-        logging.info("rrlfe git hash: " + sha)
-        print(attribs.sections)
+            logging.info("rrlfe git hash: " + sha)
+            print(attribs.sections)
 
-        for each_section in attribs.sections():
+            for each_section in attribs.sections():
+                logging.info("----")
+                logging.info("- " + each_section + " -")
+                for (each_key, each_val) in attribs.items(each_section):
+                    logging.info(each_key + ": " + each_val)
+
             logging.info("----")
-            logging.info("- " + each_section + " -")
-            for (each_key, each_val) in attribs.items(each_section):
-                logging.info(each_key + ": " + each_val)
+            logging.info("## End pipeline configuration parameters ##")
+            status_success = True
+        
+        except:
+            logging.error("Error in making directories!")
+            status_success = False
 
-        logging.info("----")
-        logging.info("## End pipeline configuration parameters ##")
+        return status_success
 
 
+'''
 def phase_regions():
-    '''
-    Read in the boundary between good and bad phase regions
-    '''
+    # Read in the boundary between good and bad phase regions (obsolete)
 
     # obtain values as floats
     value1 = config_gen.getfloat("phase", "MIN_GOOD")
     value2 = config_gen.getfloat("phase", "MAX_GOOD")
 
     return value1, value2
+'''

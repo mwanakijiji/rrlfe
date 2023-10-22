@@ -192,6 +192,8 @@ def test_GenerateAddlEwErrors():
 
     # loop through batches of rows corresponding to an individual spectrum, and
     # make sure the errors are consistent and the value expected
+    '''
+    # this section involves noise-churning; obsolete
     array_1 = test_df_postbalmer_errors["err_EW_Balmer_based_noise_churning"].where(test_df_postbalmer_errors["orig_spec_file_name"]=="575020m10.smo").dropna().values
     array_2 = test_df_postbalmer_errors["err_EW_Balmer_based_noise_churning"].where(test_df_postbalmer_errors["orig_spec_file_name"]=="575020m15.smo").dropna().values
     array_3 = test_df_postbalmer_errors["err_EW_Balmer_based_noise_churning"].where(test_df_postbalmer_errors["orig_spec_file_name"]=="575020m20.smo").dropna().values
@@ -203,7 +205,7 @@ def test_GenerateAddlEwErrors():
     assert round(array_1[0], 3) == 0.023
     assert round(array_2[0], 3) == 0.020
     assert round(array_3[0], 3) == 0.048
-
+    '''
     # in unusual case where collapsing the noise-churned spectra is not desired
     inst = scrape_ew_and_errew.GenerateAddlEwErrors(module_name="test2",
                                                                                     ew_data_restacked_read=config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_NET_BALMER"],
