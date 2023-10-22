@@ -35,11 +35,6 @@ def test_make_dirs():
         assert os.path.exists(abs_path_name)
 '''
 
-def test_create_spec_realizations_main():
-    ## ## CONTINUE HERE
-
-    assert 1<2
-
 
 def test_calc_noise():
 

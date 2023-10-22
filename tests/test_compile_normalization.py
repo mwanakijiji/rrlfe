@@ -8,7 +8,7 @@ from modules import *
 from modules import compile_normalization
 
 #@patch('builtins.print')
-def test_compile_bkgrnd():
+def test_CompileBkgrnd():
     # does bkgrnd compile?
 
     '''
