@@ -1,4 +1,4 @@
-realization_spec_file_name,orig_spec_file_name,EW_Hbeta,err_EW_Hbeta_from_robo,EW_Hdelta,err_EW_Hdelta_from_robo,EW_Hgamma,err_EW_Hgamma_from_robo,EW_Heps,err_EW_Heps_from_robo,EW_CaIIK,err_EW_CaIIK_from_robo,EW_Balmer,err_EW_Balmer_based_Robo
+realization_spec_file_name,orig_spec_file_name,EW_Hbeta,err_EW_Hbeta_from_robo,EW_Hdelta,err_EW_Hdelta_from_robo,EW_Hgamma,err_EW_Hgamma_from_robo,EW_Heps,err_EW_Heps_from_robo,EW_CaIIK,err_EW_CaIIK_from_robo,EW_Balmer,err_EW_Balmer_from_robo
 575020m10_noise_ver_000.smo,575020m10.smo,3.123037,1.050006,2.389473,0.541407,2.6996330000000004,0.575293,9.978587,1.074652,13.897841,2.534564,2.36216088,0.6884174972767829
 575020m10_noise_ver_001.smo,575020m10.smo,3.123037,1.050006,2.389473,0.541407,2.6996330000000004,0.575293,9.978587,1.074652,13.897841,2.534564,2.41600806,0.6884174972767829
 575020m10_noise_ver_002.smo,575020m10.smo,3.123037,1.050006,2.389473,0.541407,2.6996330000000004,0.575293,9.978587,1.074652,13.897841,2.534564,2.41177949,0.6884174972767829
