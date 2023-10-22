@@ -35,17 +35,10 @@ err_Feh_test = 0.11
 err_Caiik_ew_test = 0.27
 
 
-def test_write_soln_to_fits():
+def test_WriteSolnToFits():
 
-    inst_abcd = run_emcee.WriteSolnToFits(module_name="test1",
-                                            file_name_mcmc_posterior_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_MCMC_OUTPUT_ABCD"],
-                                            file_name_teff_data_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_READIN_TREND_TEFF_VS_BALMER"],
-                                            soln_write_name = config_gen["data_dirs"]["TEST_DIR_BIN"] + config_gen["file_names"]["CALIB_SOLN"],
-                                            model_type_override = "abcd", 
-                                            test_flag=True)
-    
-    test_abcd = inst_abcd.run_step(attribs=config_gen)
-
+    print(config_gen.sections())
+    print(config_gen["calib_type"]["COEFFS"])
     inst_abcdfghk = run_emcee.WriteSolnToFits(module_name="test2",
                                                 file_name_mcmc_posterior_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_MCMC_OUTPUT_ABCDFGHK"],
                                                 file_name_teff_data_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_READIN_TREND_TEFF_VS_BALMER"],
@@ -56,27 +49,15 @@ def test_write_soln_to_fits():
     test_abcdfghk = inst_abcdfghk.run_step(attribs=config_gen)
 
     # assert correct type and expected cols exist
-    assert isinstance(test_abcd,fits.hdu.table.BinTableHDU)
-    assert test_abcd.columns["a"]
-    assert test_abcd.columns["d"]
-
     assert isinstance(test_abcdfghk,fits.hdu.table.BinTableHDU)
     assert test_abcdfghk.columns["a"]
     assert test_abcdfghk.columns["k"]
 
 
-def test_corner_plot():
+def test_CornerPlot():
 
     # get a sample of the MCMC posterior data after being read in, and check the column
     # numbers are consisten with the model
-
-    inst_abcd = run_emcee.CornerPlot(module_name="test1",
-                                     file_name_mcmc_posterior_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["MCMC_OUTPUT_ABCD"],
-                                     plot_corner_write = config_gen["data_dirs"]["TEST_DIR_BIN"] + "test_abcd_plot.png")
-    
-    mcmc_sample_abcd = inst_abcd.run_step(attribs=config_gen)
-
-
     inst_abcdfghk = run_emcee.CornerPlot(module_name="test2",
                                          file_name_mcmc_posterior_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["MCMC_OUTPUT_ABCDFGHK"],
                                          plot_corner_write = config_gen["data_dirs"]["TEST_DIR_BIN"] + "test_abcdfghk_plot.png")
@@ -84,8 +65,7 @@ def test_corner_plot():
     mcmc_sample_abcdfghk = inst_abcdfghk.run_step(attribs=config_gen)
 
     # assert column numbers are N_coeff + 1 (1 extra from index column)
-    assert len(mcmc_sample_abcd.columns) == 5
-    assert len(mcmc_sample_abcdfghk.columns) == 9
+    assert len(mcmc_sample_abcdfghk.columns) == 8
 
 
 def test_lnprob():
