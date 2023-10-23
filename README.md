@@ -4,6 +4,7 @@ A code base for generating and applying calibrations for retrieving [Fe/H] from 
 
 [![Coverage Status](https://coveralls.io/repos/github/mwanakijiji/rrlfe/badge.svg?branch=main)](https://coveralls.io/github/mwanakijiji/rrlfe?branch=main)
 [![Documentation Status](https://readthedocs.org/projects/rrlfe/badge/?version=latest)](https://rrlfe.readthedocs.io/en/latest/?badge=latest)
+[![License](https://img.shields.io/github/license/mwanakijiji/rrlfe?color=yellow)](LICENSE)
 
 ## Attribution ##
 
