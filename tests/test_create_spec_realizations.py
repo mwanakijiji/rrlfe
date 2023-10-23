@@ -69,6 +69,10 @@ def test_calc_noise():
 def test_read_spec():
 
     # ascii format
+
+    print('conf_gen')
+    print(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
+    
     spec_name_ascii = config_gen["data_dirs"]["TEST_DIR_SRC"] + "raw_spec/575020m05.smo"
     test_spec_tab_ascii, test_hdr_ascii = create_spec_realizations.read_spec(spec_name=spec_name_ascii, format="ascii.no_header")
 
