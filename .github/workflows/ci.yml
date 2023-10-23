@@ -27,6 +27,7 @@ jobs:
           pip install setuptools -U
           pip install -r requirements.txt --use-pep517
           pip install coverage
+	  pip install coveralls
       - name: Run tests with pytest and generate coverage report
         run: coverage run -m pytest tests/
       - name: Install pypa/build
