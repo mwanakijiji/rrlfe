@@ -232,6 +232,9 @@ def read_spec(spec_name, format):
        hdr: FITS header of the input spectrum
     """
 
+    print('current_dir')
+    print(current_dir)
+
     logging.info("Reading spectrum " + spec_name)
 
     if (format == "ascii.no_header"):
