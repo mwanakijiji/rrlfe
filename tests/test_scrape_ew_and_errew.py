@@ -53,7 +53,7 @@ def test_Scraper(monkeypatch):
     inst = scrape_ew_and_errew.Scraper(module_name = "test1",
                                        input_spec_list_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_LIST_SPEC_PHASE"],
                                        robo_output_read = config_gen["data_dirs"]["TEST_DIR_ROBO_OUTPUT"],
-                                       file_scraped_write = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_gen["file_names"]["SCRAPED_EW_ALL_DATA"])
+                                       file_scraped_write = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_gen["file_names"]["TEST_SCRAPED_EW_ALL_DATA"])
     
     # pre-set stdin to skip over user prompts
     monkeypatch.setattr('sys.stdin', io.StringIO(''))

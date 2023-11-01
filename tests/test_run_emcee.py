@@ -59,7 +59,7 @@ def test_CornerPlot():
     # get a sample of the MCMC posterior data after being read in, and check the column
     # numbers are consisten with the model
     inst_abcdfghk = run_emcee.CornerPlot(module_name="test2",
-                                         file_name_mcmc_posterior_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["MCMC_OUTPUT_ABCDFGHK"],
+                                         file_name_mcmc_posterior_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_MCMC_OUTPUT_ABCDFGHK"],
                                          plot_corner_write = config_gen["data_dirs"]["TEST_DIR_BIN"] + "test_abcdfghk_plot.png")
 
     mcmc_sample_abcdfghk = inst_abcdfghk.run_step(attribs=config_gen)
