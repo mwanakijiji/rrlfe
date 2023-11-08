@@ -18,13 +18,13 @@ import os
 stem = "/Users/bandari/Documents/git.repos/rrlfe/"
 
 # read in Liu+ catalog
-df_liu_stars = pd.read_csv(stem + "notebooks_for_development/spec_sets_check/lamost/catalog_liu_et_al.txt",
+df_liu_stars = pd.read_csv(stem + "notebooks_for_development/data/liu_etal_2020_lamost_rrlfe_comparison_20231108/catalog_liu_et_al_2020_lamost.txt",
                               skiprows=65, delim_whitespace=True, usecols=[0,1,2,11,12,13,14,31],
                                names=["ID","RAdeg","DEdeg","VType","SNR","FeH","e_FeH","Num"])
 
 # read in our retrieved Fe/H for LAMOST spectra and splice stuff to enable matching
 #df_our_data = pd.read_csv(stem + "bin/20230120_all_spectra_retrieved_vals.csv")
-df_our_data = pd.read_csv(stem + "notebooks_for_development/data/retrieved_liu_2020_lamost_vals_corrected.csv")
+df_our_data = pd.read_csv(stem + "notebooks_for_development/data/liu_etal_2020_lamost_rrlfe_comparison_20231108/retrieved_vals_corrected_liu_etal_2020_lamost_20231108.csv")
 
 # read in S/N of the SDSS spectra
 
@@ -123,6 +123,8 @@ plt.imshow(ret.statistic.T, origin='lower', extent=(-3, 0, -3, 0))
 plt.colorbar()
 plt.show()
 '''
+
+import ipdb; ipdb.set_trace()
 
 # find best fit, using non-NaN values
 coeffs_poly = np.polyfit(merged_df_liu_rrlfe_good_all["feh_liu"], merged_df_liu_rrlfe_good_all["feh_rrlfe"], deg=1)
