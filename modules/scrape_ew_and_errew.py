@@ -101,8 +101,8 @@ class Scraper():
         if os.path.isdir(subdir):
             logging.info('Reading in Robolines output from '+str(subdir))
         else:
-            logging.error('Directory '+str(subdir)+ ' which is supposed to contain Robospect output does not exist! ')
-            exit()
+            logging.warning('Making new directory '+str(subdir)+ ' which will contain Robospect output')
+            make_dir(subdir)
 
         file_list_long = glob.glob(subdir+'/'+'*robolines')
         file_list_unsorted = [os.path.basename(x) for x in file_list_long]
@@ -119,8 +119,8 @@ class Scraper():
             # check if directory exists
             logging.info('File to contain scraped EW data is '+str(write_out_filename))
         else:
-            logging.error('Directory '+str(os.path.dirname(write_out_filename))+ ' which is supposed to contain EW output data does not exist!')
-            exit()
+            logging.warning('Making new directory '+str(os.path.dirname(write_out_filename))+ ' which will contain EW output data')
+            make_dir(os.path.dirname(write_out_filename))
 
         # return tables of EW data?
         verbose = verbose
@@ -458,8 +458,8 @@ class GenerateNetBalmer():
             # check if directory exists
             logging.info("Table with net Balmer line EWs being written to " + str(write_out_filename))
         else:
-            logging.error('Directory to receive '+str(write_out_filename)+ ' does not exist! ')
-            exit()
+            logging.warning('Making new directory '+str(os.path.dirname(write_out_filename))+ ' which will contain Balmer line EW file')
+            make_dir(os.path.dirname(write_out_filename))
         df_poststack.to_csv(write_out_filename,index=False)
         
 

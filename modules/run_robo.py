@@ -116,8 +116,8 @@ class Robo():
             # check if directory exists
             logging.info('Reading in spectra from '+str(self.normzed_spec_source_dir))
         else:
-            logging.error('Directory '+str(self.normzed_spec_source_dir)+ ' which is supposed to contain normalized input spectra for Robospec does not exist! ')
-            exit()
+            logging.warning('Making new directory '+str(self.normzed_spec_source_dir)+ ' which is supposed to contain normalized input spectra for Robospec')
+            make_dir(outdir)
 
         # Check to see if it is empty (if not, there is data from a previous
         # run that will inadvertently be used later)
@@ -137,7 +137,7 @@ class Robo():
             # check if directory exists
             logging.info('Reading in background binary from '+str(self.robo_dir_read))
         else:
-            logging.error('Robospect directory '+str(self.robo_dir_read)+ ' does not exist! ')
+            logging.error('Robospect input directory '+str(self.robo_dir_read)+ ' does not exist! ')
             exit()
        
         run_robospect_instance = RunRobo(write_dir = self.robo_output_write, robo_dir = self.robo_dir_read)

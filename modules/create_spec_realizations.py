@@ -286,8 +286,8 @@ def write_bckgrnd_input(name_list, indir, normdir):
     if os.path.isdir(indir):
         logging.info('Spectrum realizations being read in from '+str(indir))
     else:
-        logging.error('Directory '+str(indir)+ ' which is supposed to spectrum realizations does not exist! ')
-        exit()
+        logging.warning('Making new directory '+str(indir)+ ' which will contain spectrum realizations')
+        make_dir(indir)
 
     #Check to see if inputfile is already there
     bckgrnd_input = os.path.join(indir, "bckgrnd_input.txt")
@@ -381,8 +381,9 @@ class CreateSpecRealizationsMain():
             # check if directory exists
             logging.info("Reading in unnormalized spectra from dir " + self.unnorm_spectra_dir_read)
         else:
-            logging.error('Directory '+str(self.unnorm_spectra_dir_read)+ ' which is supposed to contain unnormalized spectra does not exist! ')
-            exit()
+            logging.warning('Making new directory '+str(self.unnorm_spectra_dir_read)+ ' which will contain contain unnormalized spectra')
+            make_dir(self.cc_bkgrnd_dir)
+
 
         # Check to make sure the files in the list are actually in the input directory;
         # if not, just remove those from the list and set a warning
@@ -436,8 +437,9 @@ class CreateSpecRealizationsMain():
             # check if directory exists
             logging.info('Reading in background binary from '+str(self.cc_bkgrnd_dir))
         else:
-            logging.error('Directory '+str(self.cc_bkgrnd_dir)+ ' which is supposed to contain background binary does not exist! ')
-            exit()
+            logging.warning('Making new directory '+str(self.normzed_spec_source_dir)+ ' which will contain background binary')
+            make_dir(self.cc_bkgrnd_dir)
+
         bkgrnd = Popen([str(self.cc_bkgrnd_dir) + "bkgrnd", "--smooth "+str(attribs["reduc_params"]["SMOOTH"]),
                         "--sismoo 1", "--no-plot", "{}".format(bkg_input_file)], stdout=PIPE, stderr=PIPE)
         (out, err) = bkgrnd.communicate() # returns tuple (stdout, stderr)

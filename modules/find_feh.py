@@ -235,8 +235,8 @@ class FehRetrieval():
             # check if directory exists
             logging.info('Will write [Fe/H] retrievals to '+str(write_pickle_dir))
         else:
-            logging.error('Directory '+str(write_pickle_dir)+ ' which is supposed to contain [Fe/H] retrievals does not exist!')
-            exit()
+            logging.warning('Making new directory '+str(write_pickle_dir)+ ' which will contain [Fe/H] retrievals')
+            make_dir(indir)
 
         # check if there is already something else in pickle directory
         preexisting_file_list = glob.glob(write_pickle_dir + "/*.{*}")
