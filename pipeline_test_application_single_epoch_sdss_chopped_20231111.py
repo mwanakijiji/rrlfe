@@ -19,15 +19,7 @@ step = pipeline.ConfigInit(module_name="module1")
 
 # add step to procedure
 test_gen.add_step(step)
-
 '''
-# make all the directories
-step = pipeline.MakeDirsConfig(module_name="module2")
-
-# add step to procedure
-test_gen.add_step(step)
-'''
-
 # compile the C spectral normalization script
 step = pipeline.compile_normalization.CompileBkgrnd(
     module_name="module3",
@@ -81,7 +73,7 @@ step = pipeline.scrape_ew_and_errew.QualityCheck(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # transpose/stack all the data, where each row corresponds to a spectrum
 step = pipeline.scrape_ew_and_errew.StackSpectra(
     module_name="module8",
