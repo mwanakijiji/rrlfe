@@ -10,17 +10,13 @@ A code base for generating and applying calibrations for retrieving [Fe/H] from 
 
 If this code has been useful for your work, please cite the source in the following BibTeX entry:
 
-    @article{spalding2023,
-        Adsurl = {},
-        Author = {},
-        Doi = {},
-        Eid = {},
-        Journal = {MNRAS},
-        Keywords = {},
-        Month = ,
-        Pages = {},
-        Title = {{}},
-        Volume = ,
-        Year = ,
-        Bdsk-Url-1 = {}
-	}
+    @article{10.1093/mnras/stad3199,
+        author = {Spalding, Eckhart and Wilhelm, Ronald and De Lee, Nathan and Long, Stacy and Beers, Timothy C and Placco, Vinicius M and Kielkopf, John and Lee, Young Sun and Pepper, Joshua and Carrell, Kenneth},
+        title = "{rrlfe: software for generating and applying metallicity calibrations for RR Lyrae variable stars across a wide range of phases and temperatures}",
+        journal = {Monthly Notices of the Royal Astronomical Society},
+        volume = {527},
+        number = {1},
+        pages = {828-845},
+        year = {2023},
+        doi = {10.1093/mnras/stad3199}
+    }
