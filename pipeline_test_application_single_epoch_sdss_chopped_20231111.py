@@ -83,7 +83,7 @@ step = pipeline.scrape_ew_and_errew.StackSpectra(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # make a net Balmer line from the H-delta and H-gamma lines
 step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
     module_name="module9",
@@ -93,7 +93,7 @@ step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
 # add step to procedure
 test_gen.add_step(step)
 '''
-# add errors from noise-churning (obsolete)
+# add errors from noise-churning
 step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
     module_name="module10",
     ew_data_restacked_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer.csv",
@@ -102,7 +102,7 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
