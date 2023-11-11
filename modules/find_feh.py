@@ -236,7 +236,7 @@ class FehRetrieval():
             logging.info('Will write [Fe/H] retrievals to '+str(write_pickle_dir))
         else:
             logging.warning('Making new directory '+str(write_pickle_dir)+ ' which will contain [Fe/H] retrievals')
-            make_dir(indir)
+            make_dir(write_pickle_dir)
 
         # check if there is already something else in pickle directory
         preexisting_file_list = glob.glob(write_pickle_dir + "/*.{*}")
