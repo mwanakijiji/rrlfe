@@ -1,7 +1,7 @@
 This software package can either generate a metallicity calibration from real or synthetic spectra of RR Lyrae variable stars, or apply to it low-resolution (R ~2000) spectra spanning 3911 to 4950 angstroms.
 
-The calibration builds on that of `Layden 1994 <https://ui.adsabs.harvard.edu/abs/1994AJ....108.1016L/abstract>`_. See paper `[TBD] <https://uknowledge.uky.edu/physastron_etds/22/>`_ for details about how the calibration was made, and for further scientific information.
-If you do use this calibration or software, please cite the paper or the ASCL entry.
+The calibration builds on that of `Layden 1994 <https://ui.adsabs.harvard.edu/abs/1994AJ....108.1016L/abstract>`_. See paper `Spalding et al. 2023 MNRAS 527:828 <https://academic.oup.com/mnras/article/527/1/828/7326007>`_ for details about how the calibration was made, and for further scientific information.
+Please cite the paper if you do use this calibration or software.
 
 The BibTeX entry is::
 

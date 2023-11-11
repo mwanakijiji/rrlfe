@@ -98,7 +98,7 @@ def calc_noise(noise_level, spectrum_df):
         # so a '0.01' means 'Gaussian-distributed random number with sigma=0.01*flux_input';
         # note this 0.01 is a RELATIVE error
         noise_to_add = np.random.standard_normal(len(spectrum_df))*noise_level*spectrum_df["flux"]
-        logging.info("Injecting Gaussian noise based on fixed value.")
+        logging.info("Injecting "+str(noise_level)+" of Gaussian noise.")
 
     return noise_to_add
 
@@ -133,11 +133,11 @@ def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level)
         # make file names
 
         # basename of spectrum realization, ascii
-        new_prefix_ascii = "{}_noise_ver_{:03d}".format(basename.split(".")[-2], i)
+        new_prefix_ascii = "{}_{:03d}".format(basename.split(".")[-2], i)
         suffix_ascii = basename.split(".")[-1] # could be .dat, .csv, .txt, etc.
         new_basename_ascii = new_prefix_ascii + "." + suffix_ascii
         # if we want to change to FITS intermediary files:
-        new_basename_fits = "{}_noise_ver_{:03d}".format(basename.split(".fits")[0], i) + ".fits"
+        new_basename_fits = "{}_{:03d}".format(basename.split(".fits")[0], i) + ".fits"
         # don't need path info in spec_name list; add ascii name here
         new_basename_list.append(new_basename_ascii)
 
@@ -299,16 +299,17 @@ class CreateSpecRealizationsMain():
     Generate multiple realizations of the same empirical spectrum based on a noise level.
 
     Parameters:
-        num (int): number of spectrum realizations to make, per empirical spectrum
-        spec_file_type (str): file format of input spectra ["fits"/"ascii.no_header"]
-        input_spec_list_dir (str): directory containing list of empirical spectra (## OBSOLETE? ##)
-        input_list (list): file listing spectra we want to normalize
-        unnorm_spectra_dir (str): directory of empirical spectra (or, if they are actually
-            synthetic spectra, these are the original synthetic spectra which we will generate
-            multiple realizations of)
-        unnorm_noise_churned_spectra_dir (str): directory to contain noise-churned spectrum realizations
-        bkgrnd_output_dir (str): directory to contain output of bkgrnd (spectra and fit continuua)
-        final_dir (str): directory to contain normalized spectrum realizations
+        module_name (str): name of module (arbitrary)
+        cc_bkgrnd_dir (str): absolute path of the directory containing the compiled binary for spectrum backround normalization
+        input_spec_list_read (str): absolute path of the file containing the list of spectrum file names (basenames only)
+        unnorm_spectra_dir_read (str): absolute path of the directory containing the spectra
+        unnorm_noise_churned_spectra_dir_read (str): absolute path of the directory to contain the output spectra with noise added at the level given by user (which may be zero noise)
+        bkgrnd_output_dir_write (str): absolute path of the directory to contain spectra after normalization (reads in from dir set by unnorm_noise_churned_spectra_dir_read/)
+        final_spec_dir_write (str): absolute path of the directory to contain spectra after normalization, with two-column formatting (reads in from dir set by bkgrnd_output_dir_write/)
+        noise_level (str or float): (file name) of file containing noise levels, "None", or float value to set level of noise being injected into spectra (if the calibration is being applied to the spectra, you almost certainly want this to be zero)
+        spec_file_type (str): defines the input file type (only option is "ascii.no_header" for now)
+        number_specs (int): number of spectrum realizations to make, per empirical spectrum (if the calibration is being applied, this almost certainly should be 1)
+        verb (bool): verbose option
 
     Returns:
         [text files of spectra written to disk]
