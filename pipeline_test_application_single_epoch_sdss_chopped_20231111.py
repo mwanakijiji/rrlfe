@@ -58,7 +58,7 @@ test_gen.add_step(step)
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
-    input_spec_list_read=stem_abs+"src/mcd_final_phases_ascii_files_all.list",
+    input_spec_list_read=stem_abs+"src/trunc_sdss_list_single_epoch_3911_to_4950.list",
     robo_output_read=stem_abs+stem_string+"robospect_output/smo_files/",
     file_scraped_write=stem_abs+stem_string+"ew_products/all_ew_info.csv")
 
@@ -79,7 +79,7 @@ step = pipeline.scrape_ew_and_errew.StackSpectra(
     module_name="module8",
     file_ew_data_read=stem_abs+stem_string+"ew_products/ew_info_good_only.csv",
     file_restacked_write=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only.csv",
-    input_spec_list_read=stem_abs+"src/mcd_final_phases_ascii_files_all.list")
+    input_spec_list_read=stem_abs+"src/trunc_sdss_list_single_epoch_3911_to_4950.list")
 
 # add step to procedure
 test_gen.add_step(step)
