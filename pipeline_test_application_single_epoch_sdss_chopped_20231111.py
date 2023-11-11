@@ -92,7 +92,7 @@ step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # add errors from noise-churning
 step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
     module_name="module10",
@@ -112,7 +112,7 @@ step = pipeline.find_feh.FehRetrieval(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # apply final correction
 step = pipeline.final_corrxn.ApplyCorrxn(
     module_name="module16",

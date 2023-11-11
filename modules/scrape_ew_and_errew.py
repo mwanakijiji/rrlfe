@@ -565,8 +565,6 @@ class GenerateAddlEwErrors():
 
             return err
 
-        print(df_postbalmer.keys())
-        print(read_in_filename)
         df_postbalmer['err_EW_Balmer_scaled'] = scale_robo_err_to_err(df_postbalmer['err_EW_Balmer_from_robo'])
         df_postbalmer['err_EW_CaIIK_scaled'] = scale_robo_err_to_err(df_postbalmer['err_EW_CaIIK_from_robo'])
 
