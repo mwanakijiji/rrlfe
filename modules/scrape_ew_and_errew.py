@@ -120,7 +120,7 @@ class Scraper():
             logging.info('File to contain scraped EW data is '+str(write_out_filename))
         else:
             logging.error('Directory '+str(os.path.dirname(write_out_filename))+ ' which is supposed to contain EW output data does not exist!')
-        exit()
+            exit()
 
         # return tables of EW data?
         verbose = verbose
