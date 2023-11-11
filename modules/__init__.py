@@ -161,6 +161,7 @@ def make_dir(abs_path_name_gen):
     # if it is non-empty, prompt user (as long as prompt_user
     # flag has been set further above)
     # (this needs to be refined, since some directories are not supposed to be empty)
+    '''
     if prompt_user and os.path.exists(abs_path_name):
         with os.scandir(abs_path_name) as list_of_entries1:
             counter1 = 0
@@ -177,6 +178,8 @@ def make_dir(abs_path_name_gen):
             except EOFError as e:
                 print('')
             logging.info("------------------------------")
+    '''
+    return
 
 '''
 def get_hash():

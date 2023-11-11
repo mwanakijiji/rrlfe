@@ -129,8 +129,8 @@ def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level)
     if os.path.isdir(outdir):
         logging.info('Writing realizations of input spectra to '+str(outdir))
     else:
-        logging.error('Directory '+str(outdir)+ ' which is supposed to contain written out spectrum realizations does not exist! ')
-        exit()
+        logging.warning('Making new directory '+str(outdir)+ ' which is supposed to contain written out spectrum realizations')
+        make_dir(outdir)
 
     # generate realizations
     new_basename_list = list()
