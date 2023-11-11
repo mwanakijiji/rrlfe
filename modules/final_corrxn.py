@@ -138,9 +138,20 @@ class ApplyCorrxn:
         Corrected Fe/H values (for testing only)
         '''
 
+        if os.path.exists(self.file_name_basis_raw_retrieved_fehs):
+            # check if file exists
+            logging.info('Reading in raw [Fe/H] values from '+str(self.self.file_name_basis_raw_retrieved_fehs))
+        else:
+            logging.error('File '+str(self.file_name_basis_raw_retrieved_fehs)+ ' which is supposed to contain raw [Fe/H] values does not exist! ')
+            exit()
         df_raw_retrieved = pd.read_csv(self.file_name_basis_raw_retrieved_fehs) # raw values retrieved with rrlfe
 
         # read in raw FITS calibration
+        if os.path.exists(self.soln_fits_name):
+            logging.info('Reading in calibration file '+str(self.soln_fits_name))
+        else:
+            logging.error('Calibration file '+str(self.soln_fits_name)+ ' does not exist! ')
+            exit()
         hdul = fits.open(self.soln_fits_name)
         m_slope = float(hdul[1].header["CO_SLP_M"]) # slope of rrlfe_c vs. rrlfe_r
         b_yint = float(hdul[1].header["CO_YIN_B"]) # Y-intercept of rrlfe_c vs. rrlfe_r
@@ -154,7 +165,6 @@ class ApplyCorrxn:
 
         # write out
         df_raw_retrieved.to_csv(self.file_name_corrected_retrieved_fehs_write, index=False)
-
         logging.info("Corrected Fe/Hs written to " + self.file_name_corrected_retrieved_fehs_write)
 
         '''

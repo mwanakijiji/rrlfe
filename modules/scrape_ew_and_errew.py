@@ -98,16 +98,29 @@ class Scraper():
 
         # get list of filenames without the path
         ## ## note the string being sought here is specific to RW's synthetic spectra; this is a weakness here and needs to be fixed later
+        if os.path.isdir(subdir):
+            logging.info('Reading in Robolines output from '+str(subdir))
+        else:
+            logging.error('Directory '+str(subdir)+ ' which is supposed to contain Robospect output does not exist! ')
+            exit()
+
         file_list_long = glob.glob(subdir+'/'+'*robolines')
         file_list_unsorted = [os.path.basename(x) for x in file_list_long]
         file_list = sorted(file_list_unsorted)
 
-        # read in original file names
+        # read in original file names (note variable is being renamed here)
         input_list = pd.read_csv(orig_spec_list)
         orig_spec_list = input_list["orig_spec_file_name"]
 
         # EW info will get scraped into this
         write_out_filename = self.file_scraped_info
+        # check receiving directory exists in first place
+        if os.path.dirname(write_out_filename):
+            # check if directory exists
+            logging.info('File to contain scraped EW data is '+str(write_out_filename))
+        else:
+            logging.error('Directory '+str(os.path.dirname(write_out_filename))+ ' which is supposed to contain EW output data does not exist!')
+        exit()
 
         # return tables of EW data?
         verbose = verbose
@@ -286,7 +299,13 @@ class QualityCheck():
         write_out_filename = self.file_scraped_good_write
 
         # read in data
-        logging.info("Reading in for quality check: " + str(read_in_filename))
+        if os.path.exists(read_in_filename):
+            # check if directory exists
+            logging.info("Reading in for quality check: " + str(read_in_filename))
+        else:
+            logging.error('File '+str(read_in_filename)+ ' which is supposed to contain scraped EW data does not exist! ')
+            exit()
+        
         all_data = pd.read_csv(read_in_filename)
 
         # make new column for 'good' (G) or 'bad' (B) based on the below criteria
@@ -393,6 +412,12 @@ class GenerateNetBalmer():
         write_out_filename = self.file_ew_net_balmer_write
 
         # read in
+        if os.path.exists(read_in_filename):
+            # check if directory exists
+            logging.info('Reading in restacked EW data from '+str(read_in_filename))
+        else:
+            logging.error('File '+str(read_in_filename)+ ' which is supposed to contain restacked EW data does not exist! ')
+            exit()
         df_poststack = pd.read_csv(read_in_filename)
 
         # to generate a net Balmer line, make a rescaling of Hgamma
@@ -429,8 +454,14 @@ class GenerateNetBalmer():
                                                             ) # sigma_B
 
         # write out
+        if os.path.exists(os.path.dirname(write_out_filename)):
+            # check if directory exists
+            logging.info("Table with net Balmer line EWs being written to " + str(write_out_filename))
+        else:
+            logging.error('Directory to receive '+str(write_out_filename)+ ' does not exist! ')
+            exit()
         df_poststack.to_csv(write_out_filename,index=False)
-        logging.info("Table with net Balmer line EWs written to " + str(write_out_filename))
+        
 
         # returns parameters of line fit, and DataFrame with net Balmer info
         return [m, err_m, b, err_b], df_poststack
@@ -611,9 +642,19 @@ class StackSpectra():
         input_list = self.input_list_read
 
         # read in EW data
+        if os.path.exists(read_in_filename):
+            logging.info('Reading in file with good EW data from '+str(read_in_filename))
+        else:
+            logging.error('File '+str(read_in_filename)+ ' which is supposed to contain background good EW data does not exist! ')
+            exit()
         df_prestack = pd.read_csv(read_in_filename)
 
         # read in the list of original file names
+        if os.path.exists(input_list):
+            logging.info('Reading in original input spectrum file list from '+str(input_list))
+        else:
+            logging.error('File '+str(input_list)+ ' which is supposed to contain original spectrum file names does not exist! ')
+            exit()
         original_names = pd.read_csv(input_list)
 
         logging.info("--------------")
