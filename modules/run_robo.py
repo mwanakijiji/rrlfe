@@ -135,7 +135,7 @@ class Robo():
         # check if Robospect dir exists
         if os.path.isdir(self.robo_dir_read):
             # check if directory exists
-            logging.info('Reading in background binary from '+str(self.self.robo_dir_read))
+            logging.info('Reading in background binary from '+str(self.robo_dir_read))
         else:
             logging.error('Robospect directory '+str(self.robo_dir_read)+ ' does not exist! ')
             exit()
