@@ -102,7 +102,7 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
@@ -123,5 +123,5 @@ step = pipeline.final_corrxn.ApplyCorrxn(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 test_gen.run()
