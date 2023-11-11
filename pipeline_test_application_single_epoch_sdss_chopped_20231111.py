@@ -40,7 +40,7 @@ test_gen.add_step(step)
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
     cc_bkgrnd_dir=stem_abs+"src/",
-    input_spec_list_read=stem_abs+"src/sdss_list_single_epoch_3911_to_4950.list",
+    input_spec_list_read=stem_abs+"src/trunc_sdss_list_single_epoch_3911_to_4950.list",
     unnorm_spectra_dir_read=stem_abs+"src/sdss_single_epoch_chopped_3911_to_4950/",
     unnorm_noise_churned_spectra_dir_read=stem_abs+stem_string+"realizations_output/",
     bkgrnd_output_dir_write=stem_abs+stem_string+"realizations_output/norm/",
