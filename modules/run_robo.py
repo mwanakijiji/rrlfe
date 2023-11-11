@@ -117,7 +117,7 @@ class Robo():
             logging.info('Reading in spectra from '+str(self.normzed_spec_source_dir))
         else:
             logging.warning('Making new directory '+str(self.normzed_spec_source_dir)+ ' which is supposed to contain normalized input spectra for Robospec')
-            make_dir(outdir)
+            make_dir(self.normzed_spec_source_dir)
 
         # Check to see if it is empty (if not, there is data from a previous
         # run that will inadvertently be used later)
@@ -132,7 +132,7 @@ class Robo():
         # run Robospect on normalized spectra in parallel
         # (N.b. Setting the config files allows Robospect to dump files in the right places)
 
-        # check if Robospect dir exists
+        # check if Robospect binary dir exists
         if os.path.isdir(self.robo_dir_read):
             # check if directory exists
             logging.info('Reading in background binary from '+str(self.robo_dir_read))
