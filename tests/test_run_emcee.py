@@ -37,8 +37,6 @@ err_Caiik_ew_test = 0.27
 
 def test_WriteSolnToFits():
 
-    print(config_gen.sections())
-    print(config_gen["calib_type"]["COEFFS"])
     inst_abcdfghk = run_emcee.WriteSolnToFits(module_name="test2",
                                                 file_name_mcmc_posterior_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_MCMC_OUTPUT_ABCDFGHK"],
                                                 file_name_teff_data_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + config_gen["file_names"]["TEST_READIN_TREND_TEFF_VS_BALMER"],

@@ -98,7 +98,7 @@ def calc_noise(noise_level, spectrum_df):
         # so a '0.01' means 'Gaussian-distributed random number with sigma=0.01*flux_input';
         # note this 0.01 is a RELATIVE error
         noise_to_add = np.random.standard_normal(len(spectrum_df))*noise_level*spectrum_df["flux"]
-        logging.info("Injecting Gaussian noise based on fixed value.")
+        logging.info("Injecting "+str(noise_level)+" of Gaussian noise.")
 
     return noise_to_add
 
@@ -125,6 +125,13 @@ def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level)
 
     basename = os.path.basename(spec_name) # shave off path stem
 
+    # check if directory to write to exists
+    if os.path.isdir(outdir):
+        logging.info('Writing realizations of input spectra to '+str(outdir))
+    else:
+        logging.warning('Making new directory '+str(outdir)+ ' which is supposed to contain written out spectrum realizations')
+        make_dir(outdir)
+
     # generate realizations
     new_basename_list = list()
 
@@ -133,11 +140,11 @@ def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level)
         # make file names
 
         # basename of spectrum realization, ascii
-        new_prefix_ascii = "{}_noise_ver_{:03d}".format(basename.split(".")[-2], i)
+        new_prefix_ascii = "{}_{:03d}".format(basename.split(".")[-2], i)
         suffix_ascii = basename.split(".")[-1] # could be .dat, .csv, .txt, etc.
         new_basename_ascii = new_prefix_ascii + "." + suffix_ascii
         # if we want to change to FITS intermediary files:
-        new_basename_fits = "{}_noise_ver_{:03d}".format(basename.split(".fits")[0], i) + ".fits"
+        new_basename_fits = "{}_{:03d}".format(basename.split(".fits")[0], i) + ".fits"
         # don't need path info in spec_name list; add ascii name here
         new_basename_list.append(new_basename_ascii)
 
@@ -203,7 +210,10 @@ def read_list(input_list):
        numpy array of filenames
     """
 
-    logging.info("Reading in list of spectrum names " + input_list)
+    if os.path.exists(input_list):
+        logging.info("Reading in list of spectrum names " + input_list)
+    else:
+        logging.info("List of spectrum names does not exist! " + input_list)
 
     # expects header reading
     # spectrum,subtype,phase,feh,err_feh
@@ -272,9 +282,17 @@ def write_bckgrnd_input(name_list, indir, normdir):
 
     logging.info("Creating input file list of spectrum realization filenames")
 
+    # check if directory exists
+    if os.path.isdir(indir):
+        logging.info('Spectrum realizations being read in from '+str(indir))
+    else:
+        logging.warning('Making new directory '+str(indir)+ ' which will contain spectrum realizations')
+        make_dir(indir)
+
     #Check to see if inputfile is already there
     bckgrnd_input = os.path.join(indir, "bckgrnd_input.txt")
     if os.path.isfile(bckgrnd_input) is True:
+        logging.warning('Removing pre-existing file bckgrnd_input.txt')
         os.remove(bckgrnd_input)
     try:
         outfile = open(bckgrnd_input, 'w')
@@ -299,16 +317,17 @@ class CreateSpecRealizationsMain():
     Generate multiple realizations of the same empirical spectrum based on a noise level.
 
     Parameters:
-        num (int): number of spectrum realizations to make, per empirical spectrum
-        spec_file_type (str): file format of input spectra ["fits"/"ascii.no_header"]
-        input_spec_list_dir (str): directory containing list of empirical spectra (## OBSOLETE? ##)
-        input_list (list): file listing spectra we want to normalize
-        unnorm_spectra_dir (str): directory of empirical spectra (or, if they are actually
-            synthetic spectra, these are the original synthetic spectra which we will generate
-            multiple realizations of)
-        unnorm_noise_churned_spectra_dir (str): directory to contain noise-churned spectrum realizations
-        bkgrnd_output_dir (str): directory to contain output of bkgrnd (spectra and fit continuua)
-        final_dir (str): directory to contain normalized spectrum realizations
+        module_name (str): name of module (arbitrary)
+        cc_bkgrnd_dir (str): absolute path of the directory containing the compiled binary for spectrum backround normalization
+        input_spec_list_read (str): absolute path of the file containing the list of spectrum file names (basenames only)
+        unnorm_spectra_dir_read (str): absolute path of the directory containing the spectra
+        unnorm_noise_churned_spectra_dir_read (str): absolute path of the directory to contain the output spectra with noise added at the level given by user (which may be zero noise)
+        bkgrnd_output_dir_write (str): absolute path of the directory to contain spectra after normalization (reads in from dir set by unnorm_noise_churned_spectra_dir_read/)
+        final_spec_dir_write (str): absolute path of the directory to contain spectra after normalization, with two-column formatting (reads in from dir set by bkgrnd_output_dir_write/)
+        noise_level (str or float): (file name) of file containing noise levels, "None", or float value to set level of noise being injected into spectra (if the calibration is being applied to the spectra, you almost certainly want this to be zero)
+        spec_file_type (str): defines the input file type (only option is "ascii.no_header" for now)
+        number_specs (int): number of spectrum realizations to make, per empirical spectrum (if the calibration is being applied, this almost certainly should be 1)
+        verb (bool): verbose option
 
     Returns:
         [text files of spectra written to disk]
@@ -341,7 +360,7 @@ class CreateSpecRealizationsMain():
 
     def run_step(self, attribs = None):
 
-        input_list = self.input_spec_list_read
+        #input_list = self.input_spec_list_read
 
         # check if write directories exist and are empty
         make_dir(self.bkgrnd_output_dir_write)
@@ -358,12 +377,16 @@ class CreateSpecRealizationsMain():
         # input_list ALREADY SET IN DEFAULTS ## input_list = input_spec_list_read_dir + config_red["file_names"]["LIST_SPEC_PHASE"]
         list_arr = read_list(self.input_spec_list_read)
 
-        #logging.info('list_arr')
-        #logging.info(list_arr)
+        if os.path.isdir(self.cc_bkgrnd_dir):
+            # check if directory exists
+            logging.info("Reading in unnormalized spectra from dir " + self.unnorm_spectra_dir_read)
+        else:
+            logging.warning('Making new directory '+str(self.unnorm_spectra_dir_read)+ ' which will contain contain unnormalized spectra')
+            make_dir(self.cc_bkgrnd_dir)
+
 
         # Check to make sure the files in the list are actually in the input directory;
         # if not, just remove those from the list and set a warning
-        logging.info("Reading in unnormalized spectra from dir " + self.unnorm_spectra_dir_read)
         list_actually_there = glob.glob(self.unnorm_spectra_dir_read + "*.*")
         list_actually_basenames = np.array([os.path.basename(t) for t in list_actually_there])
 
@@ -410,6 +433,13 @@ class CreateSpecRealizationsMain():
                     'into the normalization routine is ' + bkg_input_file)
 
         # normalize each spectrum realization (smoothing parameter is set in __init__)
+        if os.path.isdir(self.cc_bkgrnd_dir):
+            # check if directory exists
+            logging.info('Reading in background binary from '+str(self.cc_bkgrnd_dir))
+        else:
+            logging.warning('Making new directory '+str(self.normzed_spec_source_dir)+ ' which will contain background binary')
+            make_dir(self.cc_bkgrnd_dir)
+
         bkgrnd = Popen([str(self.cc_bkgrnd_dir) + "bkgrnd", "--smooth "+str(attribs["reduc_params"]["SMOOTH"]),
                         "--sismoo 1", "--no-plot", "{}".format(bkg_input_file)], stdout=PIPE, stderr=PIPE)
         (out, err) = bkgrnd.communicate() # returns tuple (stdout, stderr)

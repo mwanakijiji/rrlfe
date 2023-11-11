@@ -110,25 +110,42 @@ class Robo():
         ## ## note the below file name list collects ALL files in that directory,
         ## ## not just the ones listed in the initial .list file
         file_name_list = glob.glob(self.normzed_spec_source_dir+"*")
-        logging.info('Reading in spectra from directory')
-        logging.info(self.normzed_spec_source_dir)
+        
+        # check Robospect input directory exists
+        if os.path.isdir(self.normzed_spec_source_dir):
+            # check if directory exists
+            logging.info('Reading in spectra from '+str(self.normzed_spec_source_dir))
+        else:
+            logging.warning('Making new directory '+str(self.normzed_spec_source_dir)+ ' which will contain normalized input spectra for Robospec')
+            make_dir(self.normzed_spec_source_dir)
+        # check Robospect output directory exists
+        if os.path.isdir(self.robo_output_write):
+            # check if directory exists
+            logging.info('Reading in spectra from '+str(self.robo_output_write))
+        else:
+            logging.warning('Making new directory '+str(self.robo_output_write)+ ' which will contain Robospec output')
+            make_dir(self.robo_output_write)
 
         # Check to see if it is empty (if not, there is data from a previous
         # run that will inadvertently be used later)
         preexisting_file_list = glob.glob(self.robo_output_write + "/*", recursive=False)
 
-        '''
         if (len(preexisting_file_list) > 0):
             logging.info("------------------------------")
-            logging.info("Directory to receive Robospect output not empty!!")
+            logging.info("Directory to receive Robospect output not empty!! Pre-existing files will also be used later")
             logging.info(self.robo_output_write)
             logging.info("------------------------------")
-            if prompt_user:
-                input("Do what you want with those files, then hit [Enter]")
-        '''
 
         # run Robospect on normalized spectra in parallel
         # (N.b. Setting the config files allows Robospect to dump files in the right places)
+
+        # check if Robospect binary dir exists
+        if os.path.isdir(self.robo_dir_read):
+            # check if directory exists
+            logging.info('Reading in background binary from '+str(self.robo_dir_read))
+        else:
+            logging.error('Robospect input directory '+str(self.robo_dir_read)+ ' does not exist! ')
+            exit()
        
         run_robospect_instance = RunRobo(write_dir = self.robo_output_write, robo_dir = self.robo_dir_read)
         #if (configuration == "config"):

@@ -202,7 +202,19 @@ class FehRetrieval():
         #write_out_filename = attribs["data_dirs"]["DIR_BIN"]+attribs["file_names"]["RETRIEVED_VALS"]
         write_out_filename = self.file_retrievals_write
         ew_file = good_ew_info_file
+
+        if os.path.exists(ew_file):
+            logging.info('Reading in EW file from '+str(ew_file))
+        else:
+            logging.error('EW file '+str(ew_file)+ ' does not exist! ')
+            exit()
         ew_data = pd.read_csv(ew_file).copy(deep=True)
+
+        if os.path.exists(calib_file):
+            logging.info('Reading in calibration file '+str(calib_file))
+        else:
+            logging.error('Calibration file '+str(calib_file)+ ' does not exist! ')
+            exit()
         hdul = fits.open(calib_file)
         soln_header = hdul[1].header
 
@@ -218,6 +230,13 @@ class FehRetrieval():
         #global mcmc_chain_global
         #mcmc_chain_global = mcmc_chain
         N_MCMC_samples = len(mcmc_chain)
+
+        if os.path.isdir(write_pickle_dir):
+            # check if directory exists
+            logging.info('Will write [Fe/H] retrievals to '+str(write_pickle_dir))
+        else:
+            logging.warning('Making new directory '+str(write_pickle_dir)+ ' which will contain [Fe/H] retrievals')
+            make_dir(write_pickle_dir)
 
         # check if there is already something else in pickle directory
         preexisting_file_list = glob.glob(write_pickle_dir + "/*.{*}")
