@@ -54,7 +54,7 @@ step = pipeline.run_robo.Robo(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
@@ -89,7 +89,7 @@ step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
     module_name="module9",
     file_restacked_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only.csv",
     file_ew_net_balmer_write=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer.csv")
-
+'''
 # add step to procedure
 test_gen.add_step(step)
 
