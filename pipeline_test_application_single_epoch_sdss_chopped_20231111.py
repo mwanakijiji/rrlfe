@@ -19,7 +19,7 @@ step = pipeline.ConfigInit(module_name="module1")
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # compile the C spectral normalization script
 step = pipeline.compile_normalization.CompileBkgrnd(
     module_name="module3",
@@ -112,7 +112,7 @@ step = pipeline.find_feh.FehRetrieval(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # apply final correction
 step = pipeline.final_corrxn.ApplyCorrxn(
     module_name="module16",

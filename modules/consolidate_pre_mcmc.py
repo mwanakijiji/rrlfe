@@ -11,9 +11,9 @@ from pylab import *
 from . import *
 
 
-def graft_feh(pickle_source_dir=config_choice["data_dirs"]["DIR_PICKLE"],
-              stars_and_offsets_info_file=config_choice["file_names"]["RRAB_RRAB_OFFSETS"],
-              hk_source_dir=config_choice["data_dirs"]["DIR_SRC"],
+def graft_feh(pickle_source_dir,
+              stars_and_offsets_info_file,
+              hk_source_dir,
               synthetic=False):
     """
     Read in the EW and phase data, and attach Fe/H values
@@ -30,6 +30,7 @@ def graft_feh(pickle_source_dir=config_choice["data_dirs"]["DIR_PICKLE"],
         [text file of EW and Fe/H values for each star written to disk]
     """
 
+    ## ## UNDER DEVELOPMENT
     ## ## TACK PHASES ONTO LIST OF EWS FROM SPECTRA
     ## ## NEED TO GET RID OF THE 'FAKE' AT SOME POINT
 
