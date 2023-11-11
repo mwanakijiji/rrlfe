@@ -141,7 +141,7 @@ class ApplyCorrxn:
 
         if os.path.exists(self.file_name_basis_raw_retrieved_fehs):
             # check if file exists
-            logging.info('Reading in raw [Fe/H] values from '+str(self.self.file_name_basis_raw_retrieved_fehs))
+            logging.info('Reading in raw [Fe/H] values from '+str(self.file_name_basis_raw_retrieved_fehs))
         else:
             logging.error('File '+str(self.file_name_basis_raw_retrieved_fehs)+ ' which is supposed to contain raw [Fe/H] values does not exist! ')
             exit()
