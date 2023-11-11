@@ -3,6 +3,7 @@ import pandas as pd
 import logging
 import matplotlib.pyplot as plt
 from astropy.io import fits
+import os
 
 
 class FindCorrxn:
