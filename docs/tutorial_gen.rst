@@ -240,8 +240,8 @@ step makes use of the package emcee.
     # where K is CaII K EW; H is Balmer EW; F is [Fe/H]
     step = pipeline.run_emcee.RunEmcee(
         module_name="module13",
-        file_name_scraped_ews_good_only_read=stem_abs+"rrlfe_io_red/ew_products/all_data_input_mcmc.csv",
-        file_name_write_mcmc_text_write=stem_abs+"rrlfe_io_red/bin/mcmc_output.csv")
+        file_name_scraped_ews_good_only_read=stem_abs+stem_string+"ew_products/all_data_input_mcmc.csv",
+        file_name_write_mcmc_text_write=stem_abs+stem_string+"bin/mcmc_output.csv")
 
     test_gen.add_step(step)
 
