@@ -15,7 +15,11 @@ To put all this into practice, we call different classes from rrlfe and string t
 The user gives each instantiated module a module_name, which allows it to be distinguished from other modules
 when the pipeline is run.
 
-Let's get started!
+
+
+first series of steps is presented without 
+commentary, as they are the same as for generating a calibration, up to and including the section
+'Make a net Balmer line.' Commentary resumes below when the steps diverge.
 
 Normalize a given set of spectra
 ----
@@ -143,7 +147,7 @@ We combine the the H-delta and H-gamma lines to make a 'net' Balmer absorption l
 
     test_gen.add_step(step)
 
-Add errors from noise-churning (OBSOLETE? CAN THIS BE SKIPPED?)
+Add errors from noise-churning
 
 .. code-block:: python
 

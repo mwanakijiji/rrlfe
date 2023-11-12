@@ -5,13 +5,23 @@ This tutorial shows you how to take a ready-made calibration and apply it to low
 spectra to find their corresponding metallicities. These steps are all in the script 
 ``example_application_min_working_example.py``, and the repo contains all the test spectra required to run it.
 
-first series of steps is presented without 
-commentary, as they are the same as for generating a calibration, up to and including the section
-'Make a net Balmer line.' Commentary resumes below when the steps diverge.
+Let's get started!
+
+Normalize a given set of spectra
+----
+
+This section can be applied to any given input spectra, be they synthetic or empirical, and for the purpose of either generating 
+a calibration from them, or applying a calibration to them. This tutorial is specifically about generating a calibration,
+so the various choices of directories will be to that end.
+
+Start by importing the machinery we need:
 
 .. code-block:: python
 
     import high_level_application_accordion as pipeline
+
+We define the absolute path of the repo, and the I/O directory which will be located beneath that. 
+In addition we define a handy string or two. 
 
 .. code-block:: python
 
@@ -24,10 +34,13 @@ commentary, as they are the same as for generating a calibration, up to and incl
     # calibration solution to use (this corresponds to that in Spalding+ 2023 MNRAS)
     calib_soln = 'deg_1-100_calib_solution_20230507.fits'   
 
+Now instantiate the object that will contain the series of reduction steps, and instantiate the object
+to print configuration parameters to a log file. We need to add the latter to the former with the add_step command.
+
 .. code-block:: python
 
-    # instantiate object that will contain the series of reduction steps
-    test_gen = pipeline.ApplyCalib() ## ## need to let this set config file being read in (currently in __init__)
+    # instantiate object that will contain the series of steps of the pipeline
+    test_gen = pipeline.ApplyCalib()
 
     # print configuration params to log file
     step = pipeline.ConfigInit(module_name="module1")
@@ -39,6 +52,9 @@ In the above first step which we formally add to the pipeline, the 'module_name'
 define different strings for each module we add to the pipeline, so that they can be kept in order. We may as well
 have used ``parakeet`` instead of ``module1``, just as long as we give a different name at each step.
 
+Now we compile the C script to do the spectral normalization. Notice how the module_name strings are arbitrary. They 
+just have to be different each time something is instantiated.
+
 .. code-block:: python
 
     # compile the C spectral normalization script and define directory in which to place the binary
@@ -48,6 +64,10 @@ have used ``parakeet`` instead of ``module1``, just as long as we give a differe
 
     # add step to procedure
     test_gen.add_step(step)
+
+Take a list of unnormalized empirical spectra, normalize them, and write out. Here, _read directories are those where
+data already exists and is being read in, and _write is where the module writes something to. Make sure these 
+directories already exist before running the pipeline.
 
 .. code-block:: python
 
@@ -68,6 +88,11 @@ have used ``parakeet`` instead of ``module1``, just as long as we give a differe
     # add step to procedure
     test_gen.add_step(step)
 
+Measure EWs of absorption lines
+----
+
+Run `Robospect <https://home.ifa.hawaii.edu/users/watersc1/robospect/>` on the spectra to measure and write out the EWs.
+
 .. code-block:: python
 
     # run_robospect on normalized synthetic spectra
@@ -79,6 +104,8 @@ have used ``parakeet`` instead of ``module1``, just as long as we give a differe
 
     # add step to procedure
     test_gen.add_step(step)
+
+Scrape all the EWs from the raw Robospect output files.
 
 .. code-block:: python
 
@@ -92,6 +119,9 @@ have used ``parakeet`` instead of ``module1``, just as long as we give a differe
     # add step to procedure
     test_gen.add_step(step)
 
+Do a quality check on the lines, based on Robospect quality flags. We don't want to base the 
+calibration on spurious EWs.
+
 .. code-block:: python
 
     # scrape_ew_from_robo and calculate EWs + err_EW
@@ -102,6 +132,9 @@ have used ``parakeet`` instead of ``module1``, just as long as we give a differe
 
     # add step to procedure
     test_gen.add_step(step)
+
+Transpose and stack all the data, so that each row corresponds to a spectrum and the columns represent 
+different absorption lines.
 
 .. code-block:: python
 
@@ -115,6 +148,11 @@ have used ``parakeet`` instead of ``module1``, just as long as we give a differe
     # add step to procedure
     test_gen.add_step(step)
 
+Make a net Balmer line
+------
+
+We combine the the H-delta and H-gamma lines to make a 'net' Balmer absorption line
+
 .. code-block:: python
 
     # make a net Balmer line from the H-delta and H-gamma lines
@@ -126,9 +164,11 @@ have used ``parakeet`` instead of ``module1``, just as long as we give a differe
     # add step to procedure
     test_gen.add_step(step)
 
+Add EW errors for the net Balmer lines
+
 .. code-block:: python
 
-    # add errors from noise-churning
+    # add errors
     step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
         module_name="module10",
         ew_data_restacked_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer.csv",
@@ -137,8 +177,12 @@ have used ``parakeet`` instead of ``module1``, just as long as we give a differe
     # add step to procedure
     test_gen.add_step(step)
 
-The above steps will provide us a table of EWs. Now apply a pre-existing [Fe/H] calibration contained in a FITS file. This will
-initially generate 'raw' [Fe/H] values.
+The above steps will provide us a table of EWs. Whether you want to *apply* a calibration to spectra to get [Fe/H] values or 
+*generate* a new calibration, the steps up until this point will be essentially the same: we take a bunch of spectra, 
+normalize them, find the absorption line EWs, generate net Balmer lines, and put all the info into a big table. 
+
+Now the steps between *applying* and *generating* a calibration diverge. Below we apply our pre-existing [Fe/H] 
+calibration contained in a FITS file. This will initially generate 'raw' [Fe/H] values.
 
 .. code-block:: python
 
@@ -152,7 +196,8 @@ initially generate 'raw' [Fe/H] values.
     # add step to procedure
     test_gen.add_step(step)
 
-Don't forget to apply the final correction to make the results consistent with high-resolution [Fe/H] studies. 
+These 'raw' values still have to be corrected for an offset to make them consistent with 
+high-res spectroscopic studies. Below we apply that final correction.
 
 .. code-block:: python
 
@@ -172,3 +217,12 @@ Here's the final line of code that executes the above steps which have been stru
 .. code-block:: python
 
     test_gen.run()
+
+That's it! You should have final [Fe/H] values in the file `retrieved_vals_corrected.csv`, whose absolute path is printed 
+to screen and to the log. That file contains various intermediatary data as well, but the columns you are likely most
+interested in are 
+
+`orig_spec_file_name`: the original file name of the spectrum
+`feh_corrected`: [Fe/H], after having applied the last correction above
+`err_feh_retrieved`: random error in [Fe/H]
+`teff_retrieved`: a coarse measure of the Teff of the spectum, based on the strong correlation between some Balmer lines and Teff
