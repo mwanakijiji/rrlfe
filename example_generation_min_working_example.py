@@ -64,7 +64,7 @@ step = pipeline.scrape_ew_and_errew.Scraper(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.QualityCheck(
     module_name="module7",
@@ -93,7 +93,7 @@ step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
 # add step to procedure
 test_gen.add_step(step)
 
-# add errors from noise-churning
+# add additional errors
 step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
     module_name="module10",
     ew_data_restacked_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer.csv",
@@ -102,18 +102,18 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 
 # add step to procedure
 test_gen.add_step(step)
-
 '''
-step = pipeline.find_feh.FehRetrieval(
+
+# take meta-data from file names of synthetic spectra and add to table
+step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(
     module_name="module11",
-    file_good_ew_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
-    file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/"+calib_soln,
-    dir_retrievals_write=stem_abs+stem_string+"bin/pickled_info/",
-    file_retrievals_write=stem_abs+stem_string+"bin/retrieved_vals.csv")
+    input_spec_list_read=stem_abs+"src/synthetic_spectra.list",
+    ew_data_w_net_balmer_read=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
+    file_w_meta_data_write=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_w_metadata.csv")
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # apply final correction
 step = pipeline.final_corrxn.ApplyCorrxn(
     module_name="module16",
