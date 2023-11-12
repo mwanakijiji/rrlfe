@@ -36,7 +36,13 @@ file tells Robospect where to look for absorption lines in the spectra.)
 This file tells Robospect which absorption lines
 to look for.
 
-That's it! You're ready to roll. If you would ever like to file an issue on the ``rrlfe`` Github repo, you can do so `here <https://github.com/mwanakijiji/rrlfe/issues>`_.
+That's it! You're ready to roll. You can try a test run in the `rrlfe/` directory with the command
+
+.. code-block:: python
+
+  python example_application_min_working_example.py
+
+If you would ever like to file an issue on the ``rrlfe`` Github repo, you can do so `here <https://github.com/mwanakijiji/rrlfe/issues>`_.
 
 
 **Note:** The repository code contains a 3 Mb FITS file `deg_1-100_calib_solution_20230507.fits`, which contains the calibration solution corresponding to that in the paper 
