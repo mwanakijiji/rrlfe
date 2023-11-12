@@ -3,7 +3,8 @@ Tutorial: Applying a calibration
 
 This tutorial shows you how to take a ready-made calibration and apply it to low-resolution stellar 
 spectra to find their corresponding metallicities. These steps are all in the script 
-``example_application_min_working_example.py``, and the repo contains all the test spectra required to run it.
+``example_application_min_working_example.py``, and the repo contains all the test spectra required to run it. 
+There's a good chance that you'll just have to change some of the directory paths for reducing your own spectra.
 
 Let's get started!
 
@@ -70,7 +71,7 @@ data already exists and is being read in, and _write is where the module writes 
 made as needed.
 
 Note that the `list <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/src/trunc_sdss_list_single_epoch_3911_to_4950.list>`_ 
-of input spectra includes file basenames under a column `orig_spec_file_name` (see the `Prerequisites <docs/prerequisites>'_ page), and a few empty columns which do not come into play
+of input spectra includes file basenames under a column `orig_spec_file_name` (see the :doc:`Prerequisites<docs/prerequisites>'. page), and a few empty columns which do not come into play
 here (they define some metadata for *generating* a new calibration).
 
 `Here <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/src/sdss_single_epoch_chopped_3911_to_4950/spec-0266-51630-0197g001.dat>`_ is an example of 
