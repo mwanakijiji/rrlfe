@@ -128,11 +128,13 @@ def test_QualityCheck():
 def test_StackSpectra():
 
     print("input list")
-    print(config_gen["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list.list")
+    print(config_gen["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list2.list")
     print("read in file name")
+    print(config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_gen["file_names"]["TEST_SCRAPED_EW_DATA_GOOD_ONLY"])
+
 
     inst = scrape_ew_and_errew.StackSpectra(module_name = "test1",
-                                            input_spec_list_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list.list",
+                                            input_spec_list_read = config_gen["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list2.list",
                                             file_ew_data_read = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_gen["file_names"]["TEST_SCRAPED_EW_DATA_GOOD_ONLY"],
                                             file_restacked_write = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/"+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_GOOD_ONLY"])
 

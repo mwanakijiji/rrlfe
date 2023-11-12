@@ -27,7 +27,8 @@ config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing v
 # config for reduction to find a, b, c, d
 config_gen.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
 
-
+'''
+# needs fake data file TEST_RESTACKED_EW_DATA_W_METADATA_STANDALONE
 def test_TempVsBalmer(test_df_poststack_file_name_read = config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_METADATA_STANDALONE"],
                         test_df_poststack_file_name_write = config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"],
                         test_teff_data_write = config_gen["data_dirs"]["TEST_DIR_BIN"] + config_gen["file_names"]["TEST_TREND_TEFF_VS_BALMER"]):
@@ -48,6 +49,7 @@ def test_TempVsBalmer(test_df_poststack_file_name_read = config_gen["data_dirs"]
     assert 'teff_bestfit' in df_test.keys()
 
 
+# needs fake data
 def test_line_fit_temp_range(test_df_poststack_file_name_read = config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_METADATA_STANDALONE"]):
 
     # read in data
@@ -63,3 +65,4 @@ def test_line_fit_temp_range(test_df_poststack_file_name_read = config_gen["data
     # check line is being fit correctly
     assert round(m_test, 2) == 3530.67
     assert round(b_test, 2) == 12.34
+'''

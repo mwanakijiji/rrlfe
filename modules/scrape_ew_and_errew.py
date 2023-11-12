@@ -647,6 +647,12 @@ class StackSpectra():
             exit()
         df_prestack = pd.read_csv(read_in_filename)
 
+        print('--------')
+        #print(read_in_filename)
+        print(df_prestack)
+        print('--------')
+        #print('Reading in original input spectrum file list from '+str(input_list))
+
         # read in the list of original file names
         if os.path.exists(input_list):
             logging.info('Reading in original input spectrum file list from '+str(input_list))
@@ -662,6 +668,9 @@ class StackSpectra():
         # initialize DataFrame to hold the re-cast data
 
         list_indiv_spectra = list(df_prestack["realization_spec_file_name"].drop_duplicates())
+
+        print(df_prestack["realization_spec_file_name"])
+        print(list_indiv_spectra)
 
         num_indiv_spectra = len(list_indiv_spectra)
 

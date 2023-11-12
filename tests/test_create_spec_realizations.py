@@ -102,12 +102,12 @@ def test_generate_realizations():
     # expected names
     # (note these should just be basenames)
     expected_filenames_ascii = [
-                                "575020m05_noise_ver_000.smo",
-                                "575020m05_noise_ver_001.smo",
-                                "575020m10_noise_ver_000.smo",
-                                "575020m10_noise_ver_001.smo",
-                                "575020m15_noise_ver_000.smo",
-                                "575020m15_noise_ver_001.smo"
+                                "575020m05_000.smo",
+                                "575020m05_001.smo",
+                                "575020m10_000.smo",
+                                "575020m10_001.smo",
+                                "575020m15_000.smo",
+                                "575020m15_001.smo"
                                 ]
     returned_filenames_ascii = []
     for spec_num in range(0,len(test_spec_list_ascii)):
@@ -179,8 +179,8 @@ def test_create_norm_spec():
 
     # create noise-churned realizations for each spectrum
     test_input_name_list = [
-                            "test_bkgrnd_output_575020m05_noise_ver_000.smo",
-                            "test_bkgrnd_output_575020m05_noise_ver_001.smo",
+                            "test_bkgrnd_output_575020m05_000.smo",
+                            "test_bkgrnd_output_575020m05_001.smo",
                             ]
 
 
@@ -245,7 +245,7 @@ def test_read_bkgrnd_spec():
 
     # loop over a few files
     # (note they should have 3 columns: 1.) wavelength, 2.) flux, 3.) background flux)
-    file_name_array = ["575020m05_noise_ver_000.smo","575020m05_noise_ver_001.smo","575020m10_noise_ver_000.smo"]
+    file_name_array = ["575020m05_000.smo","575020m05_001.smo","575020m10_000.smo"]
     for i in range(0,len(file_name_array)):
         # this is a file that looks like what it should after bkgrnd has done its thing
         # (it should have 3 columns)
