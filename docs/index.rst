@@ -35,12 +35,12 @@ Logo art by `Anna McElhannon <https://www.linkedin.com/in/annamcelhannon>`_
 .. toctree::
   :maxdepth: 1
 
-  tutorial_gen
+  tutorial_apply
 
 .. toctree::
   :maxdepth: 1
 
-  tutorial_apply
+  tutorial_gen
 
 .. toctree::
   :maxdepth: 1

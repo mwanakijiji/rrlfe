@@ -20,7 +20,7 @@ step = pipeline.ConfigInit(module_name="module1")
 # add step to procedure
 test_gen.add_step(step)
 
-# compile the C spectral normalization script
+# compile the C spectral normalization script and define directory in which to place the binary
 step = pipeline.compile_normalization.CompileBkgrnd(
     module_name="module3",
     cc_bkgrnd_dir=stem_abs+"src/")
@@ -106,7 +106,7 @@ test_gen.add_step(step)
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
-    file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/"+calib_soln,
+    file_calib_read=stem_abs+"src/"+calib_soln,
     dir_retrievals_write=stem_abs+stem_string+"bin/pickled_info/",
     file_retrievals_write=stem_abs+stem_string+"bin/retrieved_vals.csv")
 
@@ -117,7 +117,7 @@ test_gen.add_step(step)
 step = pipeline.final_corrxn.ApplyCorrxn(
     module_name="module16",
     file_name_basis_raw_retrieved_fehs=stem_abs+stem_string+"bin/retrieved_vals.csv", # retrieved McD Fe/H values based on raw rrlfe calibration
-    soln_fits_name=stem_abs+"rrlfe_io_20230507_synthetic/bin/"+calib_soln, # calibration file which includes correction info in the header
+    soln_fits_name=stem_abs+"src/"+calib_soln, # calibration file which includes correction info in the header
     file_name_corrected_retrieved_fehs_write=stem_abs+stem_string+"bin/retrieved_vals_corrected.csv" # mapped high-res literature Fe/H values for McD stars
 )
 
