@@ -83,7 +83,7 @@ class Robo():
         robo_output_write (str): directory Robospect writes EW info to
 
     Returns:
-        [EW data written to file]
+        [EW data written to text file]
     """
 
     def __init__(self,

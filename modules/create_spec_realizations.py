@@ -79,6 +79,11 @@ def calc_noise(noise_level, spectrum_df):
             "file": from file \n
             "None": no noise \n
             (float): level of relative noise to use
+        spectrum_df (pandas dataframe): spectrum file; if noise is being read in from file, or is 
+            being calculated from the flux, those must be in this file, in cols as follows: \n
+            [0]: wavelength [angstr] \n
+            [1]: flux \n
+            [2]: background flux \n
 
     Returns:
         Numpy array of noise spectrum
@@ -103,7 +108,11 @@ def calc_noise(noise_level, spectrum_df):
     return noise_to_add
 
 
-def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level):
+def generate_realizations(spec_name, 
+                          outdir, 
+                          spec_file_format, 
+                          num, 
+                          noise_level):
     '''
     Calculates a number of realizations of a given spectrum using Gaussian error bars
 
@@ -236,7 +245,7 @@ def read_spec(spec_name, format):
            [0]: wavelength \n
            [1] flux \n
            [2] error \n
-        format (str): "fits" or "ascii.no_header"
+        format (str): format of the spectrum file ("ascii.no_header" is the only option for now)
     Returns:
        spec_tab: A numpy Table with three columns: wavelength, flux, error
        hdr: FITS header of the input spectrum

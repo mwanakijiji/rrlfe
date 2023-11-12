@@ -59,9 +59,8 @@ class TempVsBalmer():
         file_ew_poststack_read (str): name of file that contains all the data from the upstream
             pipeline and will be read in for the fit; it should contain columns with 'teff'
             and 'EW_Balmer', with which a simple linear fit is made
-        df_poststack_file_name_write (str): name of file to write; this file is the same as
+        file_ew_tefffit_write (str): name of file to write; this file is the same as
             the one read in, except that now it also includes the best-fit values of the Teff
-        teff_data_write (str): file name of txt file containing info on the linear trend
         plot_tefffit_write (str): file name of Teff vs Balmer plot to write
         data_tefffit_write (str): name of file to write Teff data to
         plot (bool): flag whether to write plot or not

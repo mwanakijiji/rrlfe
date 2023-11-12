@@ -4,7 +4,11 @@ from . import * # read in config file, basic functions (logging)
 
 class CompileBkgrnd():
     """
-    Compile background routine for spectrum normalization
+    Compile background routine for spectrum normalization, write to file
+
+    Parameters:
+        module_name (str): name of module (arbitrary)
+        cc_bkgrnd_dir (str): directory containing bkgrnd.cc, and to which binary will be written
 
     Returns:
         bool: 'True' if compile was successful
@@ -16,16 +20,6 @@ class CompileBkgrnd():
         self.cc_bkgrnd_dir = cc_bkgrnd_dir
 
     def run_step(self, attribs = None):
-        '''
-        Compiles file needed for background normalization
-        
-        INPUTS:
-        module_name (str): name of module (arbitrary)
-        cc_bkgrnd_dir (str): directory containing bkgrnd.cc, and to which binary will be written
-        
-        RETURNS:
-        (compiled binary written to file)
-        '''
 
         cc_bkgrnd_file_path_abs = str(self.cc_bkgrnd_dir + "bkgrnd.cc")
         compiled_bkgrnd_file_path_abs = str(self.cc_bkgrnd_dir + "bkgrnd")

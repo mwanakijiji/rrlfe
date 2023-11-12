@@ -27,7 +27,7 @@ class CornerPlot():
         plot_corner_write (str): file name of PNG to write
 
     Returns:
-        [writes PNG to disk]
+        [a few posterior test_samples for testing only, and writes PNG to disk]
     """
 
     def __init__(self,
@@ -162,7 +162,7 @@ def lnprior(theta):
     """
 
     if (len(theta) == 4):
-        # Layden '94 relation
+        # Layden '94 relation (obsolete)
         a_test, b_test, c_test, d_test = theta
     elif (len(theta) == 8):
         # updated relation
@@ -183,9 +183,9 @@ def function_K(coeffs_pass,Bal_pass,F_pass):
     Function which gives CaIIK EW as function of Balmer, [Fe/H]
 
     Parameters:
-        coeffs_pass (array): array of coefficients
-        Bal_pass (array): Balmer EWs
-        F_pass (array): [Fe/H]
+        coeffs_pass (array of floats): array of coefficients
+        Bal_pass (array of floats): Balmer EWs
+        F_pass (array of floats): [Fe/H]
 
     Returns:
         CaIIK EW
@@ -239,7 +239,7 @@ def sigma_Km_sqd(coeffs_pass,Bal_pass,err_Bal_pass,Feh_pass,err_Feh_pass):
         coeffs_pass (array): array of coefficients
         Bal_pass (array): Balmer EWs
         err_Bal_pass (array): error in Balmer EWs
-        F_pass (array): [Fe/H]
+        Feh_pass (array): [Fe/H]
         err_Feh_pass (array): error in [Fe/H]
     """
     # def of model CaIIK error squared (this is general, regardless of number of coeffs):
@@ -328,6 +328,7 @@ class WriteSolnToFits():
         file_name_mcmc_posterior_read (str): file name of MCMC posterior to write back out as FITS file
         file_name_teff_data_read (str): file name of Teff data
         soln_write_name (str): file name of FITS file to write
+        model_type_override (str): calibration model (obsolete) ("None")
         test_flag (bool): if True, then terminal prompts are suppressed to enable continuous integration
 
     Returns:
@@ -464,7 +465,7 @@ class RunEmcee():
         file_name_write_mcmc_text_write (str): file name of MCMC posteriors to write as csv
 
     Returns:
-        [posteriors writte to disk]
+        [posteriors written to disk]
     """
 
     def __init__(self,

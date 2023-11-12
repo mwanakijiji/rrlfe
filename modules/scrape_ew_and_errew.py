@@ -19,12 +19,12 @@ from . import *
 
 def line_order_check(line_centers):
     """
-    Sanity check: are the lines listed in order?
+    Sanity check that the absorption lines are listed in order
     N.b. This checks the wavelengths using the given line list
     values (and not the fitted centers)
 
     Parameters:
-        line_centers (array): array of measured line centers
+        line_centers (array of floats): array of measured line centers
 
     Returns:
         int of number of apparent bad line centers
@@ -387,14 +387,13 @@ class GenerateNetBalmer():
 
     Parameters:
         module_name (str): arbitrary module name
-        read_in_filename: name of the file with stacked EW data from Robospect, and
+        file_restacked_read: name of the file with stacked EW data from Robospect, and
             only including 'good' data
-        write_out_filename: name of the file to be written out; identical to the file read in,
+        file_ew_net_balmer_write: name of the file to be written out; identical to the file read in,
             except that additional columns contain info on a net Balmer line
 
     Returns:
-        [writes out csv with net Balmer line EWs, and the following for testing: \n
-        [m, err_m, b, err_b], [m_1to1, err_m_1to1, b_1to1, err_b_1to1], df_poststack
+        writes out csv with net Balmer line EWs, and the following for testing: [m, err_m, b, err_b], [m_1to1, err_m_1to1, b_1to1, err_b_1to1], df_poststack
     """
 
     def __init__(self,
