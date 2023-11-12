@@ -12,7 +12,7 @@ stem_string = 'rrlfe_io_test_20231111/'
 calib_soln = 'deg_1-100_calib_solution_20230507.fits'
 
 # instantiate object that will contain the series of reduction steps
-test_gen = pipeline.ApplyCalib() ## ## need to let this set config file being read in (currently in __init__)
+test_gen = pipeline.ApplyCalib()
 
 # print configuration params to log file
 step = pipeline.ConfigInit(module_name="module1")

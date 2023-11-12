@@ -1,4 +1,4 @@
-import high_level_application_accordion as pipeline
+import high_level_generation_accordion as pipeline
 
 # absolute stem of repo; needed to make dirs if they don't exist
 stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
@@ -12,7 +12,7 @@ stem_string = 'rrlfe_io_generation_test_20231112/'
 calib_soln = 'test_only.fits'
 
 # instantiate object that will contain the series of reduction steps
-test_gen = pipeline.ApplyCalib() ## ## need to let this set config file being read in (currently in __init__)
+test_gen = pipeline.GenerateCalib()
 
 # print configuration params to log file
 step = pipeline.ConfigInit(module_name="module1")
