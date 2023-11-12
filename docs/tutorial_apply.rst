@@ -98,7 +98,7 @@ whitespace-delimited columns of wavelength (in anglstroms), flux (arbitrary) and
 Measure EWs of absorption lines
 ----
 
-Run `Robospect <https://home.ifa.hawaii.edu/users/watersc1/robospect/>` on the spectra to measure and write out the EWs.
+Run `Robospect <https://home.ifa.hawaii.edu/users/watersc1/robospect/>`_ on the spectra to measure and write out the EWs.
 
 .. code-block:: python
 
