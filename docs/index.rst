@@ -6,20 +6,6 @@ This software package can either generate a metallicity calibration from real or
 The calibration builds on that of `Layden 1994 <https://ui.adsabs.harvard.edu/abs/1994AJ....108.1016L/abstract>`_. See paper `Spalding et al. 2023 MNRAS 527:828 <https://academic.oup.com/mnras/article/527/1/828/7326007>`_ for details about how the calibration was made, and for further scientific information.
 Please cite the paper if you do use this calibration or software.
 
-The BibTeX entry is::
-
-    @misc{rrlfe,
-      author = {{Spalding}, E., R. Wilhelm, N. de Lee, and K. Carrell},
-      title = {rrlfe},
-      keywords = {Software},
-      howpublished = {Astrophysics Source Code Library},
-      year = 2023,
-      archivePrefix = "ascl",
-      eprint = {xxx.xxx},
-      adsurl = {https://ui.adsabs.harvard.edu/abs/xxxxxxx},
-      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
-    }
-
 Logo art by `Anna McElhannon <https://www.linkedin.com/in/annamcelhannon>`_
 
 .. toctree::
