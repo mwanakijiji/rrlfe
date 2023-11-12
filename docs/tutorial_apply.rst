@@ -66,13 +66,14 @@ just have to be different each time something is instantiated.
     test_gen.add_step(step)
 
 Take a list of unnormalized empirical spectra, normalize them, and write out. Here, _read directories are those where
-data already exists and is being read in, and _write is where the module writes something to. Make sure these 
-directories already exist before running the pipeline.
+data already exists and is being read in, and _write is where the module writes something to. New directories will be 
+made as needed. 
 
-Note that the list of input spectra includes file basenames, and a few empty columns which do not come into play
+Note that the `list <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/src/trunc_sdss_list_single_epoch_3911_to_4950.list>`_ 
+of input spectra includes file basenames under a column `orig_spec_file_name`, and a few empty columns which do not come into play
 here (they define some metadata for *generating* a new calibration).
 
-:download:`Here <src/sdss_single_epoch_chopped_3911_to_4950/spec-0266-51630-0197g001.dat>` is also an example of 
+:download:`Here <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/src/sdss_single_epoch_chopped_3911_to_4950/spec-0266-51630-0197g001.dat>`_ is also an example of 
 a spectrum input file from that list. It includes formatting which the pipeline is looking for: three 
 whitespace-delimited columns of wavelength (in anglstroms), flux (arbitrary) and flux noise.
 
