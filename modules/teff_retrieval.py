@@ -161,10 +161,7 @@ class TempVsBalmer():
                 logging.info('Text file to contain Teff linear fit trend is '+str(teff_data_write))
             else:
                 logging.warning('Making new directory '+str(os.path.dirname(teff_data_write))+ ' which will contain Teff linear fit trend')
-                make_dir(os.path.dirname(teff_data_write) + "/")
-                logging.info(os.path.dirname(teff_data_write))
-                logging.info(teff_data_write)
-                logging.info('----')
+                make_dir(os.path.dirname(teff_data_write) + "/") # slash necessary to avoid false string passed to make_dir()
 
         with open(teff_data_write, 'w') as file1:
 
