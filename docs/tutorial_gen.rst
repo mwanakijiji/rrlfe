@@ -282,7 +282,8 @@ Add final correction to the raw calibration
 ------
 
 To do that, skip to the next tutorial on applying a calibration, and apply the raw
-calibration to a basis set of low-resolution spectra. (In Spalding+ 2023, we used spectra taken from McDonald Observatory.)
+calibration you just made to a basis set of low-resolution spectra. 
+In Spalding et al. 2023, we used spectra taken from McDonald Observatory.
 
 Once you have done so, run the following mini-pipeline: 
 
@@ -312,3 +313,18 @@ And here's the step that executes the steps which have been strung together:
     test_gen.run()
 
 Done! Now you should have a FITS file with the raw calibration in the table data, and with correction parameters in the header.
+Now, when you apply this calibration to other spectra, run the same steps as above to generate 'raw' [Fe/H] values (i.e., up to the point 
+`Add final correction to the raw calibration`, though you can shortcut steps because you already have written out the MCMC
+posteriors), and add in the following last step to the pipeline, which reads in the 
+FITS file calibration and extracts and applies the corrective offset to the raw [Fe/H] values:
+
+    step = pipeline.final_corrxn.ApplyCorrxn(
+        module_name="module16",
+        file_name_basis_raw_retrieved_fehs="", # McD EW values
+        soln_fits_name="",
+        file_name_corrected_retrieved_fehs_write=""
+    )
+
+    test_gen.add_step(step)
+
+This functionality is encapsulated in (TBD).py.
