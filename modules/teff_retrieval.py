@@ -153,9 +153,15 @@ class TempVsBalmer():
         if (os.path.exists(teff_data_write) and test_flag==False): # pragma: no cover
 
             print(teff_data_write)
-            input("Text file containing Teff linear fit trend already exists! \n" + \
-                    teff_data_write + "\n" + \
-                    "Do what you want with that file and hit [ENTER] (will overwrite)")
+            logging.warning("Text file containing Teff linear fit trend already exists! Will overwrite\n" + \
+                    teff_data_write)
+        else:
+            if os.path.dirname(teff_data_write):
+                # check if directory to hold the text file exists
+                logging.info('Text file to contain Teff linear fit trend is '+str(teff_data_write))
+            else:
+                logging.warning('Making new directory '+str(os.path.dirname(teff_data_write))+ ' which will contain Teff linear fit trend')
+                make_dir(os.path.dirname(teff_data_write))
 
         with open(teff_data_write, 'w') as file1:
 
