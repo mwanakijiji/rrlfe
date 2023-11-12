@@ -54,6 +54,14 @@ class CornerPlot():
             model = "abcdfghk"
 
         if (model == "abcdfghk"):
+
+            if os.path.dirname(corner_plot_putput_file_name):
+                # check if directory exists
+                logging.info('Corner plot file will be '+str(corner_plot_putput_file_name))
+            else:
+                logging.warning('Making new directory '+str(os.path.dirname(corner_plot_putput_file_name))+ ' which will contain corner plot')
+                make_dir(os.path.dirname(corner_plot_putput_file_name))
+        
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
             test_samples = pd.read_csv(mcmc_text_output_file_name, delimiter = ',', nrows=5) # read in first rows to check column number
@@ -412,10 +420,16 @@ class WriteSolnToFits():
 
 
         # write out as FITS table
+        # check receiving directory exists in first place
+        if os.path.dirname(soln_write_name):
+            # check if directory exists
+            logging.info('File to contain FITS calibration is '+str(soln_write_name))
+        else:
+            logging.warning('Making new directory '+str(os.path.dirname(soln_write_name))+ ' which will contain FITS calibration')
+            make_dir(os.path.dirname(soln_write_name))
         if not test_flag: # pragma: no cover
             if os.path.exists(soln_write_name):
-                input("A calibration solution file already exists! \nDo " +\
-                        "what you want with that file and hit [ENTER] (will overwrite)")
+                input("A calibration solution file already exists! Will overwrite")
 
             table_hdu.writeto(soln_write_name, overwrite=True)
             logging.info("Full calibration MCMC posterior written to " + soln_write_name)
@@ -576,14 +590,22 @@ class RunEmcee():
         samples = sampler.get_chain(flat=True)
 
         # test plot
+        '''
         plt.hist(samples[:, 0], 100, color="k", histtype="step")
         plt.xlabel(r"$\theta_1$")
         plt.ylabel(r"$p(\theta_1)$")
         plt.gca().set_yticks([])
         plt.savefig("junk.png")
         plt.clf()
+        '''
 
         # test csv file
         logging.info("--------------------------")
+        if os.path.dirname(write_out_filename):
+            # check if directory exists
+            logging.info('File to contain MCMC data is '+str(mcmc_text_output_file_name))
+        else:
+            logging.warning('Making new directory '+str(os.path.dirname(mcmc_text_output_file_name))+ ' which will contain MCMC output data')
+            make_dir(os.path.dirname(mcmc_text_output_file_name))
         np.savetxt(mcmc_text_output_file_name,samples,delimiter=",")
         logging.info("MCMC chains written out as " + str(mcmc_text_output_file_name))

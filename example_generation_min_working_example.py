@@ -136,4 +136,29 @@ step = pipeline.run_emcee.RunEmcee(
 # add step to procedure
 test_gen.add_step(step)
 
+step = pipeline.run_emcee.WriteSolnToFits(
+    module_name="module14",
+    file_name_mcmc_posterior_read=stem_abs+"rrlfe_io_red/bin/mcmc_output.csv",
+    file_name_teff_data_read=stem_abs+"rrlfe_io_red/bin/teff_vs_balmer_trend.txt",
+    soln_write_name=stem_abs+"rrlfe_io_red/bin/calib_solution.fits")
+
+# add step to procedure
+test_gen.add_step(step)
+
+step = pipeline.run_emcee.CornerPlot(
+    module_name="module15",
+    file_name_mcmc_posterior_read=stem_abs+"rrlfe_io_red/bin/mcmc_output.csv",
+    plot_corner_write=stem_abs+"rrlfe_io_red/bin/mcmc_corner.png")
+
+# add step to procedure
+test_gen.add_step(step)
+
+# apply the raw calibration to the McD star EW data, and find the correction based on them
+# this requires a separate application script to have run on the McD data; it's too complicated to build it in here; TBD later
+step = pipeline.final_corrxn.FindCorrxn(
+    module_name="module16",
+    file_name_mcd_lit_fehs="", # McD EW values
+    soln_write_name=stem_abs+"rrlfe_io_red/bin/calib_solution.fits" # solution to which we will append corrxn to
+)
+
 test_gen.run()
