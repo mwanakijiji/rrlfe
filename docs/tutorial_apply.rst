@@ -11,7 +11,7 @@ Normalize a given set of spectra
 ----
 
 This section can be applied to any given input spectra, be they synthetic or empirical, and for the purpose of either generating 
-a calibration from them, or applying a calibration to them. This tutorial is specifically about generating a calibration,
+a calibration from them, or applying a calibration to them. This tutorial is specifically about applying a calibration,
 so the various choices of directories will be to that end.
 
 Start by importing the machinery we need:
@@ -68,6 +68,13 @@ just have to be different each time something is instantiated.
 Take a list of unnormalized empirical spectra, normalize them, and write out. Here, _read directories are those where
 data already exists and is being read in, and _write is where the module writes something to. Make sure these 
 directories already exist before running the pipeline.
+
+Note that the list of input spectra includes file basenames, and a few empty columns which do not come into play
+here (they define some metadata for *generating* a new calibration).
+
+:download:`Here <src/sdss_single_epoch_chopped_3911_to_4950/spec-0266-51630-0197g001.dat>` is also an example of 
+a spectrum input file from that list. It includes formatting which the pipeline is looking for: three 
+whitespace-delimited columns of wavelength (in anglstroms), flux (arbitrary) and flux noise.
 
 .. code-block:: python
 
