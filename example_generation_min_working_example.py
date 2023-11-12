@@ -112,7 +112,7 @@ step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.teff_retrieval.TempVsBalmer(
     module_name="module12",
@@ -120,6 +120,18 @@ step = pipeline.teff_retrieval.TempVsBalmer(
     file_ew_tefffit_write=stem_abs+stem_string+"ew_products/all_data_input_mcmc.csv",
     plot_tefffit_write=stem_abs+stem_string+"bin/teff_vs_balmer.png",
     data_tefffit_write=stem_abs+stem_string+"bin/teff_vs_balmer_trend.txt")
+
+# add step to procedure
+test_gen.add_step(step)
+'''
+
+# run_emcee
+# coeff defs: K = a + bH + cF + dHF + f(H^2) + g(F^2) + h(H^2)F + kH(F^2) + m(H^3) + n(F^3)
+# where K is CaII K EW; H is Balmer EW; F is [Fe/H]
+step = pipeline.run_emcee.RunEmcee(
+    module_name="module13",
+    file_name_scraped_ews_good_only_read=stem_abs+stem_string+"ew_products/all_data_input_mcmc.csv",
+    file_name_write_mcmc_text_write=stem_abs+stem_string+"bin/mcmc_output.csv")
 
 # add step to procedure
 test_gen.add_step(step)
