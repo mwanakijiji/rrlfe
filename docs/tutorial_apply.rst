@@ -73,7 +73,7 @@ Note that the `list <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/sr
 of input spectra includes file basenames under a column `orig_spec_file_name`, and a few empty columns which do not come into play
 here (they define some metadata for *generating* a new calibration).
 
-:download:`Here <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/src/sdss_single_epoch_chopped_3911_to_4950/spec-0266-51630-0197g001.dat>`_ is also an example of 
+`Here <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/src/sdss_single_epoch_chopped_3911_to_4950/spec-0266-51630-0197g001.dat>`_ is also an example of 
 a spectrum input file from that list. It includes formatting which the pipeline is looking for: three 
 whitespace-delimited columns of wavelength (in anglstroms), flux (arbitrary) and flux noise.
 
