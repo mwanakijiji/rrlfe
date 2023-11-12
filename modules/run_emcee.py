@@ -601,9 +601,9 @@ class RunEmcee():
 
         # test csv file
         logging.info("--------------------------")
-        if os.path.dirname(write_out_filename):
+        if os.path.dirname(mcmc_text_output_file_name):
             # check if directory exists
-            logging.info('File to contain MCMC data is '+str(mcmc_text_output_file_name))
+            logging.info('File to contain MCMC data will be '+str(mcmc_text_output_file_name))
         else:
             logging.warning('Making new directory '+str(os.path.dirname(mcmc_text_output_file_name))+ ' which will contain MCMC output data')
             make_dir(os.path.dirname(mcmc_text_output_file_name))
