@@ -61,7 +61,7 @@ class TempVsBalmer():
             and 'EW_Balmer', with which a simple linear fit is made
         df_poststack_file_name_write (str): name of file to write; this file is the same as
             the one read in, except that now it also includes the best-fit values of the Teff
-        teff_data_write (str): file name of txt file containing info on the lienar trend
+        teff_data_write (str): file name of txt file containing info on the linear trend
         plot_tefffit_write (str): file name of Teff vs Balmer plot to write
         data_tefffit_write (str): name of file to write Teff data to
         plot (bool): flag whether to write plot or not
@@ -162,6 +162,7 @@ class TempVsBalmer():
             else:
                 logging.warning('Making new directory '+str(os.path.dirname(teff_data_write))+ ' which will contain Teff linear fit trend')
                 make_dir(os.path.dirname(teff_data_write))
+                logging.info('----')
 
         with open(teff_data_write, 'w') as file1:
 
