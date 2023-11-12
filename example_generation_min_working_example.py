@@ -108,8 +108,8 @@ test_gen.add_step(step)
 step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(
     module_name="module11",
     input_spec_list_read=stem_abs+"src/synthetic_spectra.list",
-    ew_data_w_net_balmer_read=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
-    file_w_meta_data_write=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_w_metadata.csv")
+    ew_data_w_net_balmer_read=stem_abs+stem_string+"/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
+    file_w_meta_data_write=stem_abs+stem_string+"/ew_products/restacked_ew_w_metadata.csv")
 
 # add step to procedure
 test_gen.add_step(step)
