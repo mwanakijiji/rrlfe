@@ -153,6 +153,7 @@ step = pipeline.run_emcee.CornerPlot(
 # add step to procedure
 test_gen.add_step(step)
 
+'''
 # apply the final correction, as based on comparisons of [Fe/H] values from high-res spectroscopy
 # and from low resolution spectra taken at McDonald Observatory 
 step = pipeline.final_corrxn.ApplyCorrxn(
@@ -161,8 +162,10 @@ step = pipeline.final_corrxn.ApplyCorrxn(
     soln_write_name=stem_abs+"rrlfe_io_red/bin/calib_solution.fits" # solution to which we will append corrxn to
 )
 
+
 # add step to procedure
 test_gen.add_step(step)
+'''
 
 '''
         module_name (str): module name
