@@ -232,6 +232,44 @@ to screen and to the log. That file contains various intermediatary data as well
 interested in are 
 
 `orig_spec_file_name`: the original file name of the spectrum
+
 `feh_corrected`: [Fe/H], after having applied the last correction above
+
 `err_feh_retrieved`: random error in [Fe/H]
+
 `teff_retrieved`: a coarse measure of the Teff of the spectum, based on the strong correlation between some Balmer lines and Teff
+
+Other columns include 
+
+`realization_spec_file_name`: name of the spectrum if multiple realizations are being made for calculation of uncertainties (if not, then the
+names are the same as the original input spectra with a `_000` suffix)
+
+`EW_Hbeta`: EW of the H-beta line, as measured by Robospect (angstroms)
+
+`err_EW_Hbeta_from_robo`: error in the EW of the H-beta line, as returned by Robospect (angstroms)
+
+`EW_Hdelta`: EW of the H-delta line, as measured by Robospect (angstroms)
+
+`err_EW_Hdelta_from_robo`: error in the EW of the H-delta line, as returned by Robospect (angstroms)
+
+`EW_Hgamma`: EW of the H-gamma line, as measured by Robospect (angstroms)
+
+`err_EW_Hgamma_from_robo`: error in the EW of the H-gamma line, as returned by Robospect (angstroms)
+
+`EW_Heps`: EW of the H-epsilon line, as measured by Robospect (angstroms)
+
+`err_EW_Heps_from_robo`: error in the EW of the H-epsilon line, as returned by Robospect (angstroms)
+
+`EW_CaIIK`: EW of the Ca II K line, as measured by Robospect (angstroms)
+
+`err_EW_CaIIK_from_robo`: error in the EW of the Ca II K line, as returned by Robospect (angstroms)
+
+`EW_Balmer`: EW of the net Balmer line, based on H-gamma and H-delta lines (angstroms)
+
+`err_EW_Balmer_from_robo`: error in the EW of the net Balmer line, based on simple combination of Robospect errors (overestimate; angstroms)
+
+`err_EW_Balmer_scaled`: error in the EW of the net Balmer line, after rescaling the overestimated error from simple combination of Robospect errors (angstroms)
+
+`err_EW_CaIIK_scaled`: error in the EW of the Ca II K line, after rescaling the overestimated error from Robospect
+
+`feh_retrieved`: the 'raw' [Fe/H] value, before rescaling based on high-resolution spectroscopic studies

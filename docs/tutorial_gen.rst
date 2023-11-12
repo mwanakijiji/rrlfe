@@ -5,7 +5,7 @@ The basic idea is that, first, we take synthetic spectra with known input parame
 and measure the EWs of the absorption lines. Knowing the metallicities [Fe/H], we make a functional fit that 
 is an extension of the one in Layden 1994. The raw solution is output as a FITS file containing the MCMC posteriors
 and relevant information in the header. 'Raw' in this context signifies that no offset correction 
-has been applied to the solution, to make it consistent with retrievals based on high-resoltion spectroscopy.
+has been applied to the solution to make it consistent with retrievals based on high-resoltion spectroscopy.
 
 To find that offset correction, we retrieve [Fe/H] based on low-resolution spectroscopy from stars which already have known values based on 
 high-resolution spectroscopy. By comparing the two [Fe/H] values for these stars, the parameters of this correction
@@ -15,97 +15,122 @@ To put all this into practice, we call different classes from rrlfe and string t
 The user gives each instantiated module a module_name, which allows it to be distinguished from other modules
 when the pipeline is run.
 
-
-
-first series of steps is presented without 
-commentary, as they are the same as for generating a calibration, up to and including the section
-'Make a net Balmer line.' Commentary resumes below when the steps diverge.
+Note the first series of steps---normalizing spectra, measuring the EWs of their absorption lines, 
+and packaging the results into large data tables---is virtually the same as for applying a ready-made calibration
+to a given set of spectra. (See `Tutorial: Applying a Calibration`.) This tutorial is specifically about generating a calibration,
+so the choices of directories will be to that end.
 
 Normalize a given set of spectra
 ----
-
-This section can be applied to any given input spectra, be they synthetic or empirical, and for the purpose of either generating 
-a calibration from them, or applying a calibration to them. This tutorial is specifically about generating a calibration,
-so the various choices of directories will be to that end.
 
 Start by importing the machinery we need:
 
 .. code-block:: python
 
-    import high_level_application_accordion as pipeline
+    import high_level_generation_accordion as pipeline
 
-and make sure to define the absolute path of the repo. All I/O directories will be beneath this.
+We define the absolute path of the repo, and the I/O directory which will be located beneath that. 
+In addition we define a handy string or two. 
 
 .. code-block:: python
 
-    stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
+    # absolute stem of rrlfe repo
+    stem_abs = "/Users/myname/directory1/directory2/rrlfe/"
+
+    # string for the next-level directory which will contain all the I/O
+    stem_string = 'rrlfe_io_test/'
 
 Now instantiate the object that will contain the series of reduction steps, and instantiate the object
 to print configuration parameters to a log file. We need to add the latter to the former with the add_step command.
 
 .. code-block:: python
 
-    test_gen = pipeline.GenerateCalib()
+    # instantiate object that will contain the series of steps of the pipeline
+    test_gen = pipeline.ApplyCalib()
 
+    # print configuration params to log file
     step = pipeline.ConfigInit(module_name="module1")
 
+    # add step to procedure
     test_gen.add_step(step)
 
+In the above first step which we formally add to the pipeline, the 'module_name' string is arbitrary. We just have to 
+define different strings for each module we add to the pipeline, so that they can be kept in order. We may as well
+have used ``parakeet`` instead of ``module1``, just as long as we give a different name at each step.
 
-Compile the C script to do the spectral normalization. Notice how the module_name strings are arbitrary. They 
+Now we compile the C script to do the spectral normalization. Notice how the module_name strings are arbitrary. They 
 just have to be different each time something is instantiated.
 
 .. code-block:: python
 
-    step = pipeline.compile_normalization.CompileBkgrnd(module_name="module3")
+    # compile the C spectral normalization script and define directory in which to place the binary
+    step = pipeline.compile_normalization.CompileBkgrnd(
+        module_name="module3",
+        cc_bkgrnd_dir=stem_abs+"src/")
 
+    # add step to procedure
     test_gen.add_step(step)
 
 Take a list of unnormalized empirical spectra, normalize them, and write out. Here, _read directories are those where
-data already exists and is being read in, and _write is where the module writes something to. Make sure these 
-directories already exist before running the pipeline.
+data already exists and is being read in, and _write is where the module writes something to. New directories will be 
+made as needed.
+
+Note that the `list <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/src/synthetic_spectra.list>`_ 
+of input spectra includes file basenames under a column `orig_spec_file_name` (see the `Prerequisites` page), and a few columns which 
+contain metadata for *generating* a new calibration.
+
+`Here <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/src/sdss_single_epoch_chopped_3911_to_4950/spec-0266-51630-0197g001.dat>`_ 
+is an example spectrum input file. It includes formatting which the pipeline is looking for: three 
+whitespace-delimited columns of wavelength (in angstroms), flux (arbitrary) and flux noise.
 
 .. code-block:: python
 
+    # take list of unnormalized empirical spectra, normalize them, and write out
     step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
         module_name="module4",
-        input_spec_list_read=stem_abs+"src/sdss_test_20221213.list",
-        unnorm_spectra_dir_read=stem_abs+"src/sdss_20221213_cosmic_rays_removed_automated_3900_to_5299_angstr/",
-        unnorm_noise_churned_spectra_dir_read=stem_abs+"src/realizations_output/",
-        bkgrnd_output_dir_write=stem_abs+"rrlfe_io_20221220_sdss_test_2/realizations_output/norm/",
-        final_spec_dir_write=stem_abs+"rrlfe_io_20221220_sdss_test_2/realizations_output/norm/final/",
+        cc_bkgrnd_dir=stem_abs+"src/",
+        input_spec_list_read=stem_abs+"src/synthetic_spectra.list",
+        unnorm_spectra_dir_read=stem_abs+"src/synthetic_spectra/",
+        unnorm_noise_churned_spectra_dir_read=stem_abs+stem_string+"realizations_output/",
+        bkgrnd_output_dir_write=stem_abs+stem_string+"realizations_output/norm/",
+        final_spec_dir_write=stem_abs+stem_string+"realizations_output/norm/final/",
         noise_level=0.0,
         spec_file_type="ascii.no_header",
         number_specs=1,
         verb=False)
 
+    # add step to procedure
     test_gen.add_step(step)
 
 Measure EWs of absorption lines
 ----
 
-Run Robospect on the spectra to measure and write out the EWs.
+Run `Robospect <https://home.ifa.hawaii.edu/users/watersc1/robospect/>`_ on the spectra to measure and write out the EWs.
 
 .. code-block:: python
 
+    # run_robospect on normalized synthetic spectra
     step = pipeline.run_robo.Robo(
         module_name="module5",
         robo_dir_read="../robospect.py/",
-        normzed_spec_dir_read=stem_abs+"rrlfe_io_red/realizations_output/norm/final/",
-        robo_output_write=stem_abs+"rrlfe_io_red/robospect_output/smo_files/")
+        normzed_spec_dir_read=stem_abs+stem_string+"realizations_output/norm/final/",
+        robo_output_write=stem_abs+stem_string+"robospect_output/smo_files/")
 
+    # add step to procedure
     test_gen.add_step(step)
 
 Scrape all the EWs from the raw Robospect output files.
 
 .. code-block:: python
 
+    # scrape_ew_from_robo and calculate EWs + err_EW
     step = pipeline.scrape_ew_and_errew.Scraper(
         module_name="module6",
-        input_spec_list_read=stem_abs+"src/junk_test_synthetic_spectra.list",
-        robo_output_read=stem_abs+"rrlfe_io_red/robospect_output/smo_files/",
-        file_scraped_write=stem_abs+"rrlfe_io_red/ew_products/all_ew_info.csv")
+        input_spec_list_read=stem_abs+"src/synthetic_spectra.list",
+        robo_output_read=stem_abs+stem_string+"robospect_output/smo_files/",
+        file_scraped_write=stem_abs+stem_string+"ew_products/all_ew_info.csv")
 
+    # add step to procedure
     test_gen.add_step(step)
 
 Do a quality check on the lines, based on Robospect quality flags. We don't want to base the 
@@ -113,11 +138,13 @@ calibration on spurious EWs.
 
 .. code-block:: python
 
+    # scrape_ew_from_robo and calculate EWs + err_EW
     step = pipeline.scrape_ew_and_errew.QualityCheck(
         module_name="module7",
-        file_scraped_all_read=stem_abs+"rrlfe_io_red/ew_products/all_ew_info.csv",
-        file_scraped_good_write=stem_abs+"rrlfe_io_red/ew_products/ew_info_good_only.csv")
+        file_scraped_all_read=stem_abs+stem_string+"ew_products/all_ew_info.csv",
+        file_scraped_good_write=stem_abs+stem_string+"ew_products/ew_info_good_only.csv")
 
+    # add step to procedure
     test_gen.add_step(step)
 
 Transpose and stack all the data, so that each row corresponds to a spectrum and the columns represent 
@@ -125,12 +152,14 @@ different absorption lines.
 
 .. code-block:: python
 
+    # transpose/stack all the data, where each row corresponds to a spectrum
     step = pipeline.scrape_ew_and_errew.StackSpectra(
         module_name="module8",
-        input_spec_list_read=stem_abs+"src/junk_test_synthetic_spectra.list",
-        file_ew_data_read=stem_abs+"rrlfe_io_red/ew_products/ew_info_good_only.csv",
-        file_restacked_write=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_info_good_only.csv")
+        file_ew_data_read=stem_abs+stem_string+"ew_products/ew_info_good_only.csv",
+        file_restacked_write=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only.csv",
+        input_spec_list_read=stem_abs+"src/synthetic_spectra.list")
 
+    # add step to procedure
     test_gen.add_step(step)
 
 Make a net Balmer line
@@ -140,23 +169,31 @@ We combine the the H-delta and H-gamma lines to make a 'net' Balmer absorption l
 
 .. code-block:: python
 
+    # make a net Balmer line from the H-delta and H-gamma lines
     step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
         module_name="module9",
-        file_restacked_read=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_info_good_only.csv",
-        file_ew_net_balmer_write=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_info_good_only_w_net_balmer.csv")
+        file_restacked_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only.csv",
+        file_ew_net_balmer_write=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer.csv")
 
+    # add step to procedure
     test_gen.add_step(step)
 
-Add errors from noise-churning
+Add EW errors for the net Balmer lines
 
 .. code-block:: python
 
+    # add errors
     step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
         module_name="module10",
-        ew_data_restacked_read=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_info_good_only_w_net_balmer.csv",
-        ew_data_w_net_balmer_read=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv")
+        ew_data_restacked_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer.csv",
+        ew_data_w_net_balmer_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv")
 
+    # add step to procedure
     test_gen.add_step(step)
+
+The above steps will provide us a table of EWs. Whether you want to *apply* a calibration to spectra to get [Fe/H] values or 
+*generate* a new calibration, the steps up until this point will be essentially the same: we take a bunch of spectra, 
+normalize them, find the absorption line EWs, generate net Balmer lines, and put all the info into a big table.
 
 Whether you want to *generate* a new calibration or *apply* one that already exists to a given set of spectra, the steps up 
 until this point will be essentially the same: we take a bunch of spectra, normalize them, find the absorption line EWs, and put 
@@ -174,9 +211,9 @@ Note this step requires a list of spectra we want to select
 
     step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(
         module_name="module11",
-        input_spec_list_read=stem_abs+"src/junk_test_synthetic_spectra.list",
-        ew_data_w_net_balmer_read=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
-        file_w_meta_data_write=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_w_metadata.csv")
+        input_spec_list_read=stem_abs+"src/synthetic_spectra.list",
+        ew_data_w_net_balmer_read=stem_abs+stem_string+"/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
+        file_w_meta_data_write=stem_abs+stem_string+"/ew_products/restacked_ew_w_metadata.csv")
 
     test_gen.add_step(step)
 
@@ -186,10 +223,10 @@ As an added bonus to our calibration, we also calculate a linear function for Te
 
     step = pipeline.teff_retrieval.TempVsBalmer(
         module_name="module12",
-        file_ew_poststack_read=stem_abs+"rrlfe_io_red/ew_products/restacked_ew_w_metadata.csv",
-        file_ew_tefffit_write=stem_abs+"rrlfe_io_red/ew_products/all_data_input_mcmc.csv",
-        plot_tefffit_write=stem_abs+"rrlfe_io_red/bin/teff_vs_balmer.png",
-        data_tefffit_write=stem_abs+"rrlfe_io_red/bin/teff_vs_balmer_trend.txt")
+        file_ew_poststack_read=stem_abs+stem_string+"ew_products/restacked_ew_w_metadata.csv",
+        file_ew_tefffit_write=stem_abs+stem_string+"ew_products/all_data_input_mcmc.csv",
+        plot_tefffit_write=stem_abs+stem_string+"bin/teff_vs_balmer.png",
+        data_tefffit_write=stem_abs+stem_string+"bin/teff_vs_balmer_trend.txt")
 
     test_gen.add_step(step)
 
