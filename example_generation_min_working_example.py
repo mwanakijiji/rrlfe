@@ -116,10 +116,10 @@ test_gen.add_step(step)
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.teff_retrieval.TempVsBalmer(
     module_name="module12",
-    file_ew_poststack_read=stem_abs+stem_string+"/ew_products/restacked_ew_w_metadata.csv",
-    file_ew_tefffit_write=stem_abs+stem_string+"/ew_products/all_data_input_mcmc.csv",
-    plot_tefffit_write=stem_abs+stem_string+"/bin/teff_vs_balmer.png",
-    data_tefffit_write=stem_abs+stem_string+"/bin/teff_vs_balmer_trend.txt")
+    file_ew_poststack_read=stem_abs+stem_string+"ew_products/restacked_ew_w_metadata.csv",
+    file_ew_tefffit_write=stem_abs+stem_string+"ew_products/all_data_input_mcmc.csv",
+    plot_tefffit_write=stem_abs+stem_string+"bin/teff_vs_balmer.png",
+    data_tefffit_write=stem_abs+stem_string+"bin/teff_vs_balmer_trend.txt")
 
 # add step to procedure
 test_gen.add_step(step)
