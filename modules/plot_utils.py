@@ -30,8 +30,6 @@ def plot_isometal():
         empirical_spectrum_names = data_to_plot['original_spec_file_name'].where(
             data_to_plot['star_name'] == unique_star_names[y])
 
-        #import ipdb; ipdb.set_trace()
-
         # plot, and keep the same color for each star
         #color_this_star = cmap(float(y)/len(unique_star_names))
         ax.errorbar(x_data,
@@ -65,7 +63,6 @@ def plot_isometal():
                             np.array(y_data.dropna())[0]))
 
         # overplot the name of the empirical spectrum at each data point
-        #import ipdb; ipdb.set_trace()
         empirical_spectra_names_this_star = np.array(empirical_spectrum_names.dropna())
         for spec_annotate_num in range(0,len(empirical_spectra_names_this_star)):
             ax.annotate(empirical_spectra_names_this_star[spec_annotate_num],
@@ -75,7 +72,6 @@ def plot_isometal():
                             np.array(y_data.dropna())[spec_annotate_num]),
                     fontsize=6)
     '''
-    #import ipdb; ipdb.set_trace()
     # connect lines between each 'star'; that is, with the same gravity and metallicity
     df_20m10 = data_to_plot[data_to_plot['original_spec_file_name'].str.contains('20m10')].sort_values(by=["original_spec_file_name"]).reset_index()
     df_20m15 = data_to_plot[data_to_plot['original_spec_file_name'].str.contains('20m15')].sort_values(by=["original_spec_file_name"]).reset_index()
@@ -105,7 +101,6 @@ def plot_isometal():
     # establish color map
     n = 16
     colors = pl.cm.jet(np.linspace(0,1,n))
-    #import ipdb; ipdb.set_trace()
     # definition for making the annotation a bit simpler
     def annotate_fcn(ax_pass, stuff_2_plot):
         for spec_annotate_num in range(0,len(stuff_2_plot)):
