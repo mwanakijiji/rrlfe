@@ -9,7 +9,7 @@ from configparser import ConfigParser, ExtendedInterpolation
 global config_choice
 config_choice = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
 # config for reduction to find a, b, c, d
-config_choice.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_red.ini')) ## ## THIS HAS TO BE MANUALLY SET BY USER HERE; NEED TO CHANGE THIS
+config_choice.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_red.ini'))
 
 # config for applying a calibration
 '''

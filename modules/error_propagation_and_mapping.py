@@ -35,8 +35,6 @@ class feh_plotter():
         number_cum_norm = np.divide(np.arange(len(array_input)),
                                     len(array_input))
         array_input_sort = np.sort(array_input)
-        #array_cdf = np.divide(np.cumsum(array_input_sort),
-        #                      np.cumsum(array_input_sort)[-1])
 
         return array_input_sort, number_cum_norm
 
@@ -251,18 +249,17 @@ class feh_plotter():
         OUTPUTS:
         m_array: array of slopes for each bootstrap step
         b_array: array of y-intercepts for each bootstrap step
-        params_list_star_feh: star names and basis set Fe/H ## ## for what?
+        params_list_star_feh: star names and basis set Fe/H 
         data_1: original data which is fed into the bootstrap
         '''
 
         # read in actual data
-        ## ## N.b. this is just the RRabs with RRab offsets for now
         real_data_1 = pickle.load( open( read_pickle_subdir
                                          + config["file_names"]["RRAB_RRAB_OFFSETS"], "rb" ) )
 
         # arrange the data in a way we can use
         # N.b. This is NOT fake data; I'm just appropriating the old variable name
-        ## ## Note the ersatz Layden errors for now; need to revisit this with values from his paper
+        # Note the placeholder Layden errors for now
         data_1 = { "star_name": real_data_1[0]["name_star"],
                 "feh_lit": real_data_1[0]["feh_highres"],
                 "feh_layden": real_data_1[0]["feh_basis"],
@@ -337,7 +334,7 @@ class feh_mapper(feh_plotter):
 
         # number of samples to take within the Gaussian error around Layden's Fe/H value
         N = 100
-        gaussian_spread = 0.07 ## ## change this in future
+        gaussian_spread = 0.07 # might change this in future
         layden_feh = feh_test # this is the discrete value
 
         # N_m_samples x N_Layden_samples
@@ -352,7 +349,6 @@ class feh_mapper(feh_plotter):
             # loop over all (m,b) combinations found further above
             for sample_num in range(0, len(m_array)):
 
-                ## ## is it layden_feh*(1. + offset) or (layden_feh + offset) ?
                 feh_mapped_1sample = (m_array[sample_num]*layden_feh*(1. + offset) +
                                       b_array[sample_num])
                 feh_mapped_array[sample_num][integal_piece] = feh_mapped_1sample

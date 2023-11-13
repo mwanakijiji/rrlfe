@@ -435,21 +435,6 @@ class WriteSolnToFits():
             table_hdu.writeto(soln_write_name, overwrite=True)
             logging.info("Full calibration MCMC posterior written to " + soln_write_name)
 
-
-        # to read back in, can use this syntax
-        '''
-        test = fits.open(fits_table_filename)
-        test[1].data # whole table
-        test[1].data['a'] # one col
-
-        OR
-
-        from astropy.table import Table
-        table = Table.read(fits_table_filename)
-        x=np.array(table)
-        test2 = pd.DataFrame(x)
-        '''
-
         # return FITS table for testing
         return table_hdu
 
@@ -489,7 +474,6 @@ class RunEmcee():
         logging.info("--------------------------")
         logging.info("Reading in data from " + scraped_ews_good_only_file_name)
 
-        ## ## make df_choice.Spectrum -> df_choice["Spectrum etc.
         df_choice = pd.read_csv(scraped_ews_good_only_file_name,delim_whitespace=False)
 
         # EWs in table are in angstroms and are mislabeled as mA (2020 Jan 12)
@@ -503,7 +487,6 @@ class RunEmcee():
         ave = df_choice['EW_Balmer']
         eave = df_choice['err_EW_Balmer_scaled']
         #eave = np.divide(df_choice['err_balmer'], 1000.)
-        ## ## THE BELOW FEH VALUES NEED TO BE CHECKED/FIXED
         feh = df_choice['feh']
         efeh = df_choice['err_feh']
 
@@ -515,10 +498,6 @@ class RunEmcee():
         k_init = 0.1
         m_init = 0. # 4th-order term; vestigial
         n_init = 0. # 4th-order term; vestigial
-        #sigma_a_layden = 0.416
-        #sigma_b_layden = 0.076
-        #sigma_c_layden = 0.285
-        #sigma_d_layden = 0.052
 
         # starting position, before adding a perturbation
 
@@ -575,7 +554,7 @@ class RunEmcee():
         state = sampler.run_mcmc(p0, burn_in)
         sampler.reset()
 
-        ################# SAVE PROGRESSIVELY TO HDF5 FILE #################
+        ################# SAVE TO FILE #################
         ## ## refer to these code snippets from Foreman-Mackey's website
         # IMPORTANT: sampler will only have memory of the last iteration if
         # storechain flag is set to False

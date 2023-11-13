@@ -93,11 +93,10 @@ class Scraper():
         # files with the EW info
         stem = '.' ## ##
         # subdirectory containing the *.c.dat files
-        subdir = self.robo_output_read ## ##
-        orig_spec_list = self.input_spec_list_read
+        subdir = self.robo_output_read_read
 
         # get list of filenames without the path
-        ## ## note the string being sought here is specific to RW's synthetic spectra; this is a weakness here and needs to be fixed later
+        # note the string being sought here is specific to RW's synthetic spectra; might change later
         if os.path.isdir(subdir):
             logging.info('Reading in Robolines output from '+str(subdir))
         else:

@@ -453,7 +453,7 @@ class CreateSpecRealizationsMain():
                         "--sismoo 1", "--no-plot", "{}".format(bkg_input_file)], stdout=PIPE, stderr=PIPE)
         (out, err) = bkgrnd.communicate() # returns tuple (stdout, stderr)
 
-        if self.verb == True: ## ## decode messages (are they used later? why take this step?)
+        if self.verb == True: # decode messages
             logging.info(out.decode("utf-8"))
             logging.info(err.decode("utf-8"))
 

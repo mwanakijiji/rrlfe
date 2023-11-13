@@ -79,8 +79,7 @@ class LitFehRaw():
         self.df_kemper_feh = pd.read_csv(source_dir + "kemper_1982_abundances.dat")
 
         # Fe/H from Govea+ 2014
-        ## ## note: Govea+ has abundances for each phase value, and this
-        ## ## includes NLTE phases; how to get single Fe/H?
+        # note: Govea+ has abundances for each phase value, and this includes NLTE phases
         self.df_govea_feh = pd.read_csv(source_dir + "govea_2014_abundances.dat")
 
 

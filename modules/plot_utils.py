@@ -4,7 +4,6 @@ Take data the pipeline has written out, and generate FYI plots
 
 def plot_isometal():
 
-    ## ## THE BELOW IS CRIBBED FROM ELSEWHERE
     # plot data points
     cmap = plt.get_cmap(name='jet')
     fig = plt.figure(figsize=(20, 10))
@@ -272,12 +271,6 @@ def plot_isometal():
     ax.errorbar(df_30p02["balmer"], df_30p02["K"], yerr=df_30p02["err_K"], xerr=df_30p02["err_balmer"], linestyle="-", color=colors[15],
                  fmt='o', elinewidth=0.5, ecolor='k', capsize=5, capthick=0.5)
     annotate_fcn(ax,df_30p02)
-
-    #import ipdb; ipdb.set_trace()
-
-
-
-
 
     plt.title('KH plot\n(unfilled markers = bad phase region)')
     plt.ylabel('CaIIK EW ($m\AA$?)')

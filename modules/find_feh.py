@@ -191,15 +191,11 @@ class FehRetrieval():
 
     def run_step(self, attribs = None):
 
-        #calib_read_file = attribs["data_dirs"]["DIR_SRC"] + attribs["file_names"]["CALIB_SOLN"]
         calib_read_file = self.file_calib_read
         calib_file = calib_read_file ## ## vestigial?
         mcmc_chain = Table.read(calib_file, hdu=1)
-        #write_pickle_dir = attribs["data_dirs"]["DIR_PICKLE"]
         write_pickle_dir = self.dir_retrievals_write
-        #good_ew_info_file = attribs["data_dirs"]["DIR_EW_PRODS"]+attribs["file_names"]["RESTACKED_EW_DATA_W_NET_BALMER_ERRORS"]
         good_ew_info_file = self.file_good_ew_read
-        #write_out_filename = attribs["data_dirs"]["DIR_BIN"]+attribs["file_names"]["RETRIEVED_VALS"]
         write_out_filename = self.file_retrievals_write
         ew_file = good_ew_info_file
 
@@ -218,17 +214,7 @@ class FehRetrieval():
         hdul = fits.open(calib_file)
         soln_header = hdul[1].header
 
-        # if write directories do not exist, create them
-        #make_dir(write_pickle_dir)
-        #make_dir(write_out_filename)
-
-        ## ## find/input EWs for a single spectrum here; use stand-in EWs for the moment
-        # number of samples to take within the Gaussian errors around Balmer, CaIIK EWs
-        #N_EW_samples = 1 # vestigial
-
         # loop over samples in the MCMC chain ## for serial process
-        #global mcmc_chain_global
-        #mcmc_chain_global = mcmc_chain
         N_MCMC_samples = len(mcmc_chain)
 
         if os.path.isdir(write_pickle_dir):
