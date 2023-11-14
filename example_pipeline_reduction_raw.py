@@ -7,7 +7,7 @@ import high_level_reduction_accordion as pipeline
 stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
 
 # instantiate object that will contain the series of reduction steps
-test_gen = pipeline.GenerateCalib() ## ## need to let this set config file being read in (currently in __init__)
+test_gen = pipeline.GenerateCalib()
 
 # print configuration params to log file
 step = pipeline.ConfigInit(module_name="module1")
