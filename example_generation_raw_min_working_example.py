@@ -138,7 +138,7 @@ test_gen.add_step(step)
 '''
 step = pipeline.run_emcee.WriteSolnToFits(
     module_name="module14",
-    file_name_mcmc_posterior_read=stem_abs+"rrlfe_io_red/bin/mcmc_output.csv",
+    file_name_mcmc_posterior_read=stem_abs+stem_string+"bin/mcmc_output.csv",
     file_name_teff_data_read=stem_abs+stem_string+"bin/teff_vs_balmer_trend.txt",
     soln_write_name=stem_abs+stem_string+"bin/calib_solution.fits")
 
