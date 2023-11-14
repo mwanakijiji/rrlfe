@@ -680,8 +680,6 @@ class StackSpectra():
             # extract original file name (the one from which realizations are made)
             # loop over all the original spectrum names; which contains a string that
             # appears in the name of the noise-churned spectrum name?
-            ## ## inelegant; determine original spectrum name later in better way
-            #for orig_num in range(0,len(original_names)):
             condition_array = []
 
             for this_parent_spectrum in original_names["orig_spec_file_name"]:
@@ -698,7 +696,6 @@ class StackSpectra():
 
             # select data from table relevant to this spectrum realization
             data_this_spectrum = df_prestack.where(df_prestack["realization_spec_file_name"] == this_realization_spectrum).dropna().reset_index()
-            #orig_name = original_names[condition_array]["orig_spec_file_name"].values[0]
 
             try:
                 # extract Balmer lines from the table of data for this specific spectrum realization
