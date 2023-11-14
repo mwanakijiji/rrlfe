@@ -93,7 +93,7 @@ class Scraper():
         # files with the EW info
         stem = '.' ## ##
         # subdirectory containing the *.c.dat files
-        subdir = self.robo_output_read_read
+        subdir = self.robo_output_read
 
         # get list of filenames without the path
         # note the string being sought here is specific to RW's synthetic spectra; might change later

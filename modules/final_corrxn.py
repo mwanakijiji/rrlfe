@@ -38,11 +38,12 @@ class FindCorrxn:
         Finds residual between rrlfe and SSPP values
         
         INPUTS:
-        vals_sspp: basis (probably mapped McDonald) [Fe/H] values (x); these are the ones we want to map onto
-        vals_rrlfe: rrlfe [Fe/H] values (y)
+        file_name_basis_raw_retrieved_fehs (csv): file name of retrieved McDonald [Fe/H] values based on raw rrlfe calibration
+        file_name_basis_lit_fehs (str): file name with literature [Fe/H] values based on high-res spectroscopy
+        soln_write_name (str): FITS file to write the corrected solution to
         
         RETURNS:
-        values of rrlfe [Fe/H] mapped onto SSPP
+        (residuals to 1-to-1 line for testing only)
         '''
 
         # raw [Fe/H] values retrieved with rrlfe
