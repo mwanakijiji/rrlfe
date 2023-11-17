@@ -56,7 +56,7 @@ step = pipeline.run_robo.Robo(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
@@ -127,5 +127,5 @@ step = pipeline.final_corrxn.FindCorrxn(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 test_gen.run()
