@@ -76,12 +76,12 @@ class Scraper():
 
     def __init__(self,
         module_name,
-        orig_spec_list,
+        input_spec_list_read,
         robo_output_read,
         file_scraped_write):
 
         self.name = module_name
-        self.orig_spec_list = orig_spec_list
+        self.orig_spec_list = input_spec_list_read
         self.robo_output_read = robo_output_read
         self.file_scraped_info = file_scraped_write
 
