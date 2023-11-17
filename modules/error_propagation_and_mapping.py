@@ -72,8 +72,8 @@ class feh_plotter():
         # fit a Gaussian
         popt, pcov = optimize.curve_fit(self.cdf_gauss, x_vals, y_vals)
 
-        print("Line parameters")
-        print(popt)
+        logging.info("Line parameters")
+        logging.info(popt)
 
         xvals_interp = np.arange(x_vals[0], x_vals[-1], 0.001)
         yvals_interp = np.interp(xvals_interp, x_vals, y_vals)
@@ -122,15 +122,15 @@ class feh_plotter():
 
         # ---------------------------------------------------------------------------
 
-        print("Fe/H at 50 percentile")
+        logging.info("Fe/H at 50 percentile")
         feh_50_perc = xvals_interp[idx]
-        print(feh_50_perc)
+        logging.info(feh_50_perc)
 
-        print("1-sigma interval")
+        logging.info("1-sigma interval")
         feh_1sig_low = xvals_interp[idx_1sig_low]
         feh_1sig_high = xvals_interp[idx_1sig_high]
-        print(feh_1sig_low)
-        print(feh_1sig_high)
+        logging.info(feh_1sig_low)
+        logging.info(feh_1sig_high)
 
         # pickle the data for this one star, to avoid choking the machine
         # with too much plot-making all at once
@@ -179,7 +179,7 @@ class feh_plotter():
         write_plot: write plot or not
         '''
 
-        print("Making CDF and histogram plots of FeH for " + name_star + "...")
+        logging.info("Making CDF and histogram plots of FeH for " + name_star + "...")
 
         # replace space with underscore
         name_star_underscore = str(name_star).replace(" ", "_")
@@ -319,10 +319,10 @@ class feh_mapper(feh_plotter):
         # get name and Layden Fe/H of star
         name_star = params_element[:][0]
         feh_test = params_element[:][1]
-        print("Star:")
-        print(name_star)
-        print("Layden Fe/H:")
-        print(feh_test)
+        logging.info("Star:")
+        logging.info(name_star)
+        logging.info("Layden Fe/H:")
+        logging.info(feh_test)
 
         for sample_num in range(0, len(m_array)):
 
@@ -358,9 +358,9 @@ class feh_mapper(feh_plotter):
                               feh_mapped_array,
                               write_pickle_subdir=self.write_pickle_subdir)
 
-        print("Elapsed time:")
-        print(str(time.time() - time_start))
-        print("--------------------------")
+        logging.info("Elapsed time:")
+        logging.info(str(time.time() - time_start))
+        logging.info("--------------------------")
 
 
     def do(self):
@@ -380,5 +380,5 @@ class feh_mapper(feh_plotter):
         # (this is done in series to avoid memory chokes)
         for t in range(0, len(data_1["star_name"])):
             this_star = data_1["star_name"][t]
-            print("Writing Fe/H CDF for star " + this_star)
+            logging.info("Writing Fe/H CDF for star " + this_star)
             self.write_cdf_hist_plot(this_star)

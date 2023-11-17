@@ -39,7 +39,7 @@ class CompileBkgrnd():
 
                 output, error = bkgrnd_compile.communicate()
                 if bkgrnd_compile.returncode != 0:
-                    print("Compile error %d %s %s" % (bkgrnd_compile.returncode, output, error))
+                    logging.error("Compile error %d %s %s" % (bkgrnd_compile.returncode, output, error))
                     success_val = bool(False)
                 else:
                     logging.info("Binary for spectrum normalization saved to")

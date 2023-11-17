@@ -165,9 +165,6 @@ def generate_realizations(spec_name,
 
         # add the noise
         new_flux = noise_to_add + spec_tab['flux']
-        #print(new_flux)
-        print(new_name_ascii)
-
 
         try:
             outfile = open(new_name_ascii, 'w')
@@ -250,9 +247,6 @@ def read_spec(spec_name, format):
        spec_tab: A numpy Table with three columns: wavelength, flux, error
        hdr: FITS header of the input spectrum
     """
-
-    print('current_dir')
-    print(current_dir)
 
     logging.info("Reading spectrum " + spec_name)
 
@@ -409,7 +403,7 @@ class CreateSpecRealizationsMain():
 
         # did we find all the spectra we wanted?
         if (num_existing < num_sought):
-            logging.warning(print("Found only "+str(num_existing)+" of "+str(num_sought)+" spectra in input list"))
+            logging.warning("Found only "+str(num_existing)+" of "+str(num_sought)+" spectra in input list")
             logging.warning("Files missing from input directory:")
             logging.warning(files_missing)
         else:
@@ -417,7 +411,7 @@ class CreateSpecRealizationsMain():
 
         # did any other spectra appear in the directory, which may or may not be a good thing?
         if (num_extra > 1):
-            logging.warning(print("Found "+str(num_extra)+" files in directory which do not appear in input list"))
+            logging.warning("Found "+str(num_extra)+" files in directory which do not appear in input list")
         else:
             logging.info("No spectra found in input directory which do not appear in input list.")
 

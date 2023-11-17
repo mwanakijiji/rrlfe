@@ -46,9 +46,6 @@ class CornerPlot():
 
         test_samples = pd.read_csv(mcmc_text_output_file_name, delimiter = ',', nrows=5) # read in first rows to check column number
 
-        print(mcmc_text_output_file_name)
-        print(np.shape(test_samples)[1])
-        print(test_samples)
         if np.shape(test_samples)[1] == 8:
             # 9 rows: 1 index and 8 chains
             model = "abcdfghk"
@@ -371,7 +368,6 @@ class WriteSolnToFits():
         # set compound datatype
         dtype=np.rec.fromrecords([['string_key', 189.6752158]]).dtype # all floats
         # load data, skipping header and hash corresponding to that file
-        print(teff_data_retrieve_file_name)
         teff_data = np.loadtxt(teff_data_retrieve_file_name, skiprows=1, usecols=(0,1), delimiter=':', dtype=dtype)
         dict_teff_data = {}
         for key, val in teff_data:
@@ -401,9 +397,7 @@ class WriteSolnToFits():
         if (model == "abcdfghk"):
             # corner plot (requires 'storechain=True' in enumerate above)
             # just first few lines to test
-            print(mcmc_text_output_file_name)
             samples = pd.read_csv(mcmc_text_output_file_name, usecols=(0,1,2,3,4,5,6,7), delimiter=",", names=["a", "b", "c", "d", "f", "g", "h", "k"])
-            print(samples)
 
             c1 = fits.Column(name="a", array=np.array(samples.iloc[:,0].values), format="D")
             c2 = fits.Column(name="b", array=np.array(samples.iloc[:,1].values), format="D")
@@ -414,7 +408,6 @@ class WriteSolnToFits():
             c7 = fits.Column(name="h", array=np.array(samples.iloc[:,6].values), format="D")
             c8 = fits.Column(name="k", array=np.array(samples.iloc[:,7].values), format="D")
             table_hdu = fits.BinTableHDU.from_columns([c1, c2, c3, c4, c5, c6, c7, c8], header=hdr)
-            print(table_hdu)
         
         else:
             logging.error('Error! No clear selection of model')
@@ -548,9 +541,6 @@ class RunEmcee():
 
         # burn-in
         burn_in = int(3e4)
-        print("nwalkers:", nwalkers)
-        print("ndim:", ndim)
-        print("burn in:", burn_in)
         state = sampler.run_mcmc(p0, burn_in)
         sampler.reset()
 
@@ -561,6 +551,9 @@ class RunEmcee():
 
         logging.info("--------------------------")
         logging.info("Saving MCMC chains to file ...")
+        logging.info("nwalkers:", nwalkers)
+        logging.info("ndim:", ndim)
+        logging.info("burn in:", burn_in)
 
         # post-burn-in calculate and save iteratively
         # mcmc_text_output_file_name,

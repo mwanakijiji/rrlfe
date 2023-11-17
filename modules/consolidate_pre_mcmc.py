@@ -89,10 +89,10 @@ def graft_feh(pickle_source_dir,
     # and paste the FeH values to the HK table rows corresponding to the
     # empirical spectra for that star
     if not synthetic:
-        print("Filling in Fe/H values for empirical spectra")
+        logging.info("Filling in Fe/H values for empirical spectra")
         for star_num in range(0, len(final_star_feh["star_name_underscore"])):
             this_star = final_star_feh["star_name_underscore"][star_num]
-            print("Retrieving calculated Fe/H value for " + this_star)
+            logging.info("Retrieving calculated Fe/H value for " + this_star)
             feh_center_this_star = final_star_feh["final_feh_center"][star_num]
             feh_lower_this_star = final_star_feh["final_feh_lower"][star_num]
             feh_upper_this_star = final_star_feh["final_feh_upper"][star_num]
@@ -102,21 +102,20 @@ def graft_feh(pickle_source_dir,
 
                 # if the star assigned to an FeH value appears in the empirical spectrum name
                 if (this_star in hk_ews["original_spec_file_name"][em_spec_num]):
-                    print("this_star is in hk_ews")
                     hk_ews["final_feh_center"].iloc[em_spec_num] = feh_center_this_star
                     hk_ews["final_feh_lower"].iloc[em_spec_num] = feh_lower_this_star
                     hk_ews["final_feh_upper"].iloc[em_spec_num] = feh_upper_this_star
 
     # if these are synthetic spectra
     elif synthetic:
-        print("Filling in Fe/H values for synthetic spectra")
+        logging.info("Filling in Fe/H values for synthetic spectra")
 
         # read in FeH values
         feh_info = pd.read_csv(hk_source_dir + config_choice["file_names"]["LIST_SPEC_PHASE"],
                     delim_whitespace=True)
 
         for synth_spec_num in range(0, len(hk_ews["original_spec_file_name"])):
-            print("Num " + str(synth_spec_num) + " out of " + str(len(hk_ews["original_spec_file_name"])))
+            logging.info("Num " + str(synth_spec_num) + " out of " + str(len(hk_ews["original_spec_file_name"])))
             this_synth_spectrum_name = hk_ews["original_spec_file_name"][synth_spec_num]
 
             # find where spectrum name in feh_info matches, and grab the FeH from there
@@ -151,9 +150,9 @@ def graft_feh(pickle_source_dir,
     pickle_write_name = pickle_source_dir + config_choice["file_names"]["KH_FINAL_PKL"]
     with open(pickle_write_name, "wb") as f:
         pickle.dump(hk_ews, f)
-    print("-----------------------------")
-    print("Wrote HK data with Fe/H values to ")
-    print(pickle_write_name)
+    logging.info("-----------------------------")
+    logging.info("Wrote HK data with Fe/H values to ")
+    logging.info(pickle_write_name)
 
     return
 
@@ -186,9 +185,9 @@ def winnow(pickle_source_dir=config_choice["data_dirs"]["DIR_PICKLE"],
 
     winnowed_file_name = hk_winnowed_write_dir + config_choice["file_names"]["KH_WINNOWED"]
     hk_data_winnowed.to_csv(winnowed_file_name)
-    print("--------------------------")
-    print("Wrote winnowed EW data for MCMC to ")
-    print(winnowed_file_name)
+    logging.info("--------------------------")
+    logging.info("Wrote winnowed EW data for MCMC to ")
+    logging.info(winnowed_file_name)
 
     # future possibility to winnow by star type, too
 
