@@ -66,7 +66,7 @@ class Scraper():
 
     Parameters:
         module_name (str): arbitrary module name
-        input_spec_list_read (list): file names of spectra to read in
+        orig_spec_list (list): original file names of spectra to read in
         robo_output_read (str): directory containing Robospect output
         file_scraped_write (str): file name of csv containing the scraped data
 
@@ -76,12 +76,12 @@ class Scraper():
 
     def __init__(self,
         module_name,
-        input_spec_list_read,
+        orig_spec_list,
         robo_output_read,
         file_scraped_write):
 
         self.name = module_name
-        self.input_spec_list_read = input_spec_list_read
+        self.orig_spec_list = orig_spec_list
         self.robo_output_read = robo_output_read
         self.file_scraped_info = file_scraped_write
 
@@ -108,7 +108,7 @@ class Scraper():
         file_list = sorted(file_list_unsorted)
 
         # read in original file names (note variable is being renamed here)
-        input_list = pd.read_csv(orig_spec_list)
+        input_list = pd.read_csv(self.orig_spec_list)
         orig_spec_list = input_list["orig_spec_file_name"]
 
         # EW info will get scraped into this
