@@ -47,9 +47,11 @@ class FindCorrxn:
         '''
 
         # raw [Fe/H] values retrieved with rrlfe
+        logging.info('Reading in raw [Fe/H] values of basis set stars from ',self.file_name_basis_raw_retrieved_fehs)
         df_raw_retrieved = pd.read_csv(self.file_name_basis_raw_retrieved_fehs)
         # [Fe/H] based on high-res spectroscopy from the literature; this should include both
         # raw (average) literature values, and the values after remapping onto a common basis set
+        logging.info('Reading in [Fe/H] values of basis set stars from high-res spectroscopy literature from ',self.file_name_basis_lit_fehs)
         df_basis = pd.read_csv(self.file_name_basis_lit_fehs)
         # average the high-res values for each 
 
