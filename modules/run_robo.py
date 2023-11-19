@@ -33,8 +33,7 @@ class RunRobo:
         logging.info("Running Robospect on "+ file_name + " \n")
 
         # define string for output base names
-        #file_specific_string = p.split(".")[-2].split("/")[-1]
-        ## ## the below is specific to *smo* files
+        # the below is specific to *smo* files
         file_specific_string = file_name.split("/")[-1]
 
         # example rSpect command:
@@ -83,7 +82,7 @@ class Robo():
         robo_output_write (str): directory Robospect writes EW info to
 
     Returns:
-        [EW data written to file]
+        [EW data written to text file]
     """
 
     def __init__(self,
@@ -102,13 +101,12 @@ class Robo():
         # check if write directories exist and are empty
         #make_dir(self.robo_output_write)
 
-        ## ## note that I have put in a specific string to look for
-        ## ## in the file name here; this might be a weakness later on
-        #import ipdb; ipdb.set_trace()
+        # note that I have put in a specific string to look for
+        # in the file name here; might change this later
         pool = multiprocessing.Pool(ncpu)
 
-        ## ## note the below file name list collects ALL files in that directory,
-        ## ## not just the ones listed in the initial .list file
+        # note the below file name list collects ALL files in that directory,
+        # not just the ones listed in the initial .list file
         file_name_list = glob.glob(self.normzed_spec_source_dir+"*")
         
         # check Robospect input directory exists
@@ -154,7 +152,6 @@ class Robo():
         #    run_robospect_instance = RunRobo(config_data=config_apply)
 
         # in parallel
-        
         pool.map(run_robospect_instance, file_name_list)
 
         # serial (testing only)

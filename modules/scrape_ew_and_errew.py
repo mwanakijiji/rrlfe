@@ -19,12 +19,12 @@ from . import *
 
 def line_order_check(line_centers):
     """
-    Sanity check: are the lines listed in order?
+    Sanity check that the absorption lines are listed in order
     N.b. This checks the wavelengths using the given line list
     values (and not the fitted centers)
 
     Parameters:
-        line_centers (array): array of measured line centers
+        line_centers (array of floats): array of measured line centers
 
     Returns:
         int of number of apparent bad line centers
@@ -66,7 +66,7 @@ class Scraper():
 
     Parameters:
         module_name (str): arbitrary module name
-        input_spec_list_read (list): file names of spectra to read in
+        orig_spec_list (list): original file names of spectra to read in
         robo_output_read (str): directory containing Robospect output
         file_scraped_write (str): file name of csv containing the scraped data
 
@@ -81,7 +81,7 @@ class Scraper():
         file_scraped_write):
 
         self.name = module_name
-        self.input_spec_list_read = input_spec_list_read
+        self.orig_spec_list = input_spec_list_read
         self.robo_output_read = robo_output_read
         self.file_scraped_info = file_scraped_write
 
@@ -93,11 +93,10 @@ class Scraper():
         # files with the EW info
         stem = '.' ## ##
         # subdirectory containing the *.c.dat files
-        subdir = self.robo_output_read ## ##
-        orig_spec_list = self.input_spec_list_read
+        subdir = self.robo_output_read
 
         # get list of filenames without the path
-        ## ## note the string being sought here is specific to RW's synthetic spectra; this is a weakness here and needs to be fixed later
+        # note the string being sought here is specific to RW's synthetic spectra; might change later
         if os.path.isdir(subdir):
             logging.info('Reading in Robolines output from '+str(subdir))
         else:
@@ -109,7 +108,7 @@ class Scraper():
         file_list = sorted(file_list_unsorted)
 
         # read in original file names (note variable is being renamed here)
-        input_list = pd.read_csv(orig_spec_list)
+        input_list = pd.read_csv(self.orig_spec_list)
         orig_spec_list = input_list["orig_spec_file_name"]
 
         # EW info will get scraped into this
@@ -387,14 +386,13 @@ class GenerateNetBalmer():
 
     Parameters:
         module_name (str): arbitrary module name
-        read_in_filename: name of the file with stacked EW data from Robospect, and
+        file_restacked_read: name of the file with stacked EW data from Robospect, and
             only including 'good' data
-        write_out_filename: name of the file to be written out; identical to the file read in,
+        file_ew_net_balmer_write: name of the file to be written out; identical to the file read in,
             except that additional columns contain info on a net Balmer line
 
     Returns:
-        [writes out csv with net Balmer line EWs, and the following for testing: \n
-        [m, err_m, b, err_b], [m_1to1, err_m_1to1, b_1to1, err_b_1to1], df_poststack
+        writes out csv with net Balmer line EWs, and the following for testing: [m, err_m, b, err_b], [m_1to1, err_m_1to1, b_1to1, err_b_1to1], df_poststack
     """
 
     def __init__(self,
@@ -691,8 +689,6 @@ class StackSpectra():
             # extract original file name (the one from which realizations are made)
             # loop over all the original spectrum names; which contains a string that
             # appears in the name of the noise-churned spectrum name?
-            ## ## inelegant; determine original spectrum name later in better way
-            #for orig_num in range(0,len(original_names)):
             condition_array = []
 
             for this_parent_spectrum in original_names["orig_spec_file_name"]:
@@ -709,7 +705,6 @@ class StackSpectra():
 
             # select data from table relevant to this spectrum realization
             data_this_spectrum = df_prestack.where(df_prestack["realization_spec_file_name"] == this_realization_spectrum).dropna().reset_index()
-            #orig_name = original_names[condition_array]["orig_spec_file_name"].values[0]
 
             try:
                 # extract Balmer lines from the table of data for this specific spectrum realization

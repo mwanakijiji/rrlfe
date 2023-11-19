@@ -38,22 +38,26 @@ class FindCorrxn:
         Finds residual between rrlfe and SSPP values
         
         INPUTS:
-        vals_sspp: basis (probably mapped McDonald) [Fe/H] values (x); these are the ones we want to map onto
-        vals_rrlfe: rrlfe [Fe/H] values (y)
+        file_name_basis_raw_retrieved_fehs (csv): file name of retrieved McDonald [Fe/H] values, as retrieved using raw rrlfe calibration
+        file_name_basis_lit_fehs (str): file name with literature [Fe/H] values based on high-res spectroscopy
+        soln_write_name (str): pre-existing FITS file in which to write the offset correction in the header
         
         RETURNS:
-        values of rrlfe [Fe/H] mapped onto SSPP
+        (residuals to 1-to-1 line for testing only)
         '''
 
         # raw [Fe/H] values retrieved with rrlfe
+        logging.info('Reading in raw [Fe/H] values of basis set stars from '+str(self.file_name_basis_raw_retrieved_fehs))
         df_raw_retrieved = pd.read_csv(self.file_name_basis_raw_retrieved_fehs)
         # [Fe/H] based on high-res spectroscopy from the literature; this should include both
         # raw (average) literature values, and the values after remapping onto a common basis set
+        logging.info('Reading in [Fe/H] values of basis set stars from high-res spectroscopy literature from '+str(self.file_name_basis_lit_fehs))
         df_basis = pd.read_csv(self.file_name_basis_lit_fehs)
         # average the high-res values for each 
 
         ## make matching and merger
         df_raw_retrieved['name_match'] = df_raw_retrieved['orig_spec_file_name'].str[:6].str.rstrip('_')
+
         df_raw_retrieved['name_match'].loc[df_raw_retrieved['name_match'] == 'V445_O'] = 'V445_Oph' # to make the name matching for this star to work right
 
         # make lower-case in case of case error
@@ -74,7 +78,7 @@ class FindCorrxn:
 
         # generate corrected Fe/H values
         vals_rrlfe_c = vals_rrlfe_r - resids
-
+        
         # find best-fit of vals_rrlfe_c (corrected) vs. vals_rrlfe_r (raw)
         m_c, b_c = np.polyfit(vals_rrlfe_r,vals_rrlfe_c,1) # _c: corrected
 

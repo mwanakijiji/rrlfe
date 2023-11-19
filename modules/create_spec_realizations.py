@@ -79,6 +79,11 @@ def calc_noise(noise_level, spectrum_df):
             "file": from file \n
             "None": no noise \n
             (float): level of relative noise to use
+        spectrum_df (pandas dataframe): spectrum file; if noise is being read in from file, or is 
+            being calculated from the flux, those must be in this file, in cols as follows: \n
+            [0]: wavelength [angstr] \n
+            [1]: flux \n
+            [2]: background flux \n
 
     Returns:
         Numpy array of noise spectrum
@@ -103,7 +108,11 @@ def calc_noise(noise_level, spectrum_df):
     return noise_to_add
 
 
-def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level):
+def generate_realizations(spec_name, 
+                          outdir, 
+                          spec_file_format, 
+                          num, 
+                          noise_level):
     '''
     Calculates a number of realizations of a given spectrum using Gaussian error bars
 
@@ -156,9 +165,6 @@ def generate_realizations(spec_name, outdir, spec_file_format, num, noise_level)
 
         # add the noise
         new_flux = noise_to_add + spec_tab['flux']
-        #print(new_flux)
-        print(new_name_ascii)
-
 
         try:
             outfile = open(new_name_ascii, 'w')
@@ -236,14 +242,11 @@ def read_spec(spec_name, format):
            [0]: wavelength \n
            [1] flux \n
            [2] error \n
-        format (str): "fits" or "ascii.no_header"
+        format (str): format of the spectrum file ("ascii.no_header" is the only option for now)
     Returns:
        spec_tab: A numpy Table with three columns: wavelength, flux, error
        hdr: FITS header of the input spectrum
     """
-
-    print('current_dir')
-    print(current_dir)
 
     logging.info("Reading spectrum " + spec_name)
 
@@ -400,7 +403,7 @@ class CreateSpecRealizationsMain():
 
         # did we find all the spectra we wanted?
         if (num_existing < num_sought):
-            logging.warning(print("Found only "+str(num_existing)+" of "+str(num_sought)+" spectra in input list"))
+            logging.warning("Found only "+str(num_existing)+" of "+str(num_sought)+" spectra in input list")
             logging.warning("Files missing from input directory:")
             logging.warning(files_missing)
         else:
@@ -408,7 +411,7 @@ class CreateSpecRealizationsMain():
 
         # did any other spectra appear in the directory, which may or may not be a good thing?
         if (num_extra > 1):
-            logging.warning(print("Found "+str(num_extra)+" files in directory which do not appear in input list"))
+            logging.warning("Found "+str(num_extra)+" files in directory which do not appear in input list")
         else:
             logging.info("No spectra found in input directory which do not appear in input list.")
 
@@ -444,7 +447,7 @@ class CreateSpecRealizationsMain():
                         "--sismoo 1", "--no-plot", "{}".format(bkg_input_file)], stdout=PIPE, stderr=PIPE)
         (out, err) = bkgrnd.communicate() # returns tuple (stdout, stderr)
 
-        if self.verb == True: ## ## decode messages (are they used later? why take this step?)
+        if self.verb == True: # decode messages
             logging.info(out.decode("utf-8"))
             logging.info(err.decode("utf-8"))
 

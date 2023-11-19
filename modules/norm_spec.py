@@ -39,8 +39,6 @@ class norm_spec:
         # make list of all output files put out by Robospect
         dir_name = "test_robo_output/"
         list_output_files = [name for name in os.listdir(dir_name) if os.path.isfile(os.path.join(dir_name, name))]
-        print(list_output_files)
-        print('--')
                                   
         # divide the second column of the output files (empirical) with the third (normalization) 
         header = ['WAVELENGTH', 'FLUX'] # headers of output file that Robospect will use (see Robospect user manual)

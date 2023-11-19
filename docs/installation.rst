@@ -26,15 +26,12 @@ Now, follow the instructions `here <https://github.com/czwa/robospect.py>`_ to i
 Robospect. Clone the code into the same parent directory in which the ``rrlfe``
 package resides.
 
-Make a directory robospect.py/tmp/ directory, `cd` to it and copy the file ll to it. (This 
+Make directory `robospect.py/tmp/` and copy the file `ll` to it from the `rrlfe/` directory. (This 
 file tells Robospect where to look for absorption lines in the spectra.)
 
 .. code-block:: python
 
   cp ../../rrlfe/ll .
-
-This file tells Robospect which absorption lines
-to look for.
 
 That's it! You're ready to roll. You can try a test run in the `rrlfe/` directory with the command
 

@@ -59,9 +59,8 @@ class TempVsBalmer():
         file_ew_poststack_read (str): name of file that contains all the data from the upstream
             pipeline and will be read in for the fit; it should contain columns with 'teff'
             and 'EW_Balmer', with which a simple linear fit is made
-        df_poststack_file_name_write (str): name of file to write; this file is the same as
+        file_ew_tefffit_write (str): name of file to write; this file is the same as
             the one read in, except that now it also includes the best-fit values of the Teff
-        teff_data_write (str): file name of txt file containing info on the lienar trend
         plot_tefffit_write (str): file name of Teff vs Balmer plot to write
         data_tefffit_write (str): name of file to write Teff data to
         plot (bool): flag whether to write plot or not
@@ -152,10 +151,16 @@ class TempVsBalmer():
         # (note this overwrites any previous existing file)
         if (os.path.exists(teff_data_write) and test_flag==False): # pragma: no cover
 
-            print(teff_data_write)
-            input("Text file containing Teff linear fit trend already exists! \n" + \
-                    teff_data_write + "\n" + \
-                    "Do what you want with that file and hit [ENTER] (will overwrite)")
+            #print(teff_data_write)
+            logging.warning("Text file containing Teff linear fit trend already exists! Will overwrite\n" + \
+                    teff_data_write)
+        else:
+            if os.path.exists(os.path.dirname(teff_data_write)):
+                # check if directory to hold the text file exists
+                logging.info('Text file to contain Teff linear fit trend is '+str(teff_data_write))
+            else:
+                logging.warning('Making new directory '+str(os.path.dirname(teff_data_write))+ ' which will contain Teff linear fit trend')
+                make_dir(os.path.dirname(teff_data_write) + "/") # slash necessary to avoid false string passed to make_dir()
 
         with open(teff_data_write, 'w') as file1:
 

@@ -36,7 +36,6 @@ for file_num in range(0,len(file_list)):
     choice = input("[d]isc/[g]ood/[c]osmic: ")
 
     plt.clf()
-    #import ipdb; ipdb.set_trace()
 
     dat_file_name = os.path.basename(file_list[file_num]).split(".")[-2]+".dat"
     if choice == "d":

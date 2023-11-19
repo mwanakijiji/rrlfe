@@ -79,8 +79,7 @@ class LitFehRaw():
         self.df_kemper_feh = pd.read_csv(source_dir + "kemper_1982_abundances.dat")
 
         # Fe/H from Govea+ 2014
-        ## ## note: Govea+ has abundances for each phase value, and this
-        ## ## includes NLTE phases; how to get single Fe/H?
+        # note: Govea+ has abundances for each phase value, and this includes NLTE phases
         self.df_govea_feh = pd.read_csv(source_dir + "govea_2014_abundances.dat")
 
 
@@ -389,8 +388,6 @@ def main():
     plt.scatter(match_crestani["feh_single_basis"],np.subtract(match_crestani["feh_single_lit_synced"],match_crestani["feh_single_basis"]))
     plt.savefig("test_resids.pdf")
 
-    import ipdb; ipdb.set_trace()
-
     resids_synched = [np.subtract(match_clementini["feh_single_lit_synced"],match_clementini["feh_single_basis"]),
                         np.subtract(match_fernley96["feh_single_lit_synced"],match_fernley96["feh_single_basis"]),
                         np.subtract(match_fernley97["feh_single_lit_synced"],match_fernley97["feh_single_basis"]),
@@ -418,14 +415,6 @@ def main():
                         np.subtract(match_crestani["feh_single_lit"],match_crestani["feh_single_basis"])
                         ]
     df_fyi_resids_nonsynched = pd.concat(resids_nonsynched)
-    import ipdb; ipdb.set_trace()
-
-    '''
-    .values_equal()
-
-    # make common basis
-    sdiff = astropy.table.join(table_1, table_2, keys=["ASAS_common"], join_type="inner")
-    '''
 
 
 # entry point

@@ -35,8 +35,6 @@ class feh_plotter():
         number_cum_norm = np.divide(np.arange(len(array_input)),
                                     len(array_input))
         array_input_sort = np.sort(array_input)
-        #array_cdf = np.divide(np.cumsum(array_input_sort),
-        #                      np.cumsum(array_input_sort)[-1])
 
         return array_input_sort, number_cum_norm
 
@@ -74,8 +72,8 @@ class feh_plotter():
         # fit a Gaussian
         popt, pcov = optimize.curve_fit(self.cdf_gauss, x_vals, y_vals)
 
-        print("Line parameters")
-        print(popt)
+        logging.info("Line parameters")
+        logging.info(popt)
 
         xvals_interp = np.arange(x_vals[0], x_vals[-1], 0.001)
         yvals_interp = np.interp(xvals_interp, x_vals, y_vals)
@@ -124,15 +122,15 @@ class feh_plotter():
 
         # ---------------------------------------------------------------------------
 
-        print("Fe/H at 50 percentile")
+        logging.info("Fe/H at 50 percentile")
         feh_50_perc = xvals_interp[idx]
-        print(feh_50_perc)
+        logging.info(feh_50_perc)
 
-        print("1-sigma interval")
+        logging.info("1-sigma interval")
         feh_1sig_low = xvals_interp[idx_1sig_low]
         feh_1sig_high = xvals_interp[idx_1sig_high]
-        print(feh_1sig_low)
-        print(feh_1sig_high)
+        logging.info(feh_1sig_low)
+        logging.info(feh_1sig_high)
 
         # pickle the data for this one star, to avoid choking the machine
         # with too much plot-making all at once
@@ -181,7 +179,7 @@ class feh_plotter():
         write_plot: write plot or not
         '''
 
-        print("Making CDF and histogram plots of FeH for " + name_star + "...")
+        logging.info("Making CDF and histogram plots of FeH for " + name_star + "...")
 
         # replace space with underscore
         name_star_underscore = str(name_star).replace(" ", "_")
@@ -251,18 +249,17 @@ class feh_plotter():
         OUTPUTS:
         m_array: array of slopes for each bootstrap step
         b_array: array of y-intercepts for each bootstrap step
-        params_list_star_feh: star names and basis set Fe/H ## ## for what?
+        params_list_star_feh: star names and basis set Fe/H 
         data_1: original data which is fed into the bootstrap
         '''
 
         # read in actual data
-        ## ## N.b. this is just the RRabs with RRab offsets for now
         real_data_1 = pickle.load( open( read_pickle_subdir
                                          + config["file_names"]["RRAB_RRAB_OFFSETS"], "rb" ) )
 
         # arrange the data in a way we can use
         # N.b. This is NOT fake data; I'm just appropriating the old variable name
-        ## ## Note the ersatz Layden errors for now; need to revisit this with values from his paper
+        # Note the placeholder Layden errors for now
         data_1 = { "star_name": real_data_1[0]["name_star"],
                 "feh_lit": real_data_1[0]["feh_highres"],
                 "feh_layden": real_data_1[0]["feh_basis"],
@@ -322,10 +319,10 @@ class feh_mapper(feh_plotter):
         # get name and Layden Fe/H of star
         name_star = params_element[:][0]
         feh_test = params_element[:][1]
-        print("Star:")
-        print(name_star)
-        print("Layden Fe/H:")
-        print(feh_test)
+        logging.info("Star:")
+        logging.info(name_star)
+        logging.info("Layden Fe/H:")
+        logging.info(feh_test)
 
         for sample_num in range(0, len(m_array)):
 
@@ -337,7 +334,7 @@ class feh_mapper(feh_plotter):
 
         # number of samples to take within the Gaussian error around Layden's Fe/H value
         N = 100
-        gaussian_spread = 0.07 ## ## change this in future
+        gaussian_spread = 0.07 # might change this in future
         layden_feh = feh_test # this is the discrete value
 
         # N_m_samples x N_Layden_samples
@@ -352,7 +349,6 @@ class feh_mapper(feh_plotter):
             # loop over all (m,b) combinations found further above
             for sample_num in range(0, len(m_array)):
 
-                ## ## is it layden_feh*(1. + offset) or (layden_feh + offset) ?
                 feh_mapped_1sample = (m_array[sample_num]*layden_feh*(1. + offset) +
                                       b_array[sample_num])
                 feh_mapped_array[sample_num][integal_piece] = feh_mapped_1sample
@@ -362,9 +358,9 @@ class feh_mapper(feh_plotter):
                               feh_mapped_array,
                               write_pickle_subdir=self.write_pickle_subdir)
 
-        print("Elapsed time:")
-        print(str(time.time() - time_start))
-        print("--------------------------")
+        logging.info("Elapsed time:")
+        logging.info(str(time.time() - time_start))
+        logging.info("--------------------------")
 
 
     def do(self):
@@ -384,5 +380,5 @@ class feh_mapper(feh_plotter):
         # (this is done in series to avoid memory chokes)
         for t in range(0, len(data_1["star_name"])):
             this_star = data_1["star_name"][t]
-            print("Writing Fe/H CDF for star " + this_star)
+            logging.info("Writing Fe/H CDF for star " + this_star)
             self.write_cdf_hist_plot(this_star)
