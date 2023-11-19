@@ -57,6 +57,7 @@ class FindCorrxn:
 
         ## make matching and merger
         df_raw_retrieved['name_match'] = df_raw_retrieved['orig_spec_file_name'].str[:6].str.rstrip('_')
+        import ipdb; ipdb.set_trace()
         df_raw_retrieved['name_match'].loc[df_raw_retrieved['name_match'] == 'V445_O'] = 'V445_Oph' # to make the name matching for this star to work right
 
         # make lower-case in case of case error
