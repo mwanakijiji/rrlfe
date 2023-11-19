@@ -64,12 +64,12 @@ class FindCorrxn:
         df_basis['name_match'] = df_basis['name_match'].str.lower()
         df_raw_retrieved['name_match'] = df_raw_retrieved['name_match'].str.lower()
         df_merged = df_raw_retrieved[['name_match','feh_retrieved']].merge(df_basis[['name_match','feh_high_res_mapped']], on='name_match', how='inner')
-
+        import ipdb; ipdb.set_trace()
         # the literature [Fe/H] after remapping them onto a common basis
         vals_basis = df_merged['feh_high_res_mapped'].values
         # _r for raw
         vals_rrlfe_r = df_merged['feh_retrieved'].values
-
+        import ipdb; ipdb.set_trace()
         # initial best fit between rrlfe vs. basis
         m_b, b_b = np.polyfit(vals_basis,vals_rrlfe_r,1) # _b: best-fit
         
@@ -78,7 +78,7 @@ class FindCorrxn:
 
         # generate corrected Fe/H values
         vals_rrlfe_c = vals_rrlfe_r - resids
-
+        import ipdb; ipdb.set_trace()
         # find best-fit of vals_rrlfe_c (corrected) vs. vals_rrlfe_r (raw)
         m_c, b_c = np.polyfit(vals_rrlfe_r,vals_rrlfe_c,1) # _c: corrected
 
@@ -86,6 +86,7 @@ class FindCorrxn:
         hdul = fits.open(self.soln_write_name)
         hdul[1].header["CO_SLP_M"] = (m_c, "Slope of rrlfe_c vs. rrlfe_r")
         hdul[1].header["CO_YIN_B"] = (b_c, "Y-intercept of rrlfe_c vs. rrlfe_r")
+        import ipdb; ipdb.set_trace()
         hdul.writeto(self.soln_write_name, overwrite=True)
 
         logging.info("Appended final calibration correction to " + self.soln_write_name)
