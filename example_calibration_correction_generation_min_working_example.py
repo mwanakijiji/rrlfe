@@ -29,7 +29,7 @@ step = pipeline.compile_normalization.CompileBkgrnd(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # take list of unnormalized empirical spectra, normalize them, and write out
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
@@ -114,7 +114,6 @@ step = pipeline.find_feh.FehRetrieval(
 
 # add step to procedure
 test_gen.add_step(step)
-''' 
 
 
 # apply final correction
