@@ -1,6 +1,4 @@
-import high_level_application_accordion as pipeline
-
-# applies a 'raw' calibration to McDonald data, to generate calibration correction
+import high_level_generation_accordion as pipeline
 
 # absolute stem of repo; needed to make dirs if they don't exist
 stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
@@ -8,13 +6,13 @@ stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
 #stem_abs = "/home/prunelle/rrlfe/"
 
 # string for the upper level directory
-stem_string = 'rrlfe_io_calibration_correction_generation_test_20231115/'
+stem_string = 'rrlfe_io_generation_test_20231112/'
 
-# calibration solution to use
-calib_soln = 'deg_1-100_calib_solution_20230507.fits'
+# calibration solution to write out
+calib_soln = 'test_only.fits'
 
 # instantiate object that will contain the series of reduction steps
-test_gen = pipeline.ApplyCalib()
+test_gen = pipeline.GenerateCalib()
 
 # print configuration params to log file
 step = pipeline.ConfigInit(module_name="module1")
@@ -34,8 +32,8 @@ test_gen.add_step(step)
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
     cc_bkgrnd_dir=stem_abs+"src/",
-    input_spec_list_read=stem_abs+"src/mcd_final_phases_ascii_files_all_pub_20230606.list",
-    unnorm_spectra_dir_read=stem_abs+"src/mcdonald_spectra/",
+    input_spec_list_read=stem_abs+"src/synthetic_spectra.list",
+    unnorm_spectra_dir_read=stem_abs+"src/synthetic_spectra/",
     unnorm_noise_churned_spectra_dir_read=stem_abs+stem_string+"realizations_output/",
     bkgrnd_output_dir_write=stem_abs+stem_string+"realizations_output/norm/",
     final_spec_dir_write=stem_abs+stem_string+"realizations_output/norm/final/",
@@ -60,7 +58,7 @@ test_gen.add_step(step)
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
-    input_spec_list_read=stem_abs+"src/mcd_final_phases_ascii_files_all_pub_20230606.list",
+    input_spec_list_read=stem_abs+"src/synthetic_spectra.list",
     robo_output_read=stem_abs+stem_string+"robospect_output/smo_files/",
     file_scraped_write=stem_abs+stem_string+"ew_products/all_ew_info.csv")
 
@@ -81,7 +79,7 @@ step = pipeline.scrape_ew_and_errew.StackSpectra(
     module_name="module8",
     file_ew_data_read=stem_abs+stem_string+"ew_products/ew_info_good_only.csv",
     file_restacked_write=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only.csv",
-    input_spec_list_read=stem_abs+"src/mcd_final_phases_ascii_files_all_pub_20230606.list")
+    input_spec_list_read=stem_abs+"src/synthetic_spectra.list")
 
 # add step to procedure
 test_gen.add_step(step)
@@ -95,7 +93,7 @@ step = pipeline.scrape_ew_and_errew.GenerateNetBalmer(
 # add step to procedure
 test_gen.add_step(step)
 
-# add errors from noise-churning
+# add additional errors
 step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
     module_name="module10",
     ew_data_restacked_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer.csv",
@@ -105,23 +103,51 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 # add step to procedure
 test_gen.add_step(step)
 
-step = pipeline.find_feh.FehRetrieval(
+# take meta-data from file names of synthetic spectra and add to table
+step = pipeline.scrape_ew_and_errew.AddSyntheticMetaData(
     module_name="module11",
-    file_good_ew_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
-    file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/"+calib_soln,
-    dir_retrievals_write=stem_abs+stem_string+"bin/pickled_info/",
-    file_retrievals_write=stem_abs+stem_string+"bin/retrieved_vals.csv")
+    input_spec_list_read=stem_abs+"src/synthetic_spectra.list",
+    ew_data_w_net_balmer_read=stem_abs+stem_string+"/ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
+    file_w_meta_data_write=stem_abs+stem_string+"/ew_products/restacked_ew_w_metadata.csv")
 
 # add step to procedure
 test_gen.add_step(step)
 
-# apply final correction
-step = pipeline.final_corrxn.FindCorrxn(
-    module_name="module16",
-    file_name_basis_raw_retrieved_fehs=stem_abs+stem_string+"bin/retrieved_vals.csv", # retrieved McD Fe/H values based on raw rrlfe calibration
-    file_name_basis_lit_fehs=stem_abs+"src/mapped_program_fehs_20230402.csv", # file name with composite literature [Fe/H] values of McD stars based on high-res spectroscopy
-    soln_write_name=stem_abs+stem_string+"bin/calib_solution_test_20231119.fits" # mapped high-res literature Fe/H values for McD stars
-)
+# scrape_ew_from_robo and calculate EWs + err_EW
+step = pipeline.teff_retrieval.TempVsBalmer(
+    module_name="module12",
+    file_ew_poststack_read=stem_abs+stem_string+"ew_products/restacked_ew_w_metadata.csv",
+    file_ew_tefffit_write=stem_abs+stem_string+"ew_products/all_data_input_mcmc.csv",
+    plot_tefffit_write=stem_abs+stem_string+"bin/teff_vs_balmer.png",
+    data_tefffit_write=stem_abs+stem_string+"bin/teff_vs_balmer_trend.txt")
+
+# add step to procedure
+test_gen.add_step(step)
+
+# run_emcee
+# coeff defs: K = a + bH + cF + dHF + f(H^2) + g(F^2) + h(H^2)F + kH(F^2) + m(H^3) + n(F^3)
+# where K is CaII K EW; H is Balmer EW; F is [Fe/H]
+step = pipeline.run_emcee.RunEmcee(
+    module_name="module13",
+    file_name_scraped_ews_good_only_read=stem_abs+stem_string+"ew_products/all_data_input_mcmc.csv",
+    file_name_write_mcmc_text_write=stem_abs+stem_string+"bin/mcmc_output.csv")
+
+# add step to procedure
+test_gen.add_step(step)
+
+step = pipeline.run_emcee.WriteSolnToFits(
+    module_name="module14",
+    file_name_mcmc_posterior_read=stem_abs+stem_string+"bin/mcmc_output.csv",
+    file_name_teff_data_read=stem_abs+stem_string+"bin/teff_vs_balmer_trend.txt",
+    soln_write_name=stem_abs+stem_string+"bin/calib_solution.fits")
+
+# add step to procedure
+test_gen.add_step(step)
+
+step = pipeline.run_emcee.CornerPlot(
+    module_name="module15",
+    file_name_mcmc_posterior_read=stem_abs+stem_string+"bin/mcmc_output.csv",
+    plot_corner_write=stem_abs+stem_string+"bin/mcmc_corner.png")
 
 # add step to procedure
 test_gen.add_step(step)
