@@ -1,15 +1,21 @@
 Tutorial: Generating a calibration
 =================
 
-The basic idea is that, first, we take synthetic spectra with known input parameters, normalize them, 
+The basic idea is as follows:
+
+#. We take synthetic spectra with known input parameters, normalize them, 
 and measure the EWs of the absorption lines. Knowing the metallicities [Fe/H], we make a functional fit that 
 is an extension of the one in Layden 1994. The raw solution is output as a FITS file containing the MCMC posteriors
 and relevant information in the header. 'Raw' in this context signifies that no offset correction 
-has been applied to the solution to make it consistent with retrievals based on high-resoltion spectroscopy.
+has been applied to the solution to make it consistent with retrievals based on high-resolution spectroscopy. 
+`Here <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/example_calibration_generation_raw_min_working_example.py>`_
+is an example script that does through all these steps, though we step through them below.
 
-To find that offset correction, we retrieve [Fe/H] based on low-resolution spectroscopy from stars which already have known values based on 
+
+#. To find the offset correction between the [Fe/H] values based on the raw and high-res studies, we retrieve 
+[Fe/H] based on empirical low-resolution spectroscopy from stars which already have known values based on 
 high-resolution spectroscopy. By comparing the two [Fe/H] values for these stars, the parameters of this correction
-are added into the FITS header of the raw calibration to produce a final calibration.
+are added into the FITS header of the raw calibration to produce a 'final' calibration.
 
 To put all this into practice, we call different classes from rrlfe and string them together into a pipeline.
 The user gives each instantiated module a module_name, which allows it to be distinguished from other modules
@@ -18,7 +24,8 @@ when the pipeline is run.
 Note the first series of steps---normalizing spectra, measuring the EWs of their absorption lines, 
 and packaging the results into large data tables---is virtually the same as for applying a ready-made calibration
 to a given set of spectra. (See `Tutorial: Applying a Calibration`.) This tutorial is specifically about generating a calibration,
-so the choices of directories will be to that end.
+so the choices of directory names will be to that end. If you are already familiar with how to normalize spectra 
+and measure their EWs, you can probably skip down to the section `Add known meta-data and run MCMC`. 
 
 Normalize a given set of spectra
 ----
@@ -245,7 +252,7 @@ step makes use of the package emcee.
 
     test_gen.add_step(step)
 
-Export the raw Dicalibration
+Export the raw calibration
 ------
 
 Export the table to a FITS file:
@@ -285,12 +292,15 @@ To do that, skip to the next tutorial on applying a calibration, and apply the r
 calibration you just made to a basis set of low-resolution spectra. 
 In Spalding et al. 2023, we used spectra taken from McDonald Observatory.
 
-Once you have done so, run the following mini-pipeline: 
+Once you have done so and have retrieved [Fe/H] values from a basis set of empirical spectra, you can 
+run the following mini-pipeline: 
 
 .. code-block:: python
 
     import high_level_application_accordion as pipeline
-    stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
+
+    stem_abs = "/Users/myname/directory1/directory2/rrlfe/"
+    stem_string = 'rrlfe_io_test/'
 
     test_gen = pipeline.GenerateCalib()
 
@@ -300,8 +310,9 @@ Once you have done so, run the following mini-pipeline:
 
     step = pipeline.final_corrxn.FindCorrxn(
         module_name="module16",
-        file_name_mcd_lit_fehs="", # McD EW values
-        soln_write_name=stem_abs+"rrlfe_io_red/bin/calib_solution.fits" # solution to which we will append corrxn to
+        file_name_basis_raw_retrieved_fehs=stem_abs+stem_string+"bin/retrieved_vals.csv", # retrieved McD Fe/H values based on raw rrlfe calibration
+        file_name_basis_lit_fehs=stem_abs+"src/mapped_program_fehs_20230402.csv", # file name with composite literature [Fe/H] values of McD stars based on high-res spectroscopy
+        soln_write_name=stem_abs+stem_string+"bin/calib_solution_test_20231119.fits" # mapped high-res literature Fe/H values for McD stars
     )
 
     test_gen.add_step(step)
@@ -311,6 +322,10 @@ And here's the step that executes the steps which have been strung together:
 .. code-block:: python
     
     test_gen.run()
+
+To see the longer version of the above step---which includes the normalization of McDonald spectra, measurement
+of their EWs, and determination of the final offset correction---check out out the example script 
+`here <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/example_calibration_correction_generation_min_working_example.py>`_.
 
 Done! Now you should have a FITS file with the raw calibration in the table data, and with correction parameters in the header.
 Now, when you apply this calibration to other spectra, run the same steps as above to generate 'raw' [Fe/H] values (i.e., up to the point 
@@ -326,5 +341,3 @@ FITS file calibration and extracts and applies the corrective offset to the raw 
     )
 
     test_gen.add_step(step)
-
-This functionality is encapsulated in (TBD).py.
