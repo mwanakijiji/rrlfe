@@ -2,8 +2,6 @@ import high_level_generation_accordion as pipeline
 
 # absolute stem of repo; needed to make dirs if they don't exist
 stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
-#stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
-#stem_abs = "/home/prunelle/rrlfe/"
 
 # string for the upper level directory
 stem_string = 'rrlfe_io_generation_test_20231112/'
