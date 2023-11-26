@@ -27,8 +27,6 @@ config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing v
 # config for reduction to find a, b, c, d
 config_gen.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
 
-'''
-# needs fake data file TEST_RESTACKED_EW_DATA_W_METADATA_STANDALONE
 def test_TempVsBalmer(test_df_poststack_file_name_read = config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_METADATA_STANDALONE"],
                         test_df_poststack_file_name_write = config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"],
                         test_teff_data_write = config_gen["data_dirs"]["TEST_DIR_BIN"] + config_gen["file_names"]["TEST_TREND_TEFF_VS_BALMER"]):
@@ -63,6 +61,5 @@ def test_line_fit_temp_range(test_df_poststack_file_name_read = config_gen["data
     m_test, err_m_test, b_test, err_b_test = teff_retrieval.line_fit_temp_range(x_data_pass=ews_Balmer_test, y_data_pass=teff_test, t_min=5900, t_max=7350)
 
     # check line is being fit correctly
-    assert round(m_test, 2) == 3530.67
-    assert round(b_test, 2) == 12.34
-'''
+    assert round(m_test, 2) == 192.76
+    assert round(b_test, 2) == 5433.73
