@@ -1,6 +1,7 @@
 import os
 import glob
 import multiprocessing
+from multiprocessing import get_context
 import logging
 from . import *
 
@@ -101,9 +102,8 @@ class Robo():
         # check if write directories exist and are empty
         #make_dir(self.robo_output_write)
 
-        # note that I have put in a specific string to look for
-        # in the file name here; might change this later
-        pool = multiprocessing.Pool(ncpu)
+        # explicit syntax necessary for Macbook M1
+        pool = get_context("fork").Pool(ncpu)
 
         # note the below file name list collects ALL files in that directory,
         # not just the ones listed in the initial .list file

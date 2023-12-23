@@ -12,7 +12,7 @@ from scipy import optimize
 from astropy.stats import bootstrap
 from astropy.utils import NumpyRNGContext
 from multiprocessing import Pool
-#from rrlfe.modules2 import *
+from multiprocessing import get_context
 
 class feh_plotter():
     '''
@@ -371,8 +371,8 @@ class feh_mapper(feh_plotter):
         m_array, b_array, params_list_star_feh, data_1 = self.do_bootstrap()
 
         # parallel process the Fe/H info
-        #ncpu = multiprocessing.cpu_count()
-        pool = Pool(ncpu)
+        # explicit syntax necessary for Macbook M1
+        pool = get_context("fork").Pool(ncpu)
         outdat = pool.map(self.map_feh_one_star, params_list_star_feh) # FeH info is pickled here
         pool.close()
 
