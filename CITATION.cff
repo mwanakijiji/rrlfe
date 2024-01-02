@@ -1,0 +1,156 @@
+cff-version: 1.2.0
+title: rrlfe
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Eckhart
+    family-names: Spalding
+    email: eckhart.spalding@sydney.edu.au
+    affiliation: >-
+      Sydney Institute for Astronomy, School of Physics, The
+      University of Sydney
+    orcid: 'https://orcid.org/0000-0003-3819-0076'
+  - given-names: Ronald
+    family-names: Wilhelm
+    affiliation: >-
+      Department of Physics and Astronomy, University of
+      Kentucky
+    orcid: 'https://orcid.org/0000-0003-3819-0076'
+  - given-names: Nathan
+    family-names: De Lee
+    affiliation: >-
+      Department of Physics, Geology, and Engineering
+      Technology, Northern Kentucky University
+    orcid: 'https://orcid.org/0000-0002-3657-0705'
+  - given-names: Stacy
+    family-names: Long
+    affiliation: >-
+      Department of Chemistry and Physics, Lincoln Memorial
+      University
+    orcid: 'https://orcid.org/0000-0002-0726-424X'
+  - given-names: Timothy
+    name-particle: C.
+    family-names: Beers
+    affiliation: >-
+      Department of Physics and Astronomy and JINA Center
+      for the Evolution of the Elements, University of Notre
+      Dame
+    orcid: 'https://orcid.org/0000-0003-4573-6233'
+  - given-names: 'Vinicius '
+    name-particle: M.
+    family-names: Placco
+    affiliation: NSF’s NOIRLab
+    orcid: 'https://orcid.org/0000-0003-4479-1265'
+  - given-names: John
+    family-names: Kielkopf
+    affiliation: >-
+      Department of Physics and Astronomy, University of
+      Louisville
+    orcid: 'https://orcid.org/0000-0003-0497-2651'
+  - given-names: Young Sun
+    family-names: Lee
+    affiliation: >-
+      Department of Astronomy and Space Science, Chungnam
+      National University
+    orcid: 'https://orcid.org/0000-0001-5297-4518'
+  - given-names: Joshua
+    family-names: Pepper
+    affiliation: 'Department of Physics, Lehigh University'
+    orcid: 'https://orcid.org/0000-0002-3827-8417'
+  - given-names: Kenneth
+    family-names: Carrell
+    affiliation: >-
+      Department of Physics and Geosciences, Angelo State
+      University
+    orcid: 'https://orcid.org/0000-0002-6307-992X'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.8053437
+    description: Data on Zenodo
+  - type: doi
+    value: 10.1093/mnras/stad3199
+    description: Original paper
+repository-code: 'https://github.com/mwanakijiji/rrlfe.git'
+url: 'https://rrlfe.readthedocs.org/'
+abstract: >-
+  RRLFE generates and applies calibrations for retrieving
+  [Fe/H] from low-res spectra of RR Lyrae variable stars.
+  The code can generate a metallicity calibration anew, from
+  real or synthetic spectra; it can also apply a metallicity
+  calibration to low-resolution (R ~2000) RR Lyrae spectra
+  spanning 3911 to 4950 angstroms.
+license: MIT
+preferred-citation:
+  type: article
+  authors:
+    - given-names: Eckhart
+      family-names: Spalding
+      email: eckhart.spalding@sydney.edu.au
+      affiliation: >-
+        Sydney Institute for Astronomy, School of Physics, The
+        University of Sydney
+      orcid: 'https://orcid.org/0000-0003-3819-0076'
+    - given-names: Ronald
+      family-names: Wilhelm
+      affiliation: >-
+        Department of Physics and Astronomy, University of
+        Kentucky
+      orcid: 'https://orcid.org/0000-0003-3819-0076'
+    - given-names: Nathan
+      family-names: De Lee
+      affiliation: >-
+        Department of Physics, Geology, and Engineering
+        Technology, Northern Kentucky University
+      orcid: 'https://orcid.org/0000-0002-3657-0705'
+    - given-names: Stacy
+      family-names: Long
+      affiliation: >-
+        Department of Chemistry and Physics, Lincoln Memorial
+        University
+      orcid: 'https://orcid.org/0000-0002-0726-424X'
+    - given-names: Timothy
+      name-particle: C.
+      family-names: Beers
+      affiliation: >-
+        Department of Physics and Astronomy and JINA Center
+        for the Evolution of the Elements, University of Notre
+        Dame
+      orcid: 'https://orcid.org/0000-0003-4573-6233'
+    - given-names: 'Vinicius '
+      name-particle: M.
+      family-names: Placco
+      affiliation: NSF’s NOIRLab
+      orcid: 'https://orcid.org/0000-0003-4479-1265'
+    - given-names: John
+      family-names: Kielkopf
+      affiliation: >-
+        Department of Physics and Astronomy, University of
+        Louisville
+      orcid: 'https://orcid.org/0000-0003-0497-2651'
+    - given-names: Young Sun
+      family-names: Lee
+      affiliation: >-
+        Department of Astronomy and Space Science, Chungnam
+        National University
+      orcid: 'https://orcid.org/0000-0001-5297-4518'
+    - given-names: Joshua
+      family-names: Pepper
+      affiliation: 'Department of Physics, Lehigh University'
+      orcid: 'https://orcid.org/0000-0002-3827-8417'
+    - given-names: Kenneth
+      family-names: Carrell
+      affiliation: >-
+        Department of Physics and Geosciences, Angelo State
+        University
+      orcid: 'https://orcid.org/0000-0002-6307-992X'
+  doi: "10.1093/mnras/stad3199"
+  journal: "Monthly Notices of the Royal Astronomical Society"
+  month: 1
+  start: 828 # First page number
+  end: 845 # Last page number
+  title: "rrlfe: Software for Generating and Applying Metallicity Calibrations for RR Lyrae Variable Stars Across a Wide Range of Phases and Temperatures"
+  issue: 1
+  volume: 527
+  year: 2024
