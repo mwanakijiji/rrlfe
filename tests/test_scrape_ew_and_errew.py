@@ -162,25 +162,20 @@ def test_StackSpectra():
 
 
 def test_GenerateNetBalmer():
-    ## ## CONTINUE HERE; FINISH THIS TEST
-
-    # generate the fake data: H_del =
 
     inst = scrape_ew_and_errew.GenerateNetBalmer(module_name="test1",
-                                                                              file_restacked_read = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/test_stacked_data_pre_net_balmer_calc.csv",
-                                                                              file_ew_net_balmer_write = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/test_stacked_data_post_net_balmer_calc.csv")
+                                                 file_restacked_read = config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_GOOD_ONLY_READONLY"],
+                                                 file_ew_net_balmer_write = config_gen["data_dirs"]["TEST_DIR_BIN"]+"scraper_output/test_stacked_data_post_net_balmer_calc.csv")
 
     params_data, data_net_balmer_test = inst.run_step()
 
     # is the Balmer line a true element wise average?
+    assert np.allclose(np.array(data_net_balmer_test["EW_Balmer"]),
+                       np.mean([data_net_balmer_test["EW_Hgamma"],data_net_balmer_test["EW_Hdelta"]], axis=0))
 
-    #assert np.array(data_net_balmer_test["EW_Balmer"]) == np.mean([data_net_balmer_test["EW_Hgamma"],data_net_balmer_test["EW_Hdelta"]], axis=0)
-    '''
     # check data type of newly-added data
     assert isinstance(data_net_balmer_test["EW_Balmer"].iloc[0],np.float64)
-    assert isinstance(data_net_balmer_test["err_EW_Balmer_based_Robo"].iloc[0],np.float64)
-    '''
-    assert 1<2
+    assert isinstance(data_net_balmer_test["err_EW_Balmer_from_robo"].iloc[0],np.float64)
 
 
 def test_GenerateAddlEwErrors():
