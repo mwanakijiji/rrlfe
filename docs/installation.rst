@@ -41,7 +41,6 @@ That's it! You're ready to roll. You can try a test run in the `rrlfe/` director
 
 If you would ever like to file an issue on the ``rrlfe`` Github repo, you can do so `here <https://github.com/mwanakijiji/rrlfe/issues>`_.
 
-
 **Note:** The repository code contains a 3 Mb FITS file `deg_1-100_calib_solution_20230507.fits`, which contains the calibration solution corresponding to that in the paper 
 `Spalding et al. 2023 MNRAS 527:828 <https://academic.oup.com/mnras/article/527/1/828/7326007>`_, except that it is a 1:100 undersampling of the posterior chain links. Using the 'degraded' version provided, however, produces 
 [Fe/H] retrievals which differ negligibly from those using the full, 300 Mb calibration file. (The full calibration file is available on request.) 

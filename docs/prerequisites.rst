@@ -5,7 +5,7 @@ Once you have installed the software, you also need
 
 **1. A batch of spectra** 
 
-The spectra, which do not have to be normalized, are ascii files, each of which consists 
+The spectra do not have to be normalized, but do have to have cosmic rays removed. The files are ascii files, each of which consists 
 of whitespace-delimited columns (no headers) containing wavelength (in angstroms), flux (arbitrary), and noise 
 (same units as flux), like as follows. `Here <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/src/trunc_sdss_list_single_epoch_3911_to_4950.list>`_
 is an example.
