@@ -12,18 +12,20 @@ You can clone the code for this package from the command line:
 As a next step, we highly recommend that you create a compartmentalized software environment, inside of which
 you can install all the right versions of various software packages that ``rrlfe`` relies on, and without interfering
 with other installations on your local system. We recommend you have ``conda`` installed to do this.
+Here are two ways of creating such an environment with ``conda``:
 
-To create a new environment with ``conda``, run the following command:
+1.  Run the following command in the ``rrlfe/`` home directory:
 
-.. code-block:: python
+    .. code-block:: python
 
-  make
+      make
 
-This will initialize Python version 3.8 environment called ``rrlfe_env`` and install pip inside of it. (Alternatively, 
-see the instructions `here <https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_,
-using Python version 3.8 at the step \`\`To create an environment with a specific version of Python\`\`.)
+    This will initialize Python version 3.8 environment called ``rrlfe_env`` and install pip inside of it. 
 
-Now activate the environment with ``conda``:
+2. Follow the instructions `here <https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_.
+  (Use Python version 3.8 at the step \'\'To create an environment with a specific version of Python.\'\')
+
+Activate the environment with ``conda``:
 
 .. code-block:: python
 
@@ -35,21 +37,23 @@ And install the requirements for ``rrlfe`` with pip:
 
   pip install -r requirements.txt
 
-Now, install the Python port of Robospect. In the directory ``rrlfe/``, you can run a script which 
-clones Robospect into the parent directory, installs it, and copies an absorption line list into it:
+Now, install the Python port of Robospect. You can do this in one of two ways:
 
-.. code-block:: python
+1.  In the directory ``rrlfe/``, run a script which clones Robospect into the parent directory one level higher, installs it, and copies an absorption line list into it:
 
-  python install_robospect.py
+  .. code-block:: python
 
-Alternatively, you can do this manually by following the instructions `here <https://github.com/czwa/robospect.py>`_, 
-making sure to clone the code into the same parent directory in which the ``rrlfe``
-package resides. (Note that if there are any deprecation errors in the installation step, you may need 
-to file an issue in the Robospect.py `repo <https://github.com/czwa/robospect.py/issues>`_, which is maintained 
-independently of ``rrlfe``.) Then make directory `robospect.py/tmp/` and copy the file `ll` to it from the `rrlfe/` directory. (This 
-file tells Robospect where to look for absorption lines in the spectra.)
+    python install_robospect.py
 
-That's it! You're ready to roll. You can try a test run in the `rrlfe/` directory with the command
+2. Do this manually by following the instructions `here <https://github.com/czwa/robospect.py>`_.
+
+  Make sure to clone the code into the same parent directory which contains the ``rrlfe/`` directory. 
+  (Note that if there are any deprecation errors in the installation step, you may need 
+  to file an issue in the Robospect.py `repo <https://github.com/czwa/robospect.py/issues>`_, which is maintained 
+  independently of ``rrlfe``.) Then make directory ``robospect.py/tmp/`` and copy the file ``ll`` to it from the ``rrlfe/`` directory. (This 
+  file tells Robospect where to look for absorption lines in the spectra.)
+
+That's it! You're ready to roll. You can try a test run in the ``rrlfe/`` directory with the command
 
 .. code-block:: python
 
