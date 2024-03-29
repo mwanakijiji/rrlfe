@@ -21,6 +21,6 @@ setup(name="rrlfe",
       author_email="eckhart.spalding@sydney.edu.au",
       url="https://github.com/mwanakijiji/rrlfe",
       download_url="https://github.com/mwanakijiji/rrlfe/archive/refs/tags/v_0.0.12.tar.gz",
-      packages=find_packages(),
+      packages=find_packages(exclude=["rrlfe/DO_NOT_USE_modules", "rrlfe/test_bin/*.fits"]),
       include_package_data=True
       )
