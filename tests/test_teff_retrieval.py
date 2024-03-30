@@ -19,7 +19,8 @@ target_dir = os.path.abspath(os.path.join(current_dir, "../"))
 sys.path.insert(0, target_dir)
 
 from . import *
-from rrlfe.rrlfe import teff_retrieval
+from rrlfe import teff_retrieval
+#from rrlfe.rrlfe import teff_retrieval
 from conf import *
 
 # configuration data for reduction

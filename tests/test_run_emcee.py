@@ -14,7 +14,8 @@ sys.path.insert(0, target_dir)
 
 # import more things with changed system path
 from rrlfe.rrlfe import *
-from rrlfe.rrlfe import run_emcee
+from rrlfe import run_emcee
+#from rrlfe.rrlfe import run_emcee
 from conf import *
 import numpy as np
 import glob
