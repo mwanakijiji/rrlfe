@@ -4,6 +4,7 @@ import logging
 import matplotlib.pyplot as plt
 from astropy.io import fits
 import os
+from sys import exit
 
 
 class FindCorrxn:

@@ -12,8 +12,8 @@ target_dir = os.path.abspath(os.path.join(current_dir, "../"))
 sys.path.insert(0, target_dir)
 
 # import more things with changed system path
-from modules import *
-from modules import create_spec_realizations
+from rrlfe import *
+from rrlfe import create_spec_realizations
 from conf import *
 import numpy as np
 

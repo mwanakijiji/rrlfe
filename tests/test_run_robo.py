@@ -12,8 +12,8 @@ sys.path.insert(0, target_dir)
 
 '''
 # import more things with changed system path
-from modules import *
-from modules import run_robo
+from rrlfe import *
+from rrlfe import run_robo
 from conf import *
 import numpy as np
 import glob

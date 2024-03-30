@@ -11,8 +11,8 @@ target_dir = os.path.abspath(os.path.join(current_dir, "../"))
 sys.path.insert(0, target_dir)
 
 # import more things with changed system path
-from modules import *
-from modules import scrape_ew_and_errew
+from rrlfe import *
+from rrlfe import scrape_ew_and_errew
 from conf import *
 import numpy as np
 import glob

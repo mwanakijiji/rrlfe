@@ -14,7 +14,7 @@ from setuptools import setup, find_packages
 long_description = "For determining metallicities of RR Lyraes from low-res spectroscopy see `here <https://rrlfe.readthedocs.io>`__ for more info"
 
 setup(name="rrlfe",
-      version="0.1",
+      version="0.1.10",
       description="For finding FeH from low-res survey spectra of RR Lyrae stars",
       long_description=long_description,
       author="Eckhart Spalding, Ron Wilhelm, Nathan De Lee, Kenneth Carrell",

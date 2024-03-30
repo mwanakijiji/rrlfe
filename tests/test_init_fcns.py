@@ -8,7 +8,7 @@ print(current_dir)
 print(target_dir)
 sys.path.insert(0, target_dir)
 
-from modules import *
+from rrlfe import *
 from conf import *
 from configparser import ConfigParser, ExtendedInterpolation
 from conf import *

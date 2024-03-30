@@ -11,11 +11,21 @@ from setuptools import Distribution
 from setuptools.command.install import install
 from datetime import datetime
 from configparser import ConfigParser, ExtendedInterpolation
+import subprocess
 
 # get pipeline hash
 # warning: may throw error on cluster
-repo = git.Repo(search_parent_directories=True)
-sha = repo.head.object.hexsha
+'''
+def get_git_hash():
+    try:
+        git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode().strip()
+        return git_hash
+    except:
+        return None
+
+# get pipeline hash
+sha = get_git_hash()
+'''
 
 # set up logging, to print to screen and save to file simultaneously
 time_start = datetime.now()
@@ -206,7 +216,7 @@ class ConfigInit():
         try: 
             logging.info("## Begin pipeline configuration parameters ##")
 
-            logging.info("rrlfe git hash: " + sha)
+            #logging.info("rrlfe git hash: " + sha)
             print(attribs.sections)
 
             for each_section in attribs.sections():

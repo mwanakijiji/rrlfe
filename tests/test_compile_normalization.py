@@ -4,8 +4,8 @@ current_dir = os.path.dirname(__file__)
 target_dir = os.path.abspath(os.path.join(current_dir, "../"))
 sys.path.insert(0, target_dir)
 
-from modules import *
-from modules import compile_normalization
+from rrlfe import *
+from rrlfe import compile_normalization
 
 #@patch('builtins.print')
 def test_CompileBkgrnd():
