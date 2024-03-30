@@ -17,7 +17,8 @@ from rrlfe import *
 #from rrlfe.rrlfe import *
 from rrlfe import run_emcee
 #from rrlfe.rrlfe import run_emcee
-from conf import *
+from rrlfe.conf import *
+#from conf import *
 import numpy as np
 import glob
 
