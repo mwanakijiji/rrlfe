@@ -1,10 +1,12 @@
-import high_level_application_accordion as pipeline
+from rrlfe import high_level_application_accordion as pipeline
 
 # absolute stem of repo; needed to make dirs if they don't exist
-stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
+#stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
+#stem_abs = "/suphys/espa3021/Downloads/sandbox_install/one_deeper/one_deeper/"
+stem_abs = "/suphys/espa3021/Desktop/sandbox/sandbox_install/"
 
 # string for the upper level directory
-stem_string = 'rrlfe_io_test_20231111/'
+stem_string = 'rrlfe_io_test/'
 
 # calibration solution to use
 calib_soln = 'deg_1-100_calib_solution_20230507.fits'
@@ -30,8 +32,8 @@ test_gen.add_step(step)
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
     cc_bkgrnd_dir=stem_abs+"src/",
-    input_spec_list_read=stem_abs+"src/trunc_sdss_list_single_epoch_3911_to_4950.list",
-    unnorm_spectra_dir_read=stem_abs+"src/sdss_single_epoch_chopped_3911_to_4950/",
+    input_spec_list_read=stem_abs+"src/original_ascii_files.list",
+    unnorm_spectra_dir_read=stem_abs+"src/original_ascii_files/",
     unnorm_noise_churned_spectra_dir_read=stem_abs+stem_string+"realizations_output/",
     bkgrnd_output_dir_write=stem_abs+stem_string+"realizations_output/norm/",
     final_spec_dir_write=stem_abs+stem_string+"realizations_output/norm/final/",
@@ -56,7 +58,7 @@ test_gen.add_step(step)
 # scrape_ew_from_robo and calculate EWs + err_EW
 step = pipeline.scrape_ew_and_errew.Scraper(
     module_name="module6",
-    input_spec_list_read=stem_abs+"src/trunc_sdss_list_single_epoch_3911_to_4950.list",
+    input_spec_list_read=stem_abs+"src/original_ascii_files.list",
     robo_output_read=stem_abs+stem_string+"robospect_output/smo_files/",
     file_scraped_write=stem_abs+stem_string+"ew_products/all_ew_info.csv")
 
@@ -77,7 +79,7 @@ step = pipeline.scrape_ew_and_errew.StackSpectra(
     module_name="module8",
     file_ew_data_read=stem_abs+stem_string+"ew_products/ew_info_good_only.csv",
     file_restacked_write=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only.csv",
-    input_spec_list_read=stem_abs+"src/trunc_sdss_list_single_epoch_3911_to_4950.list")
+    input_spec_list_read=stem_abs+"src/original_ascii_files.list")
 
 # add step to procedure
 test_gen.add_step(step)
