@@ -27,7 +27,7 @@ from rrlfe.conf import *
 # configuration data for reduction
 config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
 # config for reduction to find a, b, c, d
-config_gen.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
+config_gen.read(os.path.join(os.path.dirname(__file__), '../rrlfe/conf', 'config_gen.ini'))
 
 def test_TempVsBalmer(test_df_poststack_file_name_read = config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_W_METADATA_STANDALONE"],
                         test_df_poststack_file_name_write = config_gen["data_dirs"]["TEST_DIR_SRC"]+config_gen["file_names"]["TEST_RESTACKED_EW_DATA_GOOD_ONLY_TEFFFIT"],

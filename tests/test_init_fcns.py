@@ -17,7 +17,7 @@ from configparser import ConfigParser, ExtendedInterpolation
 # configuration data for reduction
 config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
 # config for reduction to find a, b, c, d
-config_gen.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
+config_gen.read(os.path.join(os.path.dirname(__file__), '../rrlfe/conf', 'config_gen.ini'))
 
 # check if the directory-making function works
 def test_make_dir(monkeypatch):

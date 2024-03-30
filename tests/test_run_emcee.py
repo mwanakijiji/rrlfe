@@ -12,6 +12,9 @@ current_dir = os.path.dirname(__file__)
 target_dir = os.path.abspath(os.path.join(current_dir, "../"))
 sys.path.insert(0, target_dir)
 
+print('-----------')
+print(target_dir)
+
 # import more things with changed system path
 from rrlfe import *
 #from rrlfe.rrlfe import *
@@ -25,7 +28,7 @@ import glob
 # configuration data for reduction
 config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
 # config for reduction to find a, b, c, d
-config_gen.read(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
+config_gen.read(os.path.join(os.path.dirname(__file__), '../rrlfe/conf', 'config_gen.ini'))
 
 # set some fake constants
 coeffs_4_test = np.array([1.5,2.6,3.7,4.8])
