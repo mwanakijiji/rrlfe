@@ -2,10 +2,10 @@ name: Run Python Tests
 on:
   push:
     branches:
-      - main
+      - pip_dev_morgana
   pull_request:
     branches:
-      - main
+      - pip_dev_morgana
 
 jobs:
   build:
