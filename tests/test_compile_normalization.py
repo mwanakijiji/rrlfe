@@ -5,8 +5,8 @@ target_dir = os.path.abspath(os.path.join(current_dir, "../"))
 sys.path.insert(0, target_dir)
 
 from rrlfe import *
-#from rrlfe import compile_normalization
-from rrlfe.compile_normalization import CompileBkgrnd
+from rrlfe.rrlfe import compile_normalization
+#from rrlfe.compile_normalization import CompileBkgrnd
 
 #@patch('builtins.print')
 def test_CompileBkgrnd():
