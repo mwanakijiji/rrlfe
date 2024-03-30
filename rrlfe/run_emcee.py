@@ -385,7 +385,7 @@ class WriteSolnToFits():
         hdr["COMMENT"] = "K = a + bH + cF + dHF + f(H^2) + g(F^2) + h(H^2)F + kH(F^2)"
         # history
         hdr["COMMENT"] = "------------------------------------------------------------"
-        hdr["HISTORY"] = "Solution generated with rrlfe, git hash " + sha
+        # hdr["HISTORY"] = "Solution generated with rrlfe, git hash " + sha # sha causes problems in the cloud
         hdr["HISTORY"] = "Start time " + timestring_human
         hdr["HISTORY"] = "Log file " + log_filename
 
