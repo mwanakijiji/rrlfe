@@ -1,63 +1,49 @@
 Installation
 =================
 
-You can clone the code for this package from the command line:
+We highly recommend that you create a compartmentalized software environment, inside of which
+you can install ``rrlfe`` and all the right versions of packages that it relies on.
 
-.. code-block:: python
+To create such an environment with ``conda``, follow the instructions `here <https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_. 
+(Use Python version 3.8 at the step \'\'To create an environment with a specific version of Python.\'\')
 
-  git clone https://github.com/mwanakijiji/rrlfe.git
-
-(A ``pip install`` option will come in the future.)
-
-As a next step, we highly recommend that you create a compartmentalized software environment, inside of which
-you can install all the right versions of various software packages that ``rrlfe`` relies on, and without interfering
-with other installations on your local system. We recommend you have ``conda`` installed to do this.
-Here are two ways of creating such an environment with ``conda``:
-
-1.  Run the following command in the ``rrlfe/`` home directory:
-
-    .. code-block:: python
-
-      make
-
-    This will initialize Python version 3.8 environment called ``rrlfe_env`` and install pip inside of it. 
-
-2. Follow the instructions `here <https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_.
-  (Use Python version 3.8 at the step \'\'To create an environment with a specific version of Python.\'\')
-
-Activate the environment with ``conda``:
+Activate the environment:
 
 .. code-block:: python
 
   conda activate rrlfe_env
 
-And install the requirements for ``rrlfe`` with pip:
+Pip install ``rrlfe``:
+
+.. code-block:: python
+
+  pip install rrlfe
+
+Make a directory (say, ``rrlfe_io/``) to contain the I/O of your reduction. ``cd`` to it, and grab some files directly from the repo which we
+will need:
+
+.. code-block:: python
+
+  wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/src.tar.gz
+  tar -xvf src.tar.gz
+
+Pip install the packages listed in the requirements file:
 
 .. code-block:: python
 
   pip install -r requirements.txt
 
-Now, install the Python port of Robospect. You can do this in one of two ways:
+In the parent directory which contains ``rrlfe_io/``, clone the Python port of Robospect and install it
+by following the instructions `here <https://github.com/czwa/robospect.py>`_.
 
-1.  In the directory ``rrlfe/``, run a script which clones Robospect into the parent directory one level higher, installs it, and copies an absorption line list into it:
+Then make directory ``robospect.py/tmp/`` and copy the file ``ll`` to it from the ``rrlfe_io/`` directory. (This 
+file tells Robospect where to look for absorption lines in the spectra.)
 
-  .. code-block:: python
-
-    python install_robospect.py
-
-2. Do this manually by following the instructions `here <https://github.com/czwa/robospect.py>`_.
-
-  Make sure to clone the code into the same parent directory which contains the ``rrlfe/`` directory. 
-  (Note that if there are any deprecation errors in the installation step, you may need 
-  to file an issue in the Robospect.py `repo <https://github.com/czwa/robospect.py/issues>`_, which is maintained 
-  independently of ``rrlfe``.) Then make directory ``robospect.py/tmp/`` and copy the file ``ll`` to it from the ``rrlfe/`` directory. (This 
-  file tells Robospect where to look for absorption lines in the spectra.)
-
-That's it! You're ready to roll. You can try a test run in the ``rrlfe/`` directory with the command
+That's it! You're ready to roll. To try a test run in the ``rrlfe_io/`` directory, run the sample script which was contained in the tar file:
 
 .. code-block:: python
 
-  python example_application_min_working_example.py
+  python example_calibration_application_min_working_example.py
 
 If you would ever like to file an issue on the ``rrlfe`` Github repo, you can do so `here <https://github.com/mwanakijiji/rrlfe/issues>`_.
 

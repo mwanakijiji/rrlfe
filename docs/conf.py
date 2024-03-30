@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'rrlfe'
-copyright = '2023, Eckhart Spalding, Ron Wilhelm, Nathan De Lee, Kenneth Carrell'
+copyright = '2024, Eckhart Spalding, Ron Wilhelm, Nathan De Lee, Kenneth Carrell'
 author = 'Eckhart Spalding, Ron Wilhelm, Nathan De Lee, Kenneth Carrell'
 
 
