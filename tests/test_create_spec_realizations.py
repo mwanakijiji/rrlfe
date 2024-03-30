@@ -15,7 +15,8 @@ sys.path.insert(0, target_dir)
 from rrlfe import *
 from rrlfe import create_spec_realizations
 #from rrlfe.rrlfe import create_spec_realizations
-from conf import *
+from rrlfe.conf import *
+#from conf import *
 import numpy as np
 
 # configuration data for reduction

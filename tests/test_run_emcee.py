@@ -13,7 +13,8 @@ target_dir = os.path.abspath(os.path.join(current_dir, "../"))
 sys.path.insert(0, target_dir)
 
 # import more things with changed system path
-from rrlfe.rrlfe import *
+from rrlfe import *
+#from rrlfe.rrlfe import *
 from rrlfe import run_emcee
 #from rrlfe.rrlfe import run_emcee
 from conf import *

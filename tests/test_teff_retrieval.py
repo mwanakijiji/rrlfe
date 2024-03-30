@@ -21,7 +21,8 @@ sys.path.insert(0, target_dir)
 from . import *
 from rrlfe import teff_retrieval
 #from rrlfe.rrlfe import teff_retrieval
-from conf import *
+from rrlfe.conf import *
+#from conf import *
 
 # configuration data for reduction
 config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file

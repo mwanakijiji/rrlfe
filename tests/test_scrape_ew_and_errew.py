@@ -14,7 +14,8 @@ sys.path.insert(0, target_dir)
 from rrlfe import *
 from rrlfe import scrape_ew_and_errew
 #from rrlfe.rrlfe import scrape_ew_and_errew
-from conf import *
+from rrlfe.conf import *
+#from conf import *
 import numpy as np
 import glob
 

@@ -10,9 +10,9 @@ sys.path.insert(0, target_dir)
 
 from rrlfe import *
 #from rrlfe.rrlfe import *
-from conf import *
+from rrlfe.conf import *
 from configparser import ConfigParser, ExtendedInterpolation
-from conf import *
+#from conf import *
 
 # configuration data for reduction
 config_gen = ConfigParser(interpolation=ExtendedInterpolation()) # for parsing values in .init file
