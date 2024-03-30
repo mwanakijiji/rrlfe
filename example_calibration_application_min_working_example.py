@@ -1,12 +1,11 @@
 from rrlfe import high_level_application_accordion as pipeline
 
 # absolute stem of repo; needed to make dirs if they don't exist
-#stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
-#stem_abs = "/suphys/espa3021/Downloads/sandbox_install/one_deeper/one_deeper/"
-stem_abs = "/suphys/espa3021/Desktop/sandbox/sandbox_install/"
+#stem_abs = "/suphys/espa3021/Desktop/sandbox/"
+stem_abs = "/Users/myname/directory1/directory2/rrlfe/"
 
 # string for the upper level directory
-stem_string = 'rrlfe_io_test/'
+stem_string = 'rrlfe_io/'
 
 # calibration solution to use
 calib_soln = 'deg_1-100_calib_solution_20230507.fits'
