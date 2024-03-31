@@ -199,7 +199,10 @@ def read_bkgrnd_spec(spec_name):
     """
 
     logging.info("Reading ascii spectrum realization and background in " + spec_name)
-
+    print('--------spec_name being read in--------')
+    print(spec_name)
+    print('---------is it a file?-------')
+    print(os.path.isfile(spec_name))
     spec_tab = Table.read(spec_name, format='ascii.no_header',
                           names=['wavelength', 'flux', 'bckgrnd_flux'])
 
