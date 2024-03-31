@@ -29,7 +29,10 @@ jobs:
           pip install coverage
           pip install coveralls
       - name: Run tests with pytest and generate coverage report
-        run: coverage run -m pytest tests/
+        run:
+          ls /Users/runner/work/rrlfe/
+          ls /Users/runner/work/rrlfe/rrlfe/test_src/ 
+          coverage run -m pytest tests/
       - name: Install pypa/build
         run: >-
           python -m
