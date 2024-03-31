@@ -56,6 +56,11 @@ def create_norm_spec(name_list,
         # add to list
         new_name_list.append(new_name)
 
+        print('name_list')
+        print(name_list)
+        print('new_name-------------------------')
+        print(new_name)
+
         try:
             # open file to write normalized spectrum to
             outfile = open(new_name, 'w')
