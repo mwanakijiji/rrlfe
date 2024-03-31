@@ -203,6 +203,9 @@ def read_bkgrnd_spec(spec_name):
     print(spec_name)
     print('---------is it a file?-------')
     print(os.path.isfile(spec_name))
+    df = pd.read_csv(spec_name, delim_whitespace=True)
+    print(df)
+    
     spec_tab = Table.read(spec_name, format='ascii.no_header',
                           names=['wavelength', 'flux', 'bckgrnd_flux'])
 
