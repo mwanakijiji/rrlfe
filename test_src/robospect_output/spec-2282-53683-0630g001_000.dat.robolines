@@ -1,0 +1,24 @@
+## Robospect line catalog
+## Flags:
+##                 NONE 0x00000000 No known issue with line fit.                
+##             FIT_FAIL 0x00000001 Solver returned impossible value.  Line ignored.
+##            FIT_CHISQ 0x00000002 Chi^2 did not improve with inclusion of line.  Line ignored.
+##            FIT_DELTA 0x00000004 Large parameter shift between line prior and fit.  Line ignored.
+##            FIT_BOUND 0x00000008 Line parameters exceed allowed bounds.  Line ignored.
+##  FIT_ERROR_ESTIMATED 0x00000010 No error calculated.  Estimated at 10%       
+##            ALT_CHISQ 0x00000020 Chi^2 did not improve with inclusion of alternate line model.
+##                 NONE 0x00000000 No known issue with line fit.                
+##             SUPPLIED 0x00010000 Line supplied from external list.            
+##             DETECTED 0x00020000 Line detected from the data.                 
+##                BLEND 0x00040000 Line fit as part of a blend.                 
+##        CONTINUUM_FIT 0x00100000 Continuum measured for this line.            
+##       WAVELENGTH_FIT 0x00200000 Wavelenth solution measured for this line.   
+## Units
+##AA [AA  AA  None]   [AA AA None]   [AA AA None]   mAA mAA  None  None  None None
+## Headers
+##wave_0 [gaussianMu  gaussianSigma  gaussianAmp]   [uncertaintyMu  uncertaintySigma  uncertaintyAmp]   [priorMu  priorSigma  priorAmp]   EQW   uncertaintyEQW  chiSqr  flags  blendGroup comment
+3933.6600 [ 3934.890591  1.597311 -0.452244]   [ 0.139674  0.139234  0.035242]   [ 3934.912226  1.845311  0.415276]       1.810723   0.530690   0.040137  0x10020  0  CaII-K
+3970.0750 [ 3970.911926  5.653954 -0.551821]   [ 0.457643  0.457225  0.043056]   [ 3971.267662  3.121630  0.781666]       7.820606   2.202886   0.420346  0x10020  0  H-eps
+4101.7100 [ 4103.203647  5.744379 -0.470901]   [ 0.400541  0.387879  0.028227]   [ 4101.600000  5.531800  0.509900]       6.780515   1.534607   0.311680  0x10020  0  H-del
+4340.4720 [ 4341.784067  5.643901 -0.440839]   [ 0.408805  0.405592  0.026939]   [ 4339.600000  4.118584  0.404600]       6.236619   1.474694   0.332352  0x10020  0  H-gam
+4861.2900 [ 4863.287160  5.420442 -0.428910]   [ 0.527339  0.526570  0.037555]   [ 4860.400000  5.084684  0.332700]       5.827611   1.910417   0.556773  0x10020  0  H-beta
