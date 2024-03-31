@@ -71,11 +71,6 @@ def test_calc_noise():
 def test_read_spec():
 
     # ascii format
-    print('current_gen')
-    print((os.path.dirname(__file__)))
-    print('conf_gen')
-    print(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
-    
     spec_name_ascii = config_gen["data_dirs"]["TEST_DIR_SRC"] + "raw_spec/575020m05.smo"
     test_spec_tab_ascii, test_hdr_ascii = create_spec_realizations.read_spec(spec_name=spec_name_ascii, format="ascii.no_header")
 
@@ -189,8 +184,6 @@ def test_create_norm_spec():
 
     #test_input_name_list = config_gen["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list.list"
     ## ## note TEST_BIN might be changed to TEST_DIR_REZNS_SPEC_NORM, if it can be changed across multiple functions
-    print('--------- THIS IS THE DIR WHERE IT IS LOOKING FOR THEM ------')
-    print(config_gen["data_dirs"]["TEST_DIR_REZNS_SPEC"])
     test_new_name_list = create_spec_realizations.create_norm_spec(
                             name_list=test_input_name_list,
                             normdir=config_gen["data_dirs"]["TEST_DIR_REZNS_SPEC"],

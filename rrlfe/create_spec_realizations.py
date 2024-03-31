@@ -56,11 +56,6 @@ def create_norm_spec(name_list,
         # add to list
         new_name_list.append(new_name)
 
-        print('name_list')
-        print(name_list)
-        print('new_name-------------------------')
-        print(new_name)
-        print(os.path.isfile(new_name))
         try:
             # open file to write normalized spectrum to
             outfile = open(new_name, 'w')
@@ -199,12 +194,6 @@ def read_bkgrnd_spec(spec_name):
     """
 
     logging.info("Reading ascii spectrum realization and background in " + spec_name)
-    print('--------spec_name being read in--------')
-    print(spec_name)
-    print('---------is it a file?-------')
-    print(os.path.isfile(spec_name))
-    df = pd.read_csv(spec_name, delim_whitespace=True)
-    print(df)
     
     spec_tab = Table.read(spec_name, format='ascii.no_header',
                           names=['wavelength', 'flux', 'bckgrnd_flux'])
