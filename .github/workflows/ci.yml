@@ -16,8 +16,6 @@ jobs:
           submodules: 'recursive'
       - name: check the file list
         run: |
-          pwd
-          ls
           ls -R src/*cc
       - name: Install Python 3
         uses: actions/setup-python@v1
@@ -32,9 +30,6 @@ jobs:
           pip install coveralls
       - name: Run tests with pytest and generate coverage report
         run:
-          pwd
-          ls /Users/runner/work/rrlfe/
-          ls /Users/runner/work/rrlfe/rrlfe/test_src/ 
           coverage run -m pytest tests/
       - name: Install pypa/build
         run: >-
