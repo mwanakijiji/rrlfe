@@ -189,6 +189,8 @@ def test_create_norm_spec():
 
     #test_input_name_list = config_gen["data_dirs"]["TEST_DIR_SRC"] + "test_input_file_list.list"
     ## ## note TEST_BIN might be changed to TEST_DIR_REZNS_SPEC_NORM, if it can be changed across multiple functions
+    print('--------- THIS IS THE DIR WHERE IT IS LOOKING FOR THEM ------')
+    print(config_gen["data_dirs"]["TEST_DIR_REZNS_SPEC"])
     test_new_name_list = create_spec_realizations.create_norm_spec(
                             name_list=test_input_name_list,
                             normdir=config_gen["data_dirs"]["TEST_DIR_REZNS_SPEC"],
