@@ -73,7 +73,6 @@ def test_read_spec():
     # ascii format
     print('current_gen')
     print((os.path.dirname(__file__))
-
     print('conf_gen')
     print(os.path.join(os.path.dirname(__file__), '../conf', 'config_gen.ini'))
     
