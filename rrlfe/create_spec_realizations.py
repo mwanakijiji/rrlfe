@@ -60,7 +60,8 @@ def create_norm_spec(name_list,
         print(name_list)
         print('new_name-------------------------')
         print(new_name)
-
+        import os
+        print(os.path.isfile(new_name))
         try:
             # open file to write normalized spectrum to
             outfile = open(new_name, 'w')
