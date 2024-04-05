@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "rrlfe"
-version = "0.1.10"
+version = "0.1.13"
 description = "For finding FeH from low-res survey spectra of RR Lyrae stars"
 authors = ["Eckhart Spalding <eckhart.spalding@sydney.edu.au>", "Ron Wilhelm", "Nathan De Lee", "Kenneth Carrell"]
 readme = "README.md"
