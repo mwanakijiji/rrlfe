@@ -1,4 +1,4 @@
-import high_level_application_accordion as pipeline
+from rrlfe import high_level_application_accordion as pipeline
 
 # applies a 'raw' calibration to McDonald data, to generate calibration correction
 
