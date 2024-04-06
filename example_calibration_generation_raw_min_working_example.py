@@ -1,4 +1,4 @@
-from rrlfe import high_level_application_accordion as pipeline
+from rrlfe import high_level_generation_accordion as pipeline
 
 # absolute stem of repo; needed to make dirs if they don't exist
 stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
