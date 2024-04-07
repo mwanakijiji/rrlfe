@@ -8,7 +8,7 @@ stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
 #stem_abs = "/home/prunelle/rrlfe/"
 
 # string for the upper level directory
-stem_string = 'rrlfe_io_generation_test_20231112/'
+stem_string = 'rrlfe_io_calibration_correction_generation_test_20231115/'
 
 # instantiate object that will contain the series of reduction steps
 test_gen = pipeline.ApplyCalib()
