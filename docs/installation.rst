@@ -45,6 +45,7 @@ That's it! You're ready to roll. To try a test run in the ``rrlfe_io/`` director
 
   python example_calibration_application_min_working_example.py
 
+(Be sure to edit the pathname at the top of the script appropriately.) 
 If you would ever like to file an issue on the ``rrlfe`` Github repo, you can do so `here <https://github.com/mwanakijiji/rrlfe/issues>`_.
 
 **Note:** The repository code contains a 3 Mb FITS file `deg_1-100_calib_solution_20230507.fits`, which contains the calibration solution corresponding to that in the paper 

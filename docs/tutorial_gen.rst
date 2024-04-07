@@ -3,22 +3,22 @@ Tutorial: Generating a calibration
 
 The basic idea is as follows:
 
-#. We take synthetic spectra with known input parameters, normalize them, 
+1. We take synthetic spectra with known input parameters, normalize them, 
 and measure the EWs of the absorption lines. Knowing the metallicities [Fe/H], we make a functional fit that 
 is an extension of the one in Layden 1994. The raw solution is output as a FITS file containing the MCMC posteriors
 and relevant information in the header. 'Raw' in this context signifies that no offset correction 
 has been applied to the solution to make it consistent with retrievals based on high-resolution spectroscopy. 
 `Here <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/example_calibration_generation_raw_min_working_example.py>`_
-is an example script that does through all these steps, though we step through them below.
+is an example script that does through all these steps, and we step through them below.
 
 
-#. To find the offset correction between the [Fe/H] values based on the raw and high-res studies, we retrieve 
+2. To find the offset correction between the [Fe/H] values based on the raw and high-res studies, we retrieve 
 [Fe/H] based on empirical low-resolution spectroscopy from stars which already have known values based on 
 high-resolution spectroscopy. By comparing the two [Fe/H] values for these stars, the parameters of this correction
 are added into the FITS header of the raw calibration to produce a 'final' calibration.
 
-To put all this into practice, we call different classes from rrlfe and string them together into a pipeline.
-The user gives each instantiated module a module_name, which allows it to be distinguished from other modules
+To put all this into practice, we call different classes from ``rrlfe`` and string them together into a pipeline.
+The user gives each instantiated module a ``module_name``, which allows it to be distinguished from other modules
 when the pipeline is run.
 
 Note the first series of steps---normalizing spectra, measuring the EWs of their absorption lines, 
@@ -27,14 +27,14 @@ to a given set of spectra. (See `Tutorial: Applying a Calibration`.) This tutori
 so the choices of directory names will be to that end. If you are already familiar with how to normalize spectra 
 and measure their EWs, you can probably skip down to the section `Add known meta-data and run MCMC`. 
 
-Normalize a given set of spectra
+Normalize a given set of synthetic spectra
 ----
 
 Start by importing the machinery we need:
 
 .. code-block:: python
 
-    import high_level_generation_accordion as pipeline
+    from rrlfe import high_level_generation_accordion as pipeline
 
 We define the absolute path of the repo, and the I/O directory which will be located beneath that. 
 In addition we define a handy string or two. 
@@ -290,7 +290,7 @@ Add final correction to the raw calibration
 
 To do that, skip to the next tutorial on applying a calibration, and apply the raw
 calibration you just made to a basis set of low-resolution spectra. 
-In Spalding et al. 2023, we used spectra taken from McDonald Observatory.
+In Spalding et al. 2024, we used spectra taken from McDonald Observatory.
 
 Once you have done so and have retrieved [Fe/H] values from a basis set of empirical spectra, you can 
 run the following mini-pipeline: 
@@ -333,6 +333,8 @@ Now, when you apply this calibration to other spectra, run the same steps as abo
 posteriors), and add in the following last step to the pipeline, which reads in the 
 FITS file calibration and extracts and applies the corrective offset to the raw [Fe/H] values:
 
+.. code-block:: python
+    
     step = pipeline.final_corrxn.ApplyCorrxn(
         module_name="module16",
         file_name_basis_raw_retrieved_fehs="", # McD EW values

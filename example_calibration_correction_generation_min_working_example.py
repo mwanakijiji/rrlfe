@@ -1,4 +1,4 @@
-from rrlfe import high_level_application_accordion as pipeline
+from rrlfe import high_level_generation_accordion as pipeline
 
 # applies a 'raw' calibration to McDonald data, to generate calibration correction
 
@@ -8,9 +8,10 @@ stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
 #stem_abs = "/home/prunelle/rrlfe/"
 
 # string for the upper level directory
-stem_string = 'rrlfe_io_calibration_correction_generation_test_20231115/'
+stem_string = 'rrlfe_io_generation_test_20231112/'
 
-# calibration solution to use
+# RAW calibration solution to use for finding first-pass [Fe/H] vals
+# (correction will be written into the header of this file)
 calib_soln = 'deg_1-100_calib_solution_20230507.fits'
 
 # instantiate object that will contain the series of reduction steps
