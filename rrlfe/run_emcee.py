@@ -423,7 +423,7 @@ class WriteSolnToFits():
             make_dir(os.path.dirname(soln_write_name))
         if not test_flag: # pragma: no cover
             if os.path.exists(soln_write_name):
-                input("A calibration solution file already exists! Will overwrite")
+                logging.warning("A calibration solution file already exists! Will overwrite")
 
             table_hdu.writeto(soln_write_name, overwrite=True)
             logging.info("Full calibration MCMC posterior written to " + soln_write_name)
