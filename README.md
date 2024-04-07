@@ -17,6 +17,6 @@ If this code has been useful for your work, please cite the source in the follow
         volume = {527},
         number = {1},
         pages = {828-845},
-        year = {2023},
+        year = {2024},
         doi = {10.1093/mnras/stad3199}
     }
