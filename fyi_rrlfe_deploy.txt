@@ -1,0 +1,17 @@
+In rrlfe dir, build by updating version number in setup.py and pyproject.toml. Then
+
+> python -m build
+
+Resulting files will be in dist/ dir
+
+Upload to Testpypi:
+> python -m twine upload --repository testpypi dist/*
+
+… or to Pypi:
+> twine upload dist/*
+
+Install with (ex. for ver. 0.1.9):
+> pip install -i https://test.pypi.org/simple/ rrlfe==0.1.9
+
+or try
+> pip install -i https://test.pypi.org/simple/ rrlfe
