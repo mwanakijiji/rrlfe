@@ -2,10 +2,8 @@ from rrlfe import high_level_application_accordion as pipeline
 
 # applies a 'raw' calibration to McDonald data, to generate calibration correction
 
-# absolute stem of repo; needed to make dirs if they don't exist
-stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
-#stem_abs = "/Users/bandari/Documents/git.repos/rrlfe/"
-#stem_abs = "/home/prunelle/rrlfe/"
+# absolute stem of the directory in which to do things
+stem_abs = "/Users/myname/directory1/directory2/rrlfe_io/"
 
 # string for the upper level directory
 stem_string = 'rrlfe_io_calibration_correction_generation_test_20231115/'
@@ -18,7 +16,7 @@ step = pipeline.ConfigInit(module_name="module1")
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # compile the C spectral normalization script
 step = pipeline.compile_normalization.CompileBkgrnd(
     module_name="module3",
@@ -101,7 +99,7 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",

@@ -1,9 +1,7 @@
 from rrlfe import high_level_generation_accordion as pipeline
 
 # absolute stem of the directory in which to do things
-#stem_abs = "/suphys/espa3021/Desktop/sandbox/"
-stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
-#stem_abs = "/Users/myname/directory1/directory2/rrlfe_io/"
+stem_abs = "/Users/myname/directory1/directory2/rrlfe_io/"
 
 # string for the upper level directory
 stem_string = 'rrlfe_io_generation_test_20231112/'
