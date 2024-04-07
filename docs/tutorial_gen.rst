@@ -326,6 +326,7 @@ And here's the step that executes the steps which have been strung together:
 To see the longer version of the above step---which includes the normalization of McDonald spectra, measurement
 of their EWs, and determination of the final offset correction---check out out the example script 
 `here <https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/example_calibration_correction_generation_min_working_example.py>`_.
+(This script is also in the repo and the tarball src.tar.gz.)
 
 Done! Now you should have a FITS file with the raw calibration in the table data, and with correction parameters in the header.
 Now, when you apply this calibration to other spectra, run the same steps as above to generate 'raw' [Fe/H] values (i.e., up to the point 
