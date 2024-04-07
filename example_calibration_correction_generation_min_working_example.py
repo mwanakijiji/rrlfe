@@ -10,10 +10,6 @@ stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
 # string for the upper level directory
 stem_string = 'rrlfe_io_generation_test_20231112/'
 
-# RAW calibration solution to use for finding first-pass [Fe/H] vals
-# (correction will be written into the header of this file)
-calib_soln = 'test_only.fits'
-
 # instantiate object that will contain the series of reduction steps
 test_gen = pipeline.ApplyCalib()
 
@@ -109,7 +105,7 @@ test_gen.add_step(step)
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",
-    file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/"+calib_soln,
+    file_calib_read=stem_abs+"rrlfe_io_20230507_synthetic/bin/calib_solution.fits",
     dir_retrievals_write=stem_abs+stem_string+"bin/pickled_info/",
     file_retrievals_write=stem_abs+stem_string+"bin/retrieved_vals.csv")
 

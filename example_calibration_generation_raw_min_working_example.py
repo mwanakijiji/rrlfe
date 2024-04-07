@@ -8,9 +8,6 @@ stem_abs = "/suphys/espa3021/Documents/git.repos/rrlfe/"
 # string for the upper level directory
 stem_string = 'rrlfe_io_generation_test_20231112/'
 
-# calibration solution to write out
-calib_soln = 'test_only.fits'
-
 # instantiate object that will contain the series of reduction steps
 test_gen = pipeline.GenerateCalib()
 
@@ -139,7 +136,7 @@ step = pipeline.run_emcee.WriteSolnToFits(
     module_name="module14",
     file_name_mcmc_posterior_read=stem_abs+stem_string+"bin/mcmc_output.csv",
     file_name_teff_data_read=stem_abs+stem_string+"bin/teff_vs_balmer_trend.txt",
-    soln_write_name=stem_abs+stem_string+"bin/calib_solution2.fits")
+    soln_write_name=stem_abs+stem_string+"bin/calib_solution.fits")
 
 # add step to procedure
 test_gen.add_step(step)
