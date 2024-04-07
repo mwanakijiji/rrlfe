@@ -12,7 +12,7 @@ stem_string = 'rrlfe_io_generation_test_20231112/'
 
 # RAW calibration solution to use for finding first-pass [Fe/H] vals
 # (correction will be written into the header of this file)
-calib_soln = 'deg_1-100_calib_solution_20230507.fits'
+calib_soln = 'test_only.fits'
 
 # instantiate object that will contain the series of reduction steps
 test_gen = pipeline.ApplyCalib()
@@ -22,7 +22,7 @@ step = pipeline.ConfigInit(module_name="module1")
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 # compile the C spectral normalization script
 step = pipeline.compile_normalization.CompileBkgrnd(
     module_name="module3",
@@ -105,7 +105,7 @@ step = pipeline.scrape_ew_and_errew.GenerateAddlEwErrors(
 
 # add step to procedure
 test_gen.add_step(step)
-
+'''
 step = pipeline.find_feh.FehRetrieval(
     module_name="module11",
     file_good_ew_read=stem_abs+stem_string+"ew_products/restacked_ew_info_good_only_w_net_balmer_errors.csv",

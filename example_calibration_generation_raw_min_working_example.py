@@ -27,7 +27,7 @@ step = pipeline.compile_normalization.CompileBkgrnd(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 # take list of unnormalized empirical spectra, normalize them, and write out
 step = pipeline.create_spec_realizations.CreateSpecRealizationsMain(
     module_name="module4",
@@ -134,7 +134,7 @@ step = pipeline.run_emcee.RunEmcee(
 
 # add step to procedure
 test_gen.add_step(step)
-'''
+
 step = pipeline.run_emcee.WriteSolnToFits(
     module_name="module14",
     file_name_mcmc_posterior_read=stem_abs+stem_string+"bin/mcmc_output.csv",
